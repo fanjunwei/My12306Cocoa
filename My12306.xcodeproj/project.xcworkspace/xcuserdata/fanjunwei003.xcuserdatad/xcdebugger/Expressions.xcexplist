@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[M12306Document queryLock:]:M12306Document.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "url">
+            </PersistentString>
+            <PersistentString
+               value = "search">
+            </PersistentString>
+            <PersistentString
+               value = "table">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[M12306Document windowControllerDidLoadNib:]:M12306Document.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[M12306Document getCommitPage]:M12306Document.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.token">
+            </PersistentString>
+            <PersistentString
+               value = "self.lefttick">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[M12306PassengerTableView initSelected:]:M12306PassengerTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[array indexOfObject:cardNo]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[M12306Document loginLock]:M12306Document.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "(NSString *)outs">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[M12306Form post]:M12306Form.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.UserAgent">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[M12306Document doStationsResult]:M12306Document.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "fromstation">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

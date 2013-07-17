@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>loginform</key>
+	<string>loginRand#|loginUser.user_name#|nameErrorFocus#|user.password#|passwordErrorFocus#|randCode#</string>
+	<key>yudingform</key>
+	<string>station_train_code#D624|train_date#2013-02-08|seattype_num#|from_station_telecode#ZZF|to_station_telecode#AOH|include_student#00|from_station_telecode_name#郑州|to_station_telecode_name#上海|round_train_date#2013-02-08|round_start_time_str#00:00--24:00|single_round_type#1|train_pass_type#QB|train_class_arr#QB#D#Z#T#K#QT#|start_time_str#00:00--24:00|lishi#06:42|train_start_time#12:38|trainno4#380000D62403|arrive_time#19:20|from_station_name#郑州|to_station_name#上海虹桥|from_station_no#01|to_station_no#11|ypInfoDetail#O*****0277O*****3084M*****0005|mmStr#56326EECB4B30BBE96B87789A32AE962E6AEF605F7F0C5C16AE6F6C0|locationCode#F1</string>
+	<key>commitform</key>
+	<string>org.apache.struts.taglib.html.TOKEN#1f0aa644944e5073ff550f8cb51df8908|leftTicketStr#O023650277O023653084M037950005|textfield#中文或拼音首字母|orderRequest.train_date#2013-02-08|orderRequest.train_no#380000D62403|orderRequest.station_train_code#D624|orderRequest.from_station_telecode#ZZF|orderRequest.to_station_telecode#AOH|orderRequest.seat_type_code#|orderRequest.ticket_type_order_num#|orderRequest.bed_level_order_num#000000000000000000000000000000|orderRequest.start_time#12:38|orderRequest.end_time#19:20|orderRequest.from_station_name#郑州|orderRequest.to_station_name#上海虹桥|orderRequest.cancel_flag#1|orderRequest.id_mode#Y</string>
+	<key>commitform2</key>
+	<string>randCode#cccc|orderRequest.reserve_flag#A|tFlag#dc</string>
+	<key>checkform</key>
+	<string>org.apache.struts.taglib.html.TOKEN#1f0aa644944e5073ff550f8cb51df8908|leftTicketStr#O023650277O023653084M037950005|textfield#中文或拼音首字母|orderRequest.train_date#2013-02-08|orderRequest.train_no#380000D62403|orderRequest.station_train_code#D624|orderRequest.from_station_telecode#ZZF|orderRequest.to_station_telecode#AOH|orderRequest.seat_type_code#|orderRequest.ticket_type_order_num#|orderRequest.bed_level_order_num#000000000000000000000000000000|orderRequest.start_time#12:38|orderRequest.end_time#19:20|orderRequest.from_station_name#郑州|orderRequest.to_station_name#上海虹桥|orderRequest.cancel_flag#1|orderRequest.id_mode#Y</string>
+	<key>checkform2</key>
+	<string>randCode#cccc|orderRequest.reserve_flag#A</string>
+</dict>
+</plist>
