@@ -15,6 +15,7 @@
 #import "M12306PassengerTableView.h"
 #import "M12306QueryTableView.h"
 #import "M12306TrainInfo.h"
+
 #define COMMIT_DELAY_SECOND 5.0
 @interface M12306Document : NSDocument
 - (IBAction)tablePassengerChange:(id)sender;
@@ -33,6 +34,7 @@
 - (IBAction)popupSeat:(id)sender;
 @property (weak) IBOutlet NSPopUpButton *popupSeat;
 @property (weak) IBOutlet M12306PassengerTableView *tablePassenger;
+@property (weak) IBOutlet NSScrollView *txtLogParent;
 
 @property (weak) IBOutlet M12306ComboBox *cbxToStation;
 @property (weak) IBOutlet M12306ComboBox *cbxFromStation;

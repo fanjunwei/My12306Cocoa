@@ -169,8 +169,8 @@
 			buildConfigurationList = E6B40650178E780E00F1B668 /* Build configuration list for PBXNativeTarget "My12306" */;
 			buildPhases = (
 				E6B4062C178E780E00F1B668 /* Sources */,
-				E6B4062D178E780E00F1B668 /* Frameworks */,
 				E6B4062E178E780E00F1B668 /* Resources */,
+				E6B4062D178E780E00F1B668 /* Frameworks */,
 			);
 			buildRules = (
 			);

@@ -55,6 +55,6 @@
 
 - (NSString *)getInfo
 {
-    return [NSString stringWithFormat:@"%@ %@ %@ %@ %@",[self.TicketTypeArray objectForKey:self.Ticket],self.Name,[self.CardTypeArray objectForKey:self.Cardtype],self.Cardno,self.Mobileno];
+    return [NSString stringWithFormat:@"***%@ %@ %@ %@ 电话:%@",self.Name,[self.TicketTypeArray objectForKey:self.Ticket],[self.CardTypeArray objectForKey:self.Cardtype],self.Cardno,self.Mobileno];
 }
 @end

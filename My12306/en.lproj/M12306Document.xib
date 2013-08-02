@@ -52,10 +52,10 @@
 				<string key="NSClassName">FirstResponder</string>
 			</object>
 			<object class="NSWindowTemplate" id="275939982">
-				<int key="NSWindowStyleMask">4103</int>
+				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{349, 194}, {720, 626}}</string>
-				<int key="NSWTFlags">1886912512</int>
+				<int key="NSWTFlags">1886913536</int>
 				<string key="NSWindowTitle">Window</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<string key="NSViewClass">View</string>
@@ -182,7 +182,6 @@
 									<string key="NSFrame">{{685, 1}, {15, 184}}</string>
 									<reference key="NSSuperview" ref="218874708"/>
 									<reference key="NSWindow"/>
-									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:83</string>
 									<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 									<reference key="NSTarget" ref="218874708"/>
@@ -1304,7 +1303,7 @@
 						</object>
 						<object class="NSTextField" id="278830772">
 							<reference key="NSNextResponder" ref="568628114"/>
-							<int key="NSvFlags">268</int>
+							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{7, 217}, {43, 17}}</string>
 							<reference key="NSSuperview" ref="568628114"/>
 							<reference key="NSWindow"/>
@@ -1325,7 +1324,7 @@
 						</object>
 						<object class="NSImageView" id="811852646">
 							<reference key="NSNextResponder" ref="568628114"/>
-							<int key="NSvFlags">268</int>
+							<int key="NSvFlags">292</int>
 							<set class="NSMutableSet" key="NSDragTypes">
 								<string>Apple PDF pasteboard type</string>
 								<string>Apple PICT pasteboard type</string>
@@ -1354,7 +1353,7 @@
 						</object>
 						<object class="NSTextField" id="301517161">
 							<reference key="NSNextResponder" ref="568628114"/>
-							<int key="NSvFlags">268</int>
+							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{126, 212}, {96, 22}}</string>
 							<reference key="NSSuperview" ref="568628114"/>
 							<reference key="NSWindow"/>
@@ -1376,7 +1375,7 @@
 						</object>
 						<object class="NSTextField" id="515017634">
 							<reference key="NSNextResponder" ref="568628114"/>
-							<int key="NSvFlags">268</int>
+							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{227, 217}, {131, 17}}</string>
 							<reference key="NSSuperview" ref="568628114"/>
 							<reference key="NSWindow"/>
@@ -1408,6 +1407,7 @@
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMinSize">{94, 108}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
+				<int key="NSWindowCollectionBehavior">128</int>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSCustomObject" id="796877042">
@@ -1607,6 +1607,14 @@
 						<reference key="destination" ref="71676416"/>
 					</object>
 					<int key="connectionID">100629</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">txtLogParent</string>
+						<reference key="source" ref="512844837"/>
+						<reference key="destination" ref="218874708"/>
+					</object>
+					<int key="connectionID">100630</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -2278,7 +2286,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">100629</int>
+			<int key="maxID">100630</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2342,6 +2350,7 @@
 						<string key="txtCommitCode">M12306TextField</string>
 						<string key="txtImgcode">NSTextField</string>
 						<string key="txtLog">NSTextView</string>
+						<string key="txtLogParent">NSScrollView</string>
 						<string key="txtPassword">NSSecureTextField</string>
 						<string key="txtTrainNameRegx">NSTextField</string>
 						<string key="txtUsername">NSTextField</string>
@@ -2402,6 +2411,10 @@
 						<object class="IBToOneOutletInfo" key="txtLog">
 							<string key="name">txtLog</string>
 							<string key="candidateClassName">NSTextView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="txtLogParent">
+							<string key="name">txtLogParent</string>
+							<string key="candidateClassName">NSScrollView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="txtPassword">
 							<string key="name">txtPassword</string>

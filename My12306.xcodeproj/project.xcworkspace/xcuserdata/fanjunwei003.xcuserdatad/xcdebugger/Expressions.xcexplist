@@ -47,6 +47,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[M12306Document addLogLock:]:M12306Document.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.txtLog">
+            </PersistentString>
+            <PersistentString
+               value = "[self.txtLogParent getView]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[M12306Form post]:M12306Form.m">
          <PersistentStrings>
             <PersistentString

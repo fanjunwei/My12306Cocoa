@@ -94,14 +94,14 @@
 
 -(void) addLogLock:(NSString *)log
 {
-    if(log!=nil)
+    if(log!=nil && self.txtLogParent)
     {
         NSDate  * now =[NSDate date];
         NSDateFormatter * formate=[[NSDateFormatter alloc]init];
         [formate setDateFormat:@"HH:mm:ss"];
         NSString * str = [formate stringFromDate:now];
         str = [str stringByAppendingFormat:@" %@",log];
-      
+        
         self.txtLog.string=[self.txtLog.string stringByAppendingFormat:@"%@\n",str];
         
         NSRange range = NSMakeRange ([[self.txtLog string] length], 0);
@@ -117,8 +117,9 @@
 - (void)setLoginImgCode:(NSImage *)image
 {
     [self.imgLoginCode setImage:image];
-    if(self.txtUsername.stringValue && self.txtPassword.stringValue)
+    if(self.txtUsername.stringValue && ![self.txtUsername.stringValue isEqualToString:@""] && self.txtPassword.stringValue && ![self.txtPassword.stringValue isEqualToString:@""])
     {
+        self.txtImgcode.stringValue=@"";
         [self.txtImgcode becomeFirstResponder];
     }
     else
@@ -155,13 +156,18 @@
 }
 
 - (void)txtImgLoginCodeAction{
-    if([self.txtImgcode.stringValue length]>=4)
+    if([self.txtImgcode.stringValue isEqualToString:@" "])
+    {
+        [self getLoginImgCode];
+    }
+    else if([self.txtImgcode.stringValue length]==4)
     {
         [self login];
     }
 }
 - (void)delayLoginLock
 {
+    
     sleep(2);
     [self loginLock];
 }
@@ -808,6 +814,7 @@
         if(item.state)
         {
             selectedPassengerCount++;
+            [self addLog:[item getInfo]];
             [item addToForm:commitForm forIndex:selectedPassengerCount forSeat:[self.seatData objectForKey:[self.popupSeat selectedItem].title]];
         }
     }
