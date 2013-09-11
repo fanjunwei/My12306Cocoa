@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "My12306/M12306Document.m"
-         timestampString = "395756019.510802"
+         timestampString = "397199286.885156"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1220"
-         endingLineNumber = "1220"
+         startingLineNumber = "1222"
+         endingLineNumber = "1222"
          landmarkName = "-setSavedDate:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -86,24 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "My12306/M12306Document.m"
-         timestampString = "395756019.510802"
+         timestampString = "397199286.885156"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "467"
-         endingLineNumber = "467"
-         landmarkName = "-doStationsResult"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "My12306/M12306Document.m"
-         timestampString = "395768293.674096"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "97"
-         endingLineNumber = "97"
+         startingLineNumber = "99"
+         endingLineNumber = "99"
          landmarkName = "-addLogLock:"
          landmarkType = "5">
       </FileBreakpoint>

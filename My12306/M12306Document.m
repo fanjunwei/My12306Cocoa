@@ -85,10 +85,13 @@
 
 -(void) myinit
 {
+    NSNotification * noti = [NSNotification notificationWithName:@"center" object:@"ok"];
+    [[NSNotificationCenter defaultCenter]postNotification:noti];
     [self addLog:@"初始化..."];
     [self getStations];
     [self getLoginImgCode];
     [self addLog:@"初始化完成。"];
+    
 
 }
 
@@ -129,7 +132,7 @@
 }
 -(void) getLoginImgCodeLock
 {
-    NSImage *image = [self getImageWithUrl:@"https://dynamic.12306.cn/otsweb/passCodeAction.do?rand=sjrand" refUrl:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init"];
+    NSImage *image = [self getImageWithUrl:@"https://dynamic.12306.cn/otsweb/passCodeNewAction.do?module=login&rand=sjrand" refUrl:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init"];
     [self performSelectorOnMainThread:@selector(setLoginImgCode:) withObject:image waitUntilDone:YES];
     
 }
@@ -730,7 +733,7 @@
 }
 - (void)getCommitImgCodeLock
 {
-    NSString * url= [NSString stringWithFormat:@"https://dynamic.12306.cn/otsweb/passCodeAction.do?rand=randp&%d",arc4random()];
+    NSString * url= @"https://dynamic.12306.cn/otsweb/passCodeNewAction.do?module=passenger&rand=randp";
     NSImage * map=nil;
     while (map==nil) {
         map=[self getImageWithUrl:url refUrl:@"https://dynamic.12306.cn/otsweb/order/confirmPassengerAction.do?method=init"];
