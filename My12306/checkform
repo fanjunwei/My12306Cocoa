@@ -1,0 +1,17 @@
+org.apache.struts.taglib.html.TOKEN=1f0aa644944e5073ff550f8cb51df8908
+leftTicketStr=O023650277O023653084M037950005
+textfield=中文或拼音首字母
+orderRequest.train_date=2013-02-08
+orderRequest.train_no=380000D62403
+orderRequest.station_train_code=D624
+orderRequest.from_station_telecode=ZZF
+orderRequest.to_station_telecode=AOH
+orderRequest.seat_type_code=
+orderRequest.ticket_type_order_num=
+orderRequest.bed_level_order_num=000000000000000000000000000000
+orderRequest.start_time=12:38
+orderRequest.end_time=19:20
+orderRequest.from_station_name=郑州
+orderRequest.to_station_name=上海虹桥
+orderRequest.cancel_flag=1
+orderRequest.id_mode=Y

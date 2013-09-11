@@ -132,6 +132,9 @@
 }
 -(void) getLoginImgCodeLock
 {
+    [self getText:@"http://www.12306.cn/mormhweb/kyfw/" IsPost:NO];
+    NSString *t1 = [self getText:@"https://dynamic.12306.cn/otsweb/" IsPost:NO];
+    NSString * test=[self getText:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init" IsPost:NO];
     NSImage *image = [self getImageWithUrl:@"https://dynamic.12306.cn/otsweb/passCodeNewAction.do?module=login&rand=sjrand" refUrl:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init"];
     [self performSelectorOnMainThread:@selector(setLoginImgCode:) withObject:image waitUntilDone:YES];
     
@@ -191,6 +194,10 @@
 }
 - (void)login
 {
+    NSMutableArray *sd = [self.savedDate mutableCopy];
+    [sd setValue:self.txtUsername.stringValue forKey:@"username"];
+    [sd setValue:self.txtPassword.stringValue forKey:@"password"];
+    self.savedDate=(NSDictionary *)sd;
     [NSThread detachNewThreadSelector:@selector(loginLock) toTarget:self withObject:nil];
 }
 - (void)loginLock
@@ -198,7 +205,7 @@
     [self addLog:@"开始登录"];
     M12306Form * form =[[M12306Form alloc]initWithActionURL:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=login"];
     form.UserAgent=self.UserAgent;
-    [self setYuanshi:@"loginform" forFrom:form];
+    [self setYuanshiForFile:@"loginform" forFrom:form];
     while (YES){
         NSData * data = [self getData:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=loginAysnSuggest" IsPost:NO];
         if(data!=nil)
@@ -215,6 +222,7 @@
     [form setTagValue:self.txtUsername.stringValue forKey:@"loginUser.user_name"];
     [form setTagValue:self.txtPassword.stringValue forKey:@"user.password"];
     [form setTagValue:self.txtImgcode.stringValue forKey:@"randCode"];
+    form.referer=@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init";
     NSString * outs= [form post];
     [self performSelectorOnMainThread:@selector(loginDidResult:) withObject:outs waitUntilDone:YES];
 }
@@ -292,11 +300,6 @@
     }
     if ([strresult rangeOfString:@"我的订单"].location!=NSNotFound)
     {
-        NSMutableArray *sd = [self.savedDate mutableCopy];
-        [sd setValue:self.txtUsername.stringValue forKey:@"username"];
-        [sd setValue:self.txtPassword.stringValue forKey:@"password"];
-        self.savedDate=(NSDictionary *)sd;
-        
         [self addLog:@"登录成功"];
         self.isLogin = YES;
         NSMutableArray * mathcStrs = [NSMutableArray array];
@@ -319,6 +322,7 @@
         {
             self.lblLoginMsg.stringValue=@"登录成功";
         }
+        //[self getCommitImgCode];
         //getPassenger();
         [self getPassenger];
     }
@@ -405,13 +409,25 @@
 {
     [NSThread detachNewThreadSelector:@selector(getPassengerLock) toTarget:self withObject:nil];
 }
-- (void)setYuanshi:(NSString *)yuanshistrkey forFrom:(M12306Form *)form
+//- (void)setYuanshi:(NSString *)yuanshistrkey forFrom:(M12306Form *)form
+//{
+//    NSString *resPath= [[NSBundle mainBundle]pathForResource:@"string" ofType:@"plist"];
+//    NSString * value =[[[NSDictionary alloc] initWithContentsOfFile:resPath] objectForKey:yuanshistrkey];
+//    NSArray * lines = [value componentsSeparatedByString:@"|"];
+//    for (int i=0; i<[lines count]; i++) {
+//        NSArray * kv =[[lines objectAtIndex:i]componentsSeparatedByString:@"#"];
+//        [form setTagValue:[kv objectAtIndex:1] forKey:[kv objectAtIndex:0]];
+//    }
+//    
+//}
+
+- (void)setYuanshiForFile:(NSString *)filename forFrom:(M12306Form *)form
 {
-    NSString *resPath= [[NSBundle mainBundle]pathForResource:@"string" ofType:@"plist"];
-    NSString * value =[[[NSDictionary alloc] initWithContentsOfFile:resPath] objectForKey:yuanshistrkey];
-    NSArray * lines = [value componentsSeparatedByString:@"|"];
+    NSString *resPath= [[NSBundle mainBundle].resourcePath stringByAppendingPathComponent:filename];
+    NSString * value = [NSString stringWithContentsOfFile:resPath encoding:NSUTF8StringEncoding error:nil];
+    NSArray * lines = [value componentsSeparatedByString:@"\n"];
     for (int i=0; i<[lines count]; i++) {
-        NSArray * kv =[[lines objectAtIndex:i]componentsSeparatedByString:@"#"];
+        NSArray * kv =[[lines objectAtIndex:i]componentsSeparatedByString:@"="];
         [form setTagValue:[kv objectAtIndex:1] forKey:[kv objectAtIndex:0]];
     }
     
@@ -651,7 +667,7 @@
 {
     M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:@"https://dynamic.12306.cn/otsweb/order/querySingleAction.do?method=submutOrderRequest"];
     yudingForm.UserAgent=self.UserAgent;
-    [self setYuanshi:@"yudingform" forFrom:yudingForm];
+    [self setYuanshiForFile:@"yudingform" forFrom:yudingForm];
     NSArray * commsp=[info.Yuanshi componentsSeparatedByString:@"#"];
     NSArray * setField = [NSArray arrayWithObjects:@"station_train_code", @"lishi", @"train_start_time", @"trainno4", @"from_station_telecode", @"to_station_telecode", @"arrive_time", @"from_station_name", @"to_station_name", @"from_station_no", @"to_station_no", @"ypInfoDetail", @"mmStr", @"locationCode", nil];
     for (int i=0; i<[setField count]; i++) {
@@ -808,7 +824,7 @@
 {
     M12306Form *commitForm=[[M12306Form alloc]initWithActionURL:@"https://dynamic.12306.cn/otsweb/order/confirmPassengerAction.do?method=checkOrderInfo"];
     commitForm.UserAgent=self.UserAgent;
-    [self setYuanshi:@"commitform" forFrom:commitForm];
+    [self setYuanshiForFile:@"commitform" forFrom:commitForm];
     NSString * date=[self formatDate:self.dtpDate.dateValue strFormat:@"yyyy-MM-dd"];
     [commitForm addQueryStringValue:imgCode forKey:@"rand"];
     int selectedPassengerCount=0;
@@ -825,7 +841,7 @@
     for (; selectedPassengerCount<5; selectedPassengerCount++) {
         [empty addToForm:commitForm forIndex:0 forSeat:nil];
     }
-    [self setYuanshi:@"commitform2" forFrom:commitForm];
+    [self setYuanshiForFile:@"commitform2" forFrom:commitForm];
     
     
     [commitForm setTagValue:date forKey:@"orderRequest.train_date"];
@@ -957,7 +973,7 @@
 {
     M12306Form *checkForm=[[M12306Form alloc]initWithActionURL:@"https://dynamic.12306.cn/otsweb/order/confirmPassengerAction.do?method=confirmSingleForQueue"];
     checkForm.UserAgent=self.UserAgent;
-    [self setYuanshi:@"checkform" forFrom:checkForm];
+    [self setYuanshiForFile:@"checkform" forFrom:checkForm];
     NSString * date=[self formatDate:self.dtpDate.dateValue strFormat:@"yyyy-MM-dd"];
     int selectedPassengerCount=0;
     for (int i=0; i<[self.tablePassenger.data count]; i++) {
@@ -972,7 +988,7 @@
     for (; selectedPassengerCount<5; selectedPassengerCount++) {
         [empty addToForm:checkForm forIndex:0 forSeat:nil];
     }
-    [self setYuanshi:@"checkform2" forFrom:checkForm];
+    [self setYuanshiForFile:@"checkform2" forFrom:checkForm];
     
     
     [checkForm setTagValue:date forKey:@"orderRequest.train_date"];
@@ -1201,13 +1217,13 @@
     {
         if(_savedDate==nil)
         {
-            NSString *path= [[NSBundle mainBundle]pathForResource:@"store" ofType:@"plist"];
+            NSString *path= [self storeFilePath];
             NSFileManager *fm =[NSFileManager defaultManager];
             if([fm fileExistsAtPath:path])
             {
                 _savedDate =[[NSDictionary alloc] initWithContentsOfFile:path];
             }
-            else
+            if(_savedDate==nil)
             {
                 _savedDate=[NSDictionary dictionary];
             }
@@ -1222,7 +1238,7 @@
     @synchronized(self)
     {
         _savedDate=savedDate;
-        NSString *path= [[NSBundle mainBundle]pathForResource:@"store" ofType:@"plist"];
+        NSString *path= [self storeFilePath];
         NSFileManager *fm =[NSFileManager defaultManager];
         if(![fm fileExistsAtPath:path])
         {
@@ -1230,5 +1246,14 @@
         }
         [_savedDate writeToFile:path atomically:YES];
     }
+}
+-(NSString *)storeFilePath
+{
+    NSString * path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"store.plist"];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:path])
+    {
+        [[NSFileManager defaultManager]createFileAtPath:path contents:nil attributes:nil];
+    }
+    return path;
 }
 @end
