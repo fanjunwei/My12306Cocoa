@@ -63,6 +63,9 @@
 @property (weak) IBOutlet WebView *webview;
 @property (strong,nonatomic)NSString *loginKey;
 @property (strong,nonatomic)NSString *loginValue;
+
+@property (strong,nonatomic)NSString *queryKey;
+@property (strong,nonatomic)NSString *queryValue;
 - (void) myinit;
 - (void) addLog:(NSString *) log;
 - (void) addLogLock:(NSString *)log;
@@ -96,5 +99,7 @@
 - (BOOL)getTickCount;
 - (void)checkTickDoResult:(NSString *)strresult;
 -(void)getOrder;
+- (IBAction)loginOutClick:(id)sender;
+
 
 @end

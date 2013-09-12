@@ -177,30 +177,92 @@
 }
 -(NSString *)getLoginKey
 {
-    NSString * str = [self getText:@"https://dynamic.12306.cn/otsweb/dynamicJsAction.do?jsversion=9548&method=loginJs" IsPost:NO];
-    NSString *keyword =@"gc(){var key='";
-    NSRange range=[str rangeOfString:keyword];
-    if(range.location!=NSNotFound)
+    NSString * html=[self getText:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init" IsPost:NO];
+    NSString *html_keyWard = @"/otsweb/dynamicJsAction.do?jsversion=";
+    NSRange htmlR1=[html rangeOfString:html_keyWard];
+    if(htmlR1.location!=NSNotFound)
     {
+        NSRange htmlR;
+        htmlR.location=htmlR1.location+html_keyWard.length;
+        htmlR.length=25;
         
-        NSRange range1;
-        range1.location=range.location+keyword.length;
-        range1.length=12;
-        return  [str substringWithRange:range1];
+        NSRange htmlR2 = [html rangeOfString:@"&method=loginJs" options:0 range:htmlR];
+        
+        int length = htmlR2.location-htmlR.location;
+        htmlR.length=length;
+        NSString * version=[html substringWithRange:htmlR];
+        
+        NSString * str = [self getText:[NSString stringWithFormat:@"https://dynamic.12306.cn/otsweb/dynamicJsAction.do?jsversion=%@&method=loginJs",version] IsPost:NO];
+        NSString *keyword =@"gc(){var key='";
+        NSRange range=[str rangeOfString:keyword];
+        if(range.location!=NSNotFound)
+        {
+            
+            NSRange range1;
+            range1.location=range.location+keyword.length;
+            range1.length=12;
+            return  [str substringWithRange:range1];
+        }
     }
+ 
     return nil;
 }
--(NSString *)getLoginValue:(NSString *)key
+-(NSString *)getEncValue:(NSString *)key
 {
     NSString * str=[NSString stringWithFormat:@"myenc('%@')",key];
    return [self.webview stringByEvaluatingJavaScriptFromString:str];
 }
 -(void)getLoginKeyValueLock
 {
-    self.loginKey = [self getLoginKey];
-    self.loginValue = [self getLoginValue:self.loginKey];
+//    self.loginKey = [self getLoginKey];
+//    self.loginValue = [self getLoginValue:self.loginKey];
+    
+    self.loginKey = @"tem";
+    self.loginValue = @"tem";
     
 }
+
+-(NSString *)getQueryKey
+{
+    NSString * html=[self getText:@"https://dynamic.12306.cn/otsweb/order/querySingleAction.do?method=init" IsPost:NO];
+    NSString *html_keyWard = @"/otsweb/dynamicJsAction.do?jsversion=";
+    NSRange htmlR1=[html rangeOfString:html_keyWard];
+    if(htmlR1.location!=NSNotFound)
+    {
+        NSRange htmlR;
+        htmlR.location=htmlR1.location+html_keyWard.length;
+        htmlR.length=25;
+        
+        NSRange htmlR2 = [html rangeOfString:@"&method=queryJs" options:0 range:htmlR];
+        
+        int length = htmlR2.location-htmlR.location;
+        htmlR.length=length;
+        NSString * version=[html substringWithRange:htmlR];
+        
+        NSString * str = [self getText:[NSString stringWithFormat:@"https://dynamic.12306.cn/otsweb/dynamicJsAction.do?jsversion=%@&method=queryJs",version] IsPost:NO];
+        NSString *keyword =@"gc(){var key='";
+        NSRange range=[str rangeOfString:keyword];
+        if(range.location!=NSNotFound)
+        {
+            
+            NSRange range1;
+            range1.location=range.location+keyword.length;
+            range1.length=12;
+            return  [str substringWithRange:range1];
+        }
+    }
+    
+    return nil;
+}
+
+-(void)getQueryKeyValueLock
+{
+    self.queryKey = [self getQueryKey];
+    self.queryValue = [self getEncValue:self.queryKey];
+
+}
+
+
 - (IBAction)btnLoginClick:(id)sender {
     [self login];
 }
@@ -264,14 +326,14 @@
         }
         [self addLog:@"获取TOKEN错误，重新获取"];
     }
-//    while (!self.loginKey) {
-//        [self performSelectorOnMainThread:@selector(getLoginKeyValueLock) withObject:nil waitUntilDone:YES];
-//    }
+    while (!self.loginKey) {
+        [self performSelectorOnMainThread:@selector(getLoginKeyValueLock) withObject:nil waitUntilDone:YES];
+    }
 
     [form setTagValue:self.txtUsername.stringValue forKey:@"loginUser.user_name"];
     [form setTagValue:self.txtPassword.stringValue forKey:@"user.password"];
     [form setTagValue:self.txtImgcode.stringValue forKey:@"randCode"];
-    //[form setTagValue:self.loginKey  forKey:self.loginValue];
+    [form setTagValue:self.loginKey  forKey:self.loginValue];
     form.referer=@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init";
     NSString * outs= [form post];
     [self performSelectorOnMainThread:@selector(loginDidResult:) withObject:outs waitUntilDone:YES];
@@ -723,10 +785,15 @@
     for (int i=0; i<[setField count]; i++) {
         [yudingForm setTagValue:[commsp objectAtIndex:i] forKey:[setField objectAtIndex:i]];
     }
+    self.queryKey=nil;
+    while (!self.queryKey) {
+        [self performSelectorOnMainThread:@selector(getQueryKeyValueLock) withObject:nil waitUntilDone:YES];
+    }
     [yudingForm setTagValue:[yudingForm getTagValue:@"from_station_name"] forKey:@"from_station_telecode_name"];
     [yudingForm setTagValue:[yudingForm getTagValue:@"to_station_name"] forKey:@"to_station_telecode_name"];
     [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"train_date"];
     [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"round_train_date"];
+    [yudingForm setTagValue:self.queryValue forKey:self.queryKey];
     NSString * postResult = [yudingForm post];
     NSLog(@"%@",postResult);
     [self yudingDoResult:postResult];
@@ -1185,6 +1252,21 @@
         }
         sleep(1);
     }
+}
+
+- (IBAction)loginOutClick:(id)sender {
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
+    NSURL *url = [NSURL URLWithString:@"https://dynamic.12306.cn"];
+    if (url) {
+        NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:url];
+        for (int i = 0; i < [cookies count]; i++) {
+            NSHTTPCookie *cookie = (NSHTTPCookie *)[cookies objectAtIndex:i];
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+            
+        }
+    }
+    [self getLoginImgCode];
 }
 - (void)query:(BOOL) loop
 {
