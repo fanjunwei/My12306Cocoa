@@ -7,7 +7,7 @@
 //
 
 #import "M12306Document.h"
-
+#import "M12306Base32.h"
 @implementation M12306Document
 {
     NSDictionary *_savedDate;
@@ -35,8 +35,19 @@
     
     //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-    self.UserAgent=@"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)";
+    self.UserAgent=@"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)";
     
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
+    NSURL *url = [NSURL URLWithString:@"https://dynamic.12306.cn"];
+    if (url) {
+        NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:url];
+        for (int i = 0; i < [cookies count]; i++) {
+            NSHTTPCookie *cookie = (NSHTTPCookie *)[cookies objectAtIndex:i];
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+            
+        }
+    }
     [self initSeat];
     NSTimeInterval timei = 19*24*60*60;
     NSDate *date = [NSDate dateWithTimeIntervalSinceNow:timei];
@@ -56,6 +67,13 @@
     
     [(M12306TextField *) self.txtImgcode setTextChangeAction:@selector(txtImgLoginCodeAction) toTarget:self];
     [self.txtCommitCode setTextChangeAction:@selector(txtCommitCodeTextChageAction) toTarget:self];
+    NSURL *gu =[[NSURL alloc]
+                 initWithString:@"http://www.google.com.hk/m?gl=CN&hl=zh_CN&source=ihp"];
+    NSURLRequest *request =  [[NSURLRequest alloc] initWithURL:gu];
+   
+    NSLog(@"%@",self.webview.mainFrame);
+    NSString  * html=[self getResFile:@"login.html"];
+    [self.webview.mainFrame loadHTMLString:html baseURL:nil];
     [NSThread detachNewThreadSelector:@selector(myinit) toTarget:self withObject:nil];
 }
 
@@ -85,6 +103,8 @@
 
 -(void) myinit
 {
+    M12306Base32 * basese=[[M12306Base32 alloc] init];
+    
     NSNotification * noti = [NSNotification notificationWithName:@"center" object:@"ok"];
     [[NSNotificationCenter defaultCenter]postNotification:noti];
     [self addLog:@"初始化..."];
@@ -132,9 +152,9 @@
 }
 -(void) getLoginImgCodeLock
 {
-    [self getText:@"http://www.12306.cn/mormhweb/kyfw/" IsPost:NO];
-    NSString *t1 = [self getText:@"https://dynamic.12306.cn/otsweb/" IsPost:NO];
-    NSString * test=[self getText:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init" IsPost:NO];
+//    [self getText:@"http://www.12306.cn/mormhweb/kyfw/" IsPost:NO];
+//    NSString *t1 = [self getText:@"https://dynamic.12306.cn/otsweb/" IsPost:NO];
+//    NSString * test=[self getText:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init" IsPost:NO];
     NSImage *image = [self getImageWithUrl:@"https://dynamic.12306.cn/otsweb/passCodeNewAction.do?module=login&rand=sjrand" refUrl:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init"];
     [self performSelectorOnMainThread:@selector(setLoginImgCode:) withObject:image waitUntilDone:YES];
     
@@ -155,9 +175,33 @@
 
     return image;
 }
-
+-(NSString *)getLoginKey
+{
+    NSString * str = [self getText:@"https://dynamic.12306.cn/otsweb/dynamicJsAction.do?jsversion=9548&method=loginJs" IsPost:NO];
+    NSString *keyword =@"gc(){var key='";
+    NSRange range=[str rangeOfString:keyword];
+    if(range.location!=NSNotFound)
+    {
+        
+        NSRange range1;
+        range1.location=range.location+keyword.length;
+        range1.length=12;
+        return  [str substringWithRange:range1];
+    }
+    return nil;
+}
+-(NSString *)getLoginValue:(NSString *)key
+{
+    NSString * str=[NSString stringWithFormat:@"myenc('%@')",key];
+   return [self.webview stringByEvaluatingJavaScriptFromString:str];
+}
+-(void)getLoginKeyValueLock
+{
+    self.loginKey = [self getLoginKey];
+    self.loginValue = [self getLoginValue:self.loginKey];
+    
+}
 - (IBAction)btnLoginClick:(id)sender {
-
     [self login];
 }
 
@@ -206,8 +250,9 @@
     M12306Form * form =[[M12306Form alloc]initWithActionURL:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=login"];
     form.UserAgent=self.UserAgent;
     [self setYuanshiForFile:@"loginform" forFrom:form];
+
     while (YES){
-        NSData * data = [self getData:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=loginAysnSuggest" IsPost:NO];
+        NSData * data = [self getData:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=loginAysnSuggest" IsPost:YES];
         if(data!=nil)
         {
             NSDictionary* items= [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
@@ -219,9 +264,14 @@
         }
         [self addLog:@"获取TOKEN错误，重新获取"];
     }
+//    while (!self.loginKey) {
+//        [self performSelectorOnMainThread:@selector(getLoginKeyValueLock) withObject:nil waitUntilDone:YES];
+//    }
+
     [form setTagValue:self.txtUsername.stringValue forKey:@"loginUser.user_name"];
     [form setTagValue:self.txtPassword.stringValue forKey:@"user.password"];
     [form setTagValue:self.txtImgcode.stringValue forKey:@"randCode"];
+    //[form setTagValue:self.loginKey  forKey:self.loginValue];
     form.referer=@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init";
     NSString * outs= [form post];
     [self performSelectorOnMainThread:@selector(loginDidResult:) withObject:outs waitUntilDone:YES];
@@ -1255,5 +1305,11 @@
         [[NSFileManager defaultManager]createFileAtPath:path contents:nil attributes:nil];
     }
     return path;
+}
+-(NSString *)getResFile:(NSString *)fileName
+{
+    NSString * path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:fileName];
+    
+    return [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];;
 }
 @end

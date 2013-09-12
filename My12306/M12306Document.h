@@ -15,7 +15,7 @@
 #import "M12306PassengerTableView.h"
 #import "M12306QueryTableView.h"
 #import "M12306TrainInfo.h"
-
+#import <WebKit/WebKit.h>
 #define COMMIT_DELAY_SECOND 5.0
 @interface M12306Document : NSDocument
 - (IBAction)tablePassengerChange:(id)sender;
@@ -60,6 +60,9 @@
 @property (strong,nonatomic) NSString *token;
 @property BOOL delayCommitRuning;
 @property (strong,nonatomic)NSDictionary* savedDate;
+@property (weak) IBOutlet WebView *webview;
+@property (strong,nonatomic)NSString *loginKey;
+@property (strong,nonatomic)NSString *loginValue;
 - (void) myinit;
 - (void) addLog:(NSString *) log;
 - (void) addLogLock:(NSString *)log;
@@ -93,4 +96,5 @@
 - (BOOL)getTickCount;
 - (void)checkTickDoResult:(NSString *)strresult;
 -(void)getOrder;
+
 @end
