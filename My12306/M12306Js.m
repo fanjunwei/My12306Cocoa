@@ -13,7 +13,7 @@
 {
     if(self =[super initWithFrame:NSRectFromCGRect(CGRectMake(0, 0, 10, 10))])
     {
-        //self loadRequest:nil];
+        
     }
     return self;
 }
