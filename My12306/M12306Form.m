@@ -76,7 +76,7 @@
     NSString * res=@"";
     for (int i=0; i<[self.inputs count]; i++) {
         M12306KeyValue * item = [self.inputs objectAtIndex:i];
-            res=[res stringByAppendingFormat:@"%@:%@\n",item.key,item.Value];
+            res=[res stringByAppendingFormat:@"%@:%@\n",item.Key,item.Value];
     }
     return res;
 }

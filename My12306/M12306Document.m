@@ -67,9 +67,6 @@
     
     [(M12306TextField *) self.txtImgcode setTextChangeAction:@selector(txtImgLoginCodeAction) toTarget:self];
     [self.txtCommitCode setTextChangeAction:@selector(txtCommitCodeTextChageAction) toTarget:self];
-    NSURL *gu =[[NSURL alloc]
-                 initWithString:@"http://www.google.com.hk/m?gl=CN&hl=zh_CN&source=ihp"];
-    NSURLRequest *request =  [[NSURLRequest alloc] initWithURL:gu];
    
     NSLog(@"%@",self.webview.mainFrame);
     NSString  * html=[self getResFile:@"login.html"];
@@ -103,7 +100,7 @@
 
 -(void) myinit
 {
-    M12306Base32 * basese=[[M12306Base32 alloc] init];
+    //M12306Base32 * basese=[[M12306Base32 alloc] init];
     
     NSNotification * noti = [NSNotification notificationWithName:@"center" object:@"ok"];
     [[NSNotificationCenter defaultCenter]postNotification:noti];
@@ -188,7 +185,7 @@
         
         NSRange htmlR2 = [html rangeOfString:@"&method=loginJs" options:0 range:htmlR];
         
-        int length = htmlR2.location-htmlR.location;
+        unsigned long length = htmlR2.location-htmlR.location;
         htmlR.length=length;
         NSString * version=[html substringWithRange:htmlR];
         
@@ -214,11 +211,11 @@
 }
 -(void)getLoginKeyValueLock
 {
-//    self.loginKey = [self getLoginKey];
-//    self.loginValue = [self getLoginValue:self.loginKey];
+    self.loginKey = [self getLoginKey];
+    self.loginValue = [self getEncValue:self.loginKey];
     
-    self.loginKey = @"tem";
-    self.loginValue = @"tem";
+//    self.loginKey = @"tem";
+//    self.loginValue = @"tem";
     
 }
 
@@ -235,7 +232,7 @@
         
         NSRange htmlR2 = [html rangeOfString:@"&method=queryJs" options:0 range:htmlR];
         
-        int length = htmlR2.location-htmlR.location;
+        unsigned long length = htmlR2.location-htmlR.location;
         htmlR.length=length;
         NSString * version=[html substringWithRange:htmlR];
         
@@ -794,6 +791,7 @@
     [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"train_date"];
     [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"round_train_date"];
     [yudingForm setTagValue:self.queryValue forKey:self.queryKey];
+     NSLog(@"预定*****************************\n%@",[yudingForm debug]);
     NSString * postResult = [yudingForm post];
     NSLog(@"%@",postResult);
     [self yudingDoResult:postResult];

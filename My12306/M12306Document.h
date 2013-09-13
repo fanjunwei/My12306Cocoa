@@ -75,7 +75,6 @@
 - (void)login;
 - (void)loginLock;
 - (void)reLogin;
-- (void)setYuanshi:(NSString *)yuanshistrkey forFrom:(M12306Form *)form;
 - (NSData *)getData:(NSString *)url IsPost:(BOOL)isPost;
 - (NSString *)getText:(NSString *)url IsPost:(BOOL)isPost;
 - (id)getJson:(NSString *)url IsPost:(BOOL)isPost;

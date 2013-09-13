@@ -526,7 +526,7 @@
 											<string key="NSFrame">{{62, 25}, {66, 32}}</string>
 											<reference key="NSSuperview" ref="163192757"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="787473333"/>
+											<reference key="NSNextKeyView" ref="906507466"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="664315755">
@@ -594,7 +594,7 @@
 											</object>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 										</object>
-										<object class="NSButton" id="787473333">
+										<object class="NSButton" id="906507466">
 											<reference key="NSNextResponder" ref="163192757"/>
 											<int key="NSvFlags">268</int>
 											<string key="NSFrame">{{136, 24}, {66, 32}}</string>
@@ -603,17 +603,17 @@
 											<reference key="NSNextKeyView" ref="516038692"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
-											<object class="NSButtonCell" key="NSCell" id="299175859">
+											<object class="NSButtonCell" key="NSCell" id="71198856">
 												<int key="NSCellFlags">67108864</int>
 												<int key="NSCellFlags2">134217728</int>
 												<string key="NSContents">退出</string>
 												<reference key="NSSupport" ref="252198454"/>
 												<string key="NSCellIdentifier">_NS:9</string>
-												<reference key="NSControlView" ref="787473333"/>
+												<reference key="NSControlView" ref="906507466"/>
 												<int key="NSButtonFlags">-2038284288</int>
 												<int key="NSButtonFlags2">268435585</int>
 												<string key="NSAlternateContents"/>
-												<string key="NSKeyEquivalent"/>
+												<string type="base64-UTF8" key="NSKeyEquivalent">DQ</string>
 												<int key="NSPeriodicDelay">200</int>
 												<int key="NSPeriodicInterval">25</int>
 											</object>
@@ -1694,7 +1694,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">loginOutClick:</string>
 						<reference key="source" ref="512844837"/>
-						<reference key="destination" ref="787473333"/>
+						<reference key="destination" ref="906507466"/>
 					</object>
 					<int key="connectionID">100638</int>
 				</object>
@@ -1875,7 +1875,7 @@
 							<reference ref="366328564"/>
 							<reference ref="516038692"/>
 							<reference ref="6084289"/>
-							<reference ref="787473333"/>
+							<reference ref="906507466"/>
 						</array>
 						<reference key="parent" ref="568628114"/>
 					</object>
@@ -2274,16 +2274,16 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">100635</int>
-						<reference key="object" ref="787473333"/>
+						<reference key="object" ref="906507466"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="299175859"/>
+							<reference ref="71198856"/>
 						</array>
 						<reference key="parent" ref="145932249"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">100636</int>
-						<reference key="object" ref="299175859"/>
-						<reference key="parent" ref="787473333"/>
+						<reference key="object" ref="71198856"/>
+						<reference key="parent" ref="906507466"/>
 					</object>
 				</array>
 			</object>
