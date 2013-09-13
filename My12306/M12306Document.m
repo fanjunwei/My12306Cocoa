@@ -537,7 +537,10 @@
     NSArray * lines = [value componentsSeparatedByString:@"\n"];
     for (int i=0; i<[lines count]; i++) {
         NSArray * kv =[[lines objectAtIndex:i]componentsSeparatedByString:@"="];
-        [form setTagValue:[kv objectAtIndex:1] forKey:[kv objectAtIndex:0]];
+        if(kv.count==2)
+        {
+            [form setTagValue:[kv objectAtIndex:1] forKey:[kv objectAtIndex:0]];
+        }
     }
     
 }
@@ -791,9 +794,9 @@
     [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"train_date"];
     [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"round_train_date"];
     [yudingForm setTagValue:self.queryValue forKey:self.queryKey];
-     NSLog(@"预定*****************************\n%@",[yudingForm debug]);
+    // NSLog(@"预定*****************************\n%@",[yudingForm debug]);
     NSString * postResult = [yudingForm post];
-    NSLog(@"%@",postResult);
+    //NSLog(@"%@",postResult);
     [self yudingDoResult:postResult];
 }
 - (void)yudingDoResult:(NSString *)strResult

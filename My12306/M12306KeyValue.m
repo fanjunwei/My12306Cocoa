@@ -7,7 +7,7 @@
 //
 
 #import "M12306KeyValue.h"
-
+#import "M12306Utility.h"
 @implementation M12306KeyValue
 
 - (id)initWithValue:(NSString *)value forKey:(NSString *)key
@@ -22,7 +22,9 @@
 }
 - (NSString *)toString
 {
-    return [NSString stringWithFormat:@"%@=%@",self.Key,self.Value];
+    NSString * urlKey = [M12306Utility encodeToPercentEscapeString:self.Key];
+    NSString * urlValue = [M12306Utility encodeToPercentEscapeString:self.Value];
+    return [NSString stringWithFormat:@"%@=%@",urlKey,urlValue];
 }
 
 - (NSString *)description

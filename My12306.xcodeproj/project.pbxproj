@@ -12,6 +12,7 @@
 		E62DE8F417E1DE2400A4B423 /* login.html in Resources */ = {isa = PBXBuildFile; fileRef = E62DE8F317E1DE2400A4B423 /* login.html */; };
 		E653AD28178FB92100487ADE /* M12306Form.m in Sources */ = {isa = PBXBuildFile; fileRef = E653AD27178FB92100487ADE /* M12306Form.m */; };
 		E65994301793B5D00097C42D /* M12306QueryTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = E659942F1793B5D00097C42D /* M12306QueryTableView.m */; };
+		E666A3F417E2BE380053CC8F /* M12306Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = E666A3F317E2BE380053CC8F /* M12306Utility.m */; };
 		E682B3671790407F00979A51 /* M12306TextField.m in Sources */ = {isa = PBXBuildFile; fileRef = E682B3661790407F00979A51 /* M12306TextField.m */; };
 		E683C7E017E1A59700FF16B3 /* M12306Base32.m in Sources */ = {isa = PBXBuildFile; fileRef = E683C7DF17E1A59700FF16B3 /* M12306Base32.m */; };
 		E683C7E217E1BD5200FF16B3 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E683C7E117E1BD5200FF16B3 /* WebKit.framework */; };
@@ -46,6 +47,8 @@
 		E653AD27178FB92100487ADE /* M12306Form.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306Form.m; sourceTree = "<group>"; };
 		E659942E1793B5D00097C42D /* M12306QueryTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306QueryTableView.h; sourceTree = "<group>"; };
 		E659942F1793B5D00097C42D /* M12306QueryTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306QueryTableView.m; sourceTree = "<group>"; };
+		E666A3F217E2BE380053CC8F /* M12306Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306Utility.h; sourceTree = "<group>"; };
+		E666A3F317E2BE380053CC8F /* M12306Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306Utility.m; sourceTree = "<group>"; };
 		E682B3651790407E00979A51 /* M12306TextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306TextField.h; sourceTree = "<group>"; };
 		E682B3661790407F00979A51 /* M12306TextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306TextField.m; sourceTree = "<group>"; };
 		E683C7DD17E1849D00FF16B3 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
@@ -169,6 +172,8 @@
 				E683C7DF17E1A59700FF16B3 /* M12306Base32.m */,
 				E683C7E317E1C06600FF16B3 /* M12306Js.h */,
 				E683C7E417E1C06600FF16B3 /* M12306Js.m */,
+				E666A3F217E2BE380053CC8F /* M12306Utility.h */,
+				E666A3F317E2BE380053CC8F /* M12306Utility.m */,
 			);
 			path = My12306;
 			sourceTree = "<group>";
@@ -279,6 +284,7 @@
 				E65994301793B5D00097C42D /* M12306QueryTableView.m in Sources */,
 				E683C7E017E1A59700FF16B3 /* M12306Base32.m in Sources */,
 				E683C7E517E1C06600FF16B3 /* M12306Js.m in Sources */,
+				E666A3F417E2BE380053CC8F /* M12306Utility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
