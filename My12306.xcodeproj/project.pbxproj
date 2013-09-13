@@ -105,7 +105,6 @@
 		E6B40627178E780E00F1B668 = {
 			isa = PBXGroup;
 			children = (
-				E683C7E117E1BD5200FF16B3 /* WebKit.framework */,
 				E69439FB17968DBD002B4275 /* icon.icns */,
 				E6B40639178E780E00F1B668 /* My12306 */,
 				E6B40632178E780E00F1B668 /* Frameworks */,
@@ -124,6 +123,7 @@
 		E6B40632178E780E00F1B668 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E683C7E117E1BD5200FF16B3 /* WebKit.framework */,
 				E6B40633178E780E00F1B668 /* Cocoa.framework */,
 				E6B40635178E780E00F1B668 /* Other Frameworks */,
 			);

@@ -142,10 +142,10 @@
         self.txtImgcode.stringValue=@"";
         [self.txtImgcode becomeFirstResponder];
     }
-    else
-    {
-        [self.txtUsername becomeFirstResponder];
-    }
+//    else
+//    {
+//        [self.txtUsername becomeFirstResponder];
+//    }
 }
 -(void) getLoginImgCodeLock
 {
@@ -1267,6 +1267,9 @@
             
         }
     }
+    [self addLog:@"已不在线"];
+    self.lblLoginMsg.stringValue=@"【未登录】";
+    self.isLogin=NO;
     [self getLoginImgCode];
 }
 - (void)query:(BOOL) loop
