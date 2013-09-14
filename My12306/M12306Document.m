@@ -150,6 +150,9 @@
 //    [self getText:@"http://www.12306.cn/mormhweb/kyfw/" IsPost:NO];
 //    NSString *t1 = [self getText:HOST_URL@"/otsweb/" IsPost:NO];
 //    NSString * test=[self getText:HOST_URL@"/otsweb/loginAction.do?method=init" IsPost:NO];
+    
+    [self performSelectorOnMainThread:@selector(getLoginKeyValueLock) withObject:nil waitUntilDone:YES];
+    
     NSImage *image = [self getImageWithUrl:HOST_URL@"/otsweb/passCodeNewAction.do?module=login&rand=sjrand" refUrl:HOST_URL@"/otsweb/loginAction.do?method=init"];
     [self performSelectorOnMainThread:@selector(setLoginImgCode:) withObject:image waitUntilDone:YES];
     
@@ -319,14 +322,11 @@
         }
         [self addLog:@"获取TOKEN错误，重新获取"];
     }
-    while (!self.loginKey) {
-        [self performSelectorOnMainThread:@selector(getLoginKeyValueLock) withObject:nil waitUntilDone:YES];
-    }
 
     [form setTagValue:self.txtUsername.stringValue forKey:@"loginUser.user_name"];
     [form setTagValue:self.txtPassword.stringValue forKey:@"user.password"];
     [form setTagValue:self.txtImgcode.stringValue forKey:@"randCode"];
-    [form setTagValue:self.loginKey  forKey:self.loginValue];
+    [form setTagValue:self.loginValue  forKey:self.loginKey];
     form.referer=HOST_URL@"/otsweb/loginAction.do?method=init";
     NSString * outs= [form post];
     [self performSelectorOnMainThread:@selector(loginDidResult:) withObject:outs waitUntilDone:YES];
