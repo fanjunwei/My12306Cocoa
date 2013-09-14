@@ -17,6 +17,7 @@
 #import "M12306TrainInfo.h"
 #import <WebKit/WebKit.h>
 #define COMMIT_DELAY_SECOND 5.0
+#define HOST_URL @"http://dynamic.12306.cn"
 @interface M12306Document : NSDocument
 - (IBAction)tablePassengerChange:(id)sender;
 - (IBAction)btnStopYudingClick:(id)sender;

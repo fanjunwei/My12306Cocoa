@@ -35,11 +35,11 @@
     
     //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-    self.UserAgent=@"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)";
+    self.UserAgent=@"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/536.30.1 (KHTML, like Gecko) Version/6.0.5 Safari/536.30.1";
     
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
-    NSURL *url = [NSURL URLWithString:@"https://dynamic.12306.cn"];
+    NSURL *url = [NSURL URLWithString:HOST_URL];
     if (url) {
         NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:url];
         for (int i = 0; i < [cookies count]; i++) {
@@ -150,9 +150,9 @@
 -(void) getLoginImgCodeLock
 {
 //    [self getText:@"http://www.12306.cn/mormhweb/kyfw/" IsPost:NO];
-//    NSString *t1 = [self getText:@"https://dynamic.12306.cn/otsweb/" IsPost:NO];
-//    NSString * test=[self getText:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init" IsPost:NO];
-    NSImage *image = [self getImageWithUrl:@"https://dynamic.12306.cn/otsweb/passCodeNewAction.do?module=login&rand=sjrand" refUrl:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init"];
+//    NSString *t1 = [self getText:HOST_URL@"/otsweb/" IsPost:NO];
+//    NSString * test=[self getText:HOST_URL@"/otsweb/loginAction.do?method=init" IsPost:NO];
+    NSImage *image = [self getImageWithUrl:HOST_URL@"/otsweb/passCodeNewAction.do?module=login&rand=sjrand" refUrl:HOST_URL@"/otsweb/loginAction.do?method=init"];
     [self performSelectorOnMainThread:@selector(setLoginImgCode:) withObject:image waitUntilDone:YES];
     
 }
@@ -166,7 +166,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5];
     
     [request setValue:refUrl forHTTPHeaderField:@"Referer"];
-    [request setValue:self.UserAgent forHTTPHeaderField:@"UserAgent"];
+    [request setValue:self.UserAgent forHTTPHeaderField:@"User-Agent"];
     NSData * data=[M12306URLConnection sendSynchronousRequest:request];
     NSImage* image = [[NSImage alloc]initWithData:data];
 
@@ -174,7 +174,7 @@
 }
 -(NSString *)getLoginKey
 {
-    NSString * html=[self getText:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init" IsPost:NO];
+    NSString * html=[self getText:HOST_URL@"/otsweb/loginAction.do?method=init" IsPost:NO];
     NSString *html_keyWard = @"/otsweb/dynamicJsAction.do?jsversion=";
     NSRange htmlR1=[html rangeOfString:html_keyWard];
     if(htmlR1.location!=NSNotFound)
@@ -189,7 +189,7 @@
         htmlR.length=length;
         NSString * version=[html substringWithRange:htmlR];
         
-        NSString * str = [self getText:[NSString stringWithFormat:@"https://dynamic.12306.cn/otsweb/dynamicJsAction.do?jsversion=%@&method=loginJs",version] IsPost:NO];
+        NSString * str = [self getText:[NSString stringWithFormat:HOST_URL@"/otsweb/dynamicJsAction.do?jsversion=%@&method=loginJs",version] IsPost:NO];
         NSString *keyword =@"gc(){var key='";
         NSRange range=[str rangeOfString:keyword];
         if(range.location!=NSNotFound)
@@ -221,7 +221,7 @@
 
 -(NSString *)getQueryKey
 {
-    NSString * html=[self getText:@"https://dynamic.12306.cn/otsweb/order/querySingleAction.do?method=init" IsPost:NO];
+    NSString * html=[self getText:HOST_URL@"/otsweb/order/querySingleAction.do?method=init" IsPost:NO];
     NSString *html_keyWard = @"/otsweb/dynamicJsAction.do?jsversion=";
     NSRange htmlR1=[html rangeOfString:html_keyWard];
     if(htmlR1.location!=NSNotFound)
@@ -236,7 +236,7 @@
         htmlR.length=length;
         NSString * version=[html substringWithRange:htmlR];
         
-        NSString * str = [self getText:[NSString stringWithFormat:@"https://dynamic.12306.cn/otsweb/dynamicJsAction.do?jsversion=%@&method=queryJs",version] IsPost:NO];
+        NSString * str = [self getText:[NSString stringWithFormat:HOST_URL@"/otsweb/dynamicJsAction.do?jsversion=%@&method=queryJs",version] IsPost:NO];
         NSString *keyword =@"gc(){var key='";
         NSRange range=[str rangeOfString:keyword];
         if(range.location!=NSNotFound)
@@ -306,12 +306,12 @@
 - (void)loginLock
 {
     [self addLog:@"开始登录"];
-    M12306Form * form =[[M12306Form alloc]initWithActionURL:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=login"];
+    M12306Form * form =[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/loginAction.do?method=login"];
     form.UserAgent=self.UserAgent;
     [self setYuanshiForFile:@"loginform" forFrom:form];
 
     while (YES){
-        NSData * data = [self getData:@"https://dynamic.12306.cn/otsweb/loginAction.do?method=loginAysnSuggest" IsPost:YES];
+        NSData * data = [self getData:HOST_URL@"/otsweb/loginAction.do?method=loginAysnSuggest" IsPost:YES];
         if(data!=nil)
         {
             NSDictionary* items= [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
@@ -331,7 +331,7 @@
     [form setTagValue:self.txtPassword.stringValue forKey:@"user.password"];
     [form setTagValue:self.txtImgcode.stringValue forKey:@"randCode"];
     [form setTagValue:self.loginKey  forKey:self.loginValue];
-    form.referer=@"https://dynamic.12306.cn/otsweb/loginAction.do?method=init";
+    form.referer=HOST_URL@"/otsweb/loginAction.do?method=init";
     NSString * outs= [form post];
     [self performSelectorOnMainThread:@selector(loginDidResult:) withObject:outs waitUntilDone:YES];
 }
@@ -469,7 +469,7 @@
     NSDictionary * json;
     while (true)
     {
-        tem1 = [self getData:@"https://dynamic.12306.cn/otsweb/order/confirmPassengerAction.do?method=getpassengerJson" IsPost:YES];
+        tem1 = [self getData:HOST_URL@"/otsweb/order/confirmPassengerAction.do?method=getpassengerJson" IsPost:YES];
         if (tem1 == nil)
         {
             [self addLog:@"初始化常用联系人错误，稍候重试"];
@@ -550,8 +550,8 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5];
     
     [request setValue:url forHTTPHeaderField:@"Referer"];
-    [request setValue:self.UserAgent forHTTPHeaderField:@"UserAgent"];
-    [request setValue:@"XMLHttpRequest" forHTTPHeaderField:@"X-Requested-With"];
+    [request setValue:self.UserAgent forHTTPHeaderField:@"User-Agent"];
+
     if(isPost)
     {
         [request setHTTPMethod:@"POST"];
@@ -612,7 +612,7 @@
 {
     NSString * res;
     while (res==nil) {
-        res=[self getText:@"https://dynamic.12306.cn/otsweb/js/common/station_name.js" IsPost:YES];
+        res=[self getText:HOST_URL@"/otsweb/js/common/station_name.js" IsPost:YES];
         if (res == nil)
         {
             [self addLog:@"获取车站信息错误，稍候重试"];
@@ -689,7 +689,7 @@
         NSString *search = nil;
         NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
         NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
-        NSString *url = [NSString stringWithFormat:@"https://dynamic.12306.cn/otsweb/order/querySingleAction.do?method=queryLeftTicket&orderRequest.train_date=%@&orderRequest.from_station_telecode=%@&orderRequest.to_station_telecode=%@&orderRequest.train_no=&trainPassType=QB&trainClass=QB%%23D%%23Z%%23T%%23K%%23QT%%23&includeStudent=00&seatTypeAndNum=&orderRequest.start_time_str=00%%3A00--24%%3A00",date,sessionFrom,sessionTo];
+        NSString *url = [NSString stringWithFormat:HOST_URL@"/otsweb/order/querySingleAction.do?method=queryLeftTicket&orderRequest.train_date=%@&orderRequest.from_station_telecode=%@&orderRequest.to_station_telecode=%@&orderRequest.train_no=&trainPassType=QB&trainClass=QB%%23D%%23Z%%23T%%23K%%23QT%%23&includeStudent=00&seatTypeAndNum=&orderRequest.start_time_str=00%%3A00--24%%3A00",date,sessionFrom,sessionTo];
         NSLog(@"%@",url);
         while (search==nil) {
             search = [self getText:url IsPost:NO];
@@ -777,7 +777,7 @@
 }
 - (void)yuding:(M12306TrainInfo *)info
 {
-    M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:@"https://dynamic.12306.cn/otsweb/order/querySingleAction.do?method=submutOrderRequest"];
+    M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/order/querySingleAction.do?method=submutOrderRequest"];
     yudingForm.UserAgent=self.UserAgent;
     [self setYuanshiForFile:@"yudingform" forFrom:yudingForm];
     NSArray * commsp=[info.Yuanshi componentsSeparatedByString:@"#"];
@@ -827,7 +827,7 @@
     [self addLog:@"getCommitPage"];
     NSString *strresult=nil;
     while (strresult==nil) {
-        strresult=[self getText:@"https://dynamic.12306.cn/otsweb/order/confirmPassengerAction.do?method=init" IsPost:NO];
+        strresult=[self getText:HOST_URL@"/otsweb/order/confirmPassengerAction.do?method=init" IsPost:NO];
         if(strresult==nil)
             usleep(500*1000);
     }
@@ -867,10 +867,10 @@
 }
 - (void)getCommitImgCodeLock
 {
-    NSString * url= @"https://dynamic.12306.cn/otsweb/passCodeNewAction.do?module=passenger&rand=randp";
+    NSString * url= HOST_URL@"/otsweb/passCodeNewAction.do?module=passenger&rand=randp";
     NSImage * map=nil;
     while (map==nil) {
-        map=[self getImageWithUrl:url refUrl:@"https://dynamic.12306.cn/otsweb/order/confirmPassengerAction.do?method=init"];
+        map=[self getImageWithUrl:url refUrl:HOST_URL@"/otsweb/order/confirmPassengerAction.do?method=init"];
         if(map==nil)
         {
             [self addLog:@"获取验证码错误,稍候重试!"];
@@ -940,7 +940,7 @@
 
 - (void)commitForLefttick:(NSString *)lefttick forToken:(NSString *)token forImgCode:(NSString *)imgCode
 {
-    M12306Form *commitForm=[[M12306Form alloc]initWithActionURL:@"https://dynamic.12306.cn/otsweb/order/confirmPassengerAction.do?method=checkOrderInfo"];
+    M12306Form *commitForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/order/confirmPassengerAction.do?method=checkOrderInfo"];
     commitForm.UserAgent=self.UserAgent;
     [self setYuanshiForFile:@"commitform" forFrom:commitForm];
     NSString * date=[self formatDate:self.dtpDate.dateValue strFormat:@"yyyy-MM-dd"];
@@ -1058,7 +1058,7 @@
 {
     NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
     NSString * date=[self formatDate:self.dtpDate.dateValue strFormat:@"yyyy-MM-dd"];
-    NSString *url=[NSString stringWithFormat:@"https://dynamic.12306.cn/otsweb/order/confirmPassengerAction.do?method=getQueueCount&train_date=%@&train_no=%@&station=%@&seat=%@&from=%@&to=%@&ticket=%@",date,self.currTrainInfo.TrainCode,self.currTrainInfo.TrainName,seatCode,self.currTrainInfo.FromStationCode,self.currTrainInfo.TotationCode,self.lefttick];
+    NSString *url=[NSString stringWithFormat:HOST_URL@"/otsweb/order/confirmPassengerAction.do?method=getQueueCount&train_date=%@&train_no=%@&station=%@&seat=%@&from=%@&to=%@&ticket=%@",date,self.currTrainInfo.TrainCode,self.currTrainInfo.TrainName,seatCode,self.currTrainInfo.FromStationCode,self.currTrainInfo.TotationCode,self.lefttick];
     NSDictionary *traincount = nil;
     while (traincount == nil)
     {
@@ -1089,7 +1089,7 @@
 }
 -(void)checkForLefttick:(NSString *)lefttick forToken:(NSString *)token forImgCode:(NSString *)imgCode
 {
-    M12306Form *checkForm=[[M12306Form alloc]initWithActionURL:@"https://dynamic.12306.cn/otsweb/order/confirmPassengerAction.do?method=confirmSingleForQueue"];
+    M12306Form *checkForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/order/confirmPassengerAction.do?method=confirmSingleForQueue"];
     checkForm.UserAgent=self.UserAgent;
     [self setYuanshiForFile:@"checkform" forFrom:checkForm];
     NSString * date=[self formatDate:self.dtpDate.dateValue strFormat:@"yyyy-MM-dd"];
@@ -1198,7 +1198,7 @@
 {
     while (YES)
     {
-        NSDictionary* json=[self getJson:@"https://dynamic.12306.cn/otsweb/order/myOrderAction.do?method=queryOrderWaitTime&tourFlag=dc" IsPost:NO];
+        NSDictionary* json=[self getJson:HOST_URL@"/otsweb/order/myOrderAction.do?method=queryOrderWaitTime&tourFlag=dc" IsPost:NO];
       
         NSString *oWaiteTime = [json objectForKey:@"waitTime"];
         NSString *oWaiteCount = [json objectForKey:@"waitCount"];
@@ -1258,7 +1258,7 @@
 - (IBAction)loginOutClick:(id)sender {
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
-    NSURL *url = [NSURL URLWithString:@"https://dynamic.12306.cn"];
+    NSURL *url = [NSURL URLWithString:HOST_URL];
     if (url) {
         NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:url];
         for (int i = 0; i < [cookies count]; i++) {
