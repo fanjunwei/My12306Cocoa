@@ -13,14 +13,21 @@
 {
     // Encode all the reserved characters, per RFC 3986
     // (<http://www.ietf.org/rfc/rfc3986.txt>)
-    CFStringRef inputref = CFBridgingRetain(input);
-    NSString *outputStr = (NSString *)CFBridgingRelease(
-                                                        (CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                                                 inputref,
-                                                                                                 NULL,
-                                                                                                 (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                                 kCFStringEncodingUTF8)));
-    CFRelease(inputref);
-    return outputStr;
+    if(input)
+    {
+        CFStringRef inputref = CFBridgingRetain(input);
+        NSString *outputStr = (NSString *)CFBridgingRelease(
+                                                            (CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                     inputref,
+                                                                                                     NULL,
+                                                                                                     (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                     kCFStringEncodingUTF8)));
+        CFRelease(inputref);
+        return outputStr;
+    }
+    else
+    {
+        return nil;
+    }
 }
 @end

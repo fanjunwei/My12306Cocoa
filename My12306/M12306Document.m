@@ -150,10 +150,23 @@
 //    [self getText:@"http://www.12306.cn/mormhweb/kyfw/" IsPost:NO];
 //    NSString *t1 = [self getText:HOST_URL@"/otsweb/" IsPost:NO];
 //    NSString * test=[self getText:HOST_URL@"/otsweb/loginAction.do?method=init" IsPost:NO];
-    
-    [self performSelectorOnMainThread:@selector(getLoginKeyValueLock) withObject:nil waitUntilDone:YES];
-    
-    NSImage *image = [self getImageWithUrl:HOST_URL@"/otsweb/passCodeNewAction.do?module=login&rand=sjrand" refUrl:HOST_URL@"/otsweb/loginAction.do?method=init"];
+    self.loginKey=nil;
+    while (!self.loginKey) {
+        [self performSelectorOnMainThread:@selector(getLoginKeyValueLock) withObject:nil waitUntilDone:YES];
+        if(!self.loginKey)
+        {
+            [self addLog:@"获取加密字段错误"];
+        }
+    }
+    NSImage *image=nil;
+    while (!image) {
+    image = [self getImageWithUrl:HOST_URL@"/otsweb/passCodeNewAction.do?module=login&rand=sjrand" refUrl:HOST_URL@"/otsweb/loginAction.do?method=init"];
+        if(!image)
+        {
+            [self addLog:@"获取验证码错误,重新获取!"];
+            sleep(3);
+        }
+    }
     [self performSelectorOnMainThread:@selector(setLoginImgCode:) withObject:image waitUntilDone:YES];
     
 }
@@ -772,6 +785,19 @@
 }
 - (void)yuding:(M12306TrainInfo *)info
 {
+    self.queryKey=nil;
+    for (int i=0; i<20;i++) {
+        [self performSelectorOnMainThread:@selector(getQueryKeyValueLock) withObject:nil waitUntilDone:YES];
+        if(!self.queryKey)
+        {
+            [self addLog:@"获取加密字段错误,重新获取"];
+            sleep(1);
+        }
+        else
+        {
+            break;
+        }
+    }
     M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/order/querySingleAction.do?method=submutOrderRequest"];
     [self setYuanshiForFile:@"yudingform" forFrom:yudingForm];
     NSArray * commsp=[info.Yuanshi componentsSeparatedByString:@"#"];
@@ -780,9 +806,7 @@
         [yudingForm setTagValue:[commsp objectAtIndex:i] forKey:[setField objectAtIndex:i]];
     }
     self.queryKey=nil;
-    while (!self.queryKey) {
-        [self performSelectorOnMainThread:@selector(getQueryKeyValueLock) withObject:nil waitUntilDone:YES];
-    }
+
     [yudingForm setTagValue:[yudingForm getTagValue:@"from_station_name"] forKey:@"from_station_telecode_name"];
     [yudingForm setTagValue:[yudingForm getTagValue:@"to_station_name"] forKey:@"to_station_telecode_name"];
     [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"train_date"];
@@ -852,6 +876,12 @@
         {
             [self getCommitImgCode];
         }
+        else
+        {
+            [self addLog:@"获取提交页面错误"];
+            [self getCommitPage];
+        }
+    
     }
     
 }
