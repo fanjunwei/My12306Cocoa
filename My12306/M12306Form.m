@@ -133,7 +133,6 @@
     [request setHTTPBody:body];
     [request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     [request addValue:@"application/json, text/javascript, */*" forHTTPHeaderField:@"Accept"];
-    [request setValue:self.UserAgent forHTTPHeaderField:@"UserAgent"];
     if(self.referer!=nil)
     {
         [request setValue:self.referer forHTTPHeaderField:@"Referer"];

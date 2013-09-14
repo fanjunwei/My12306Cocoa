@@ -53,11 +53,12 @@
     [self.data appendData:data];
 }
 
-+ (NSData *)sendSynchronousRequest:(NSURLRequest *)request
++ (NSData *)sendSynchronousRequest:(NSMutableURLRequest *)request
 {
     M12306URLConnection *res = [[M12306URLConnection alloc]init];
     res.data=[NSMutableData dataWithCapacity:128];
     res.finish =NO;
+    [request setValue:UserAgent forHTTPHeaderField:@"User-Agent"];
     res.connection=[[NSURLConnection alloc]initWithRequest:request delegate:res];
     while (!res.finish) {
         

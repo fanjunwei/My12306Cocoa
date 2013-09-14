@@ -34,8 +34,6 @@
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
     
     //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-    self.UserAgent=@"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/536.30.1 (KHTML, like Gecko) Version/6.0.5 Safari/536.30.1";
     
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
@@ -166,7 +164,6 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5];
     
     [request setValue:refUrl forHTTPHeaderField:@"Referer"];
-    [request setValue:self.UserAgent forHTTPHeaderField:@"User-Agent"];
     NSData * data=[M12306URLConnection sendSynchronousRequest:request];
     NSImage* image = [[NSImage alloc]initWithData:data];
 
@@ -307,7 +304,6 @@
 {
     [self addLog:@"开始登录"];
     M12306Form * form =[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/loginAction.do?method=login"];
-    form.UserAgent=self.UserAgent;
     [self setYuanshiForFile:@"loginform" forFrom:form];
 
     while (YES){
@@ -550,7 +546,6 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5];
     
     [request setValue:url forHTTPHeaderField:@"Referer"];
-    [request setValue:self.UserAgent forHTTPHeaderField:@"User-Agent"];
 
     if(isPost)
     {
@@ -778,7 +773,6 @@
 - (void)yuding:(M12306TrainInfo *)info
 {
     M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/order/querySingleAction.do?method=submutOrderRequest"];
-    yudingForm.UserAgent=self.UserAgent;
     [self setYuanshiForFile:@"yudingform" forFrom:yudingForm];
     NSArray * commsp=[info.Yuanshi componentsSeparatedByString:@"#"];
     NSArray * setField = [NSArray arrayWithObjects:@"station_train_code", @"lishi", @"train_start_time", @"trainno4", @"from_station_telecode", @"to_station_telecode", @"arrive_time", @"from_station_name", @"to_station_name", @"from_station_no", @"to_station_no", @"ypInfoDetail", @"mmStr", @"locationCode", nil];
@@ -941,7 +935,6 @@
 - (void)commitForLefttick:(NSString *)lefttick forToken:(NSString *)token forImgCode:(NSString *)imgCode
 {
     M12306Form *commitForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/order/confirmPassengerAction.do?method=checkOrderInfo"];
-    commitForm.UserAgent=self.UserAgent;
     [self setYuanshiForFile:@"commitform" forFrom:commitForm];
     NSString * date=[self formatDate:self.dtpDate.dateValue strFormat:@"yyyy-MM-dd"];
     [commitForm addQueryStringValue:imgCode forKey:@"rand"];
@@ -1090,7 +1083,6 @@
 -(void)checkForLefttick:(NSString *)lefttick forToken:(NSString *)token forImgCode:(NSString *)imgCode
 {
     M12306Form *checkForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/order/confirmPassengerAction.do?method=confirmSingleForQueue"];
-    checkForm.UserAgent=self.UserAgent;
     [self setYuanshiForFile:@"checkform" forFrom:checkForm];
     NSString * date=[self formatDate:self.dtpDate.dateValue strFormat:@"yyyy-MM-dd"];
     int selectedPassengerCount=0;

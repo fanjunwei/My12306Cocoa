@@ -13,7 +13,7 @@
 @interface M12306Form : NSObject
 
 @property (strong,nonatomic) NSString* referer;
-@property (strong,nonatomic) NSString *UserAgent;
+
 
 
 - (id)initWithActionURL:(NSString *)url;

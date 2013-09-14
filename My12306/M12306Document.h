@@ -47,7 +47,6 @@
 - (IBAction)btnLoginClick:(id)sender;
 - (void)txtImgLoginCodeAction;
 
-@property (strong,nonatomic) NSString *UserAgent;
 @property (strong,nonatomic) NSDictionary *seatData;
 @property (strong,nonatomic) NSArray * stations;
 @property BOOL isLogin;
