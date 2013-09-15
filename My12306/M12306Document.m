@@ -1031,7 +1031,8 @@
     NSString *msg=[json objectForKey:@"msg"];
     NSString *checkHuimd=[json objectForKey:@"checkHuimd"];
     NSString *check608=[json objectForKey:@"check608"];
-    [self addLog:strresult];
+    NSLog(@"%@",strresult);
+    //[self addLog:strresult];
   
     if ([checkHuimd isEqualToString:@"Y"] && [check608 isEqualToString:@"Y"]&&[error isEqualToString:@"Y"]) {
         if ([self getTickCount])
@@ -1088,7 +1089,7 @@
         if (traincount == nil)
             usleep(500*1000);
     }
-    [self addLog:[traincount description]];
+    //[self addLog:[traincount description]];
     int waiteCount = 0;
     NSString *waito=[traincount objectForKey:@"count"];
     NSString *op_2=[traincount objectForKey:@"op_2"];
