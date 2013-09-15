@@ -98,15 +98,37 @@
 
 -(void) myinit
 {
-    //M12306Base32 * basese=[[M12306Base32 alloc] init];
-    
+//    while (TRUE) {
+//        [[NSURLCache sharedURLCache] removeAllCachedResponses];
+//        
+//        NSURL *url = [NSURL URLWithString:HOST_URL];
+//        if (url) {
+//            NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:url];
+//            for (int i = 0; i < [cookies count]; i++) {
+//                NSHTTPCookie *cookie = (NSHTTPCookie *)[cookies objectAtIndex:i];
+//                [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+//                
+//            }
+//        }
+//        NSString * str = [self getText:[NSString stringWithFormat:HOST_URL@"/otsweb/dynamicJsAction.do?jsversion=%@&method=queryJs",@"123"] IsPost:NO];
+//        if([str rangeOfString:@"function(){var dobj=new Object()"].location!=NSNotFound)
+//        {
+//            NSLog(@"find el");
+//        }
+//        else
+//        {
+//            NSLog(@"no el");
+//        }
+//        sleep(10);
+//    }
     NSNotification * noti = [NSNotification notificationWithName:@"center" object:@"ok"];
     [[NSNotificationCenter defaultCenter]postNotification:noti];
     [self addLog:@"初始化..."];
     [self getStations];
     [self getLoginImgCode];
     [self addLog:@"初始化完成。"];
-    
+
+
 
 }
 
@@ -203,6 +225,10 @@
         NSString * version=[html substringWithRange:htmlR];
         
         NSString * str = [self getText:[NSString stringWithFormat:HOST_URL@"/otsweb/dynamicJsAction.do?jsversion=%@&method=loginJs",version] IsPost:NO];
+        if([str rangeOfString:@"function(){var dobj=new Object()"].location!=NSNotFound)
+        {
+            [self getText:HOST_URL@"/otsweb/loginAction.do?method=el" IsPost:YES];
+        }
         NSString *keyword =@"gc(){var key='";
         NSRange range=[str rangeOfString:keyword];
         if(range.location!=NSNotFound)
@@ -250,6 +276,10 @@
         NSString * version=[html substringWithRange:htmlR];
         
         NSString * str = [self getText:[NSString stringWithFormat:HOST_URL@"/otsweb/dynamicJsAction.do?jsversion=%@&method=queryJs",version] IsPost:NO];
+        if([str rangeOfString:@"function(){var dobj=new Object()"].location!=NSNotFound)
+        {
+            [self getText:HOST_URL@"/otsweb/loginAction.do?method=el" IsPost:YES];
+        }
         NSString *keyword =@"gc(){var key='";
         NSRange range=[str rangeOfString:keyword];
         if(range.location!=NSNotFound)
@@ -559,7 +589,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5];
     
     [request setValue:url forHTTPHeaderField:@"Referer"];
-
+    //[request setValue:@"application/javascript, */*;q=0.8" forHTTPHeaderField:@"Accept"];
     if(isPost)
     {
         [request setHTTPMethod:@"POST"];
