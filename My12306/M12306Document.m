@@ -805,7 +805,6 @@
     for (int i=0; i<[setField count]; i++) {
         [yudingForm setTagValue:[commsp objectAtIndex:i] forKey:[setField objectAtIndex:i]];
     }
-    self.queryKey=nil;
 
     [yudingForm setTagValue:[yudingForm getTagValue:@"from_station_name"] forKey:@"from_station_telecode_name"];
     [yudingForm setTagValue:[yudingForm getTagValue:@"to_station_name"] forKey:@"to_station_telecode_name"];
