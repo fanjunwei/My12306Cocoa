@@ -69,6 +69,8 @@
     NSLog(@"%@",self.webview.mainFrame);
     NSString  * html=[self getResFile:@"login.html"];
     [self.webview.mainFrame loadHTMLString:html baseURL:nil];
+    
+    
     [NSThread detachNewThreadSelector:@selector(myinit) toTarget:self withObject:nil];
 }
 
@@ -278,7 +280,7 @@
         NSString * str = [self getText:[NSString stringWithFormat:HOST_URL@"/otsweb/dynamicJsAction.do?jsversion=%@&method=queryJs",version] IsPost:NO];
         if([str rangeOfString:@"function(){var dobj=new Object()"].location!=NSNotFound)
         {
-            [self getText:HOST_URL@"/otsweb/loginAction.do?method=el" IsPost:YES];
+            [self getText:HOST_URL@"/otsweb/trainQueryAppAction.do?method=kp" IsPost:YES];
         }
         NSString *keyword =@"gc(){var key='";
         NSRange range=[str rangeOfString:keyword];
@@ -304,6 +306,7 @@
 
 
 - (IBAction)btnLoginClick:(id)sender {
+
     [self login];
 }
 
@@ -369,7 +372,9 @@
     [form setTagValue:self.txtUsername.stringValue forKey:@"loginUser.user_name"];
     [form setTagValue:self.txtPassword.stringValue forKey:@"user.password"];
     [form setTagValue:self.txtImgcode.stringValue forKey:@"randCode"];
+   
     [form setTagValue:self.loginValue  forKey:self.loginKey];
+    
     form.referer=HOST_URL@"/otsweb/loginAction.do?method=init";
     NSString * outs= [form post];
     [self performSelectorOnMainThread:@selector(loginDidResult:) withObject:outs waitUntilDone:YES];
@@ -473,6 +478,7 @@
         //[self getCommitImgCode];
         //getPassenger();
         [self getPassenger];
+        [self resetQuerKey];
     }
     else
     {
@@ -727,6 +733,8 @@
         NSString *search = nil;
         NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
         NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
+        NSString *url1 = [NSString stringWithFormat:HOST_URL@"/otsweb/order/querySingleAction.do?method=qt&orderRequest.train_date=%@&orderRequest.from_station_telecode=%@&orderRequest.to_station_telecode=%@&orderRequest.train_no=&trainPassType=QB&trainClass=QB%%23D%%23Z%%23T%%23K%%23QT%%23&includeStudent=00&seatTypeAndNum=&orderRequest.start_time_str=00%%3A00--24%%3A00",date,sessionFrom,sessionTo];
+        [self getText:url1 IsPost:NO];
         NSString *url = [NSString stringWithFormat:HOST_URL@"/otsweb/order/querySingleAction.do?method=queryLeftTicket&orderRequest.train_date=%@&orderRequest.from_station_telecode=%@&orderRequest.to_station_telecode=%@&orderRequest.train_no=&trainPassType=QB&trainClass=QB%%23D%%23Z%%23T%%23K%%23QT%%23&includeStudent=00&seatTypeAndNum=&orderRequest.start_time_str=00%%3A00--24%%3A00",date,sessionFrom,sessionTo];
         NSLog(@"%@",url);
         while (search==nil) {
@@ -736,9 +744,10 @@
                 usleep(500*1000);
             }
         }
-
-        if ([search isEqualToString:@"-10"])
+        NSLog(@"%@",search);
+        if ([search isEqualToString:@"-10"])		
         {
+            [self addLog:@"查询错误"];
             return;
         }
         search=[search stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@""];
@@ -773,7 +782,7 @@
                     if([result numberOfRanges]>0)
                     {
                         NSString* str=[item substringWithRange:[result rangeAtIndex:1]];
-                        NSLog(@"%@",str);
+                        //NSLog(@"%@",str);
                         M12306TrainInfo *info=[[M12306TrainInfo alloc]initWithYuanshi:str];
                         if([info Success:self.txtTrainNameRegx.stringValue])
                         {
@@ -813,7 +822,7 @@
     }
     
 }
-- (void)yuding:(M12306TrainInfo *)info
+-(void)resetQuerKey
 {
     self.queryKey=nil;
     for (int i=0; i<20;i++) {
@@ -828,6 +837,10 @@
             break;
         }
     }
+}
+- (void)yuding:(M12306TrainInfo *)info
+{
+
     M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/order/querySingleAction.do?method=submutOrderRequest"];
     [self setYuanshiForFile:@"yudingform" forFrom:yudingForm];
     NSArray * commsp=[info.Yuanshi componentsSeparatedByString:@"#"];
@@ -837,10 +850,12 @@
     }
 
     [yudingForm setTagValue:[yudingForm getTagValue:@"from_station_name"] forKey:@"from_station_telecode_name"];
+
     [yudingForm setTagValue:[yudingForm getTagValue:@"to_station_name"] forKey:@"to_station_telecode_name"];
     [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"train_date"];
     [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"round_train_date"];
     [yudingForm setTagValue:self.queryValue forKey:self.queryKey];
+    NSLog(@"%@",yudingForm.debug);
     // NSLog(@"预定*****************************\n%@",[yudingForm debug]);
     NSString * postResult = [yudingForm post];
     //NSLog(@"%@",postResult);
