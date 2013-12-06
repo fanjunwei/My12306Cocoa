@@ -8,6 +8,7 @@
 
 #import "M12306Document.h"
 #import "M12306Base32.h"
+
 @implementation M12306Document
 {
     NSDictionary *_savedDate;
@@ -20,7 +21,6 @@
     }
     return self;
 }
-
 - (NSString *)windowNibName
 {
     // Override returning the nib file name of the document
@@ -263,6 +263,7 @@
 -(NSString *)getQueryKey
 {
     NSString * html=[self getText:HOST_URL@"/otsweb/order/querySingleAction.do?method=init" IsPost:NO];
+    [html writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"query.html"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
     NSString *html_keyWard = @"/otsweb/dynamicJsAction.do?jsversion=";
     NSRange htmlR1=[html rangeOfString:html_keyWard];
     if(htmlR1.location!=NSNotFound)
@@ -280,8 +281,10 @@
         NSString * str = [self getText:[NSString stringWithFormat:HOST_URL@"/otsweb/dynamicJsAction.do?jsversion=%@&method=queryJs",version] IsPost:NO];
         if([str rangeOfString:@"function(){var dobj=new Object()"].location!=NSNotFound)
         {
+            //sleep(1);
             [self getText:HOST_URL@"/otsweb/trainQueryAppAction.do?method=kp" IsPost:YES];
         }
+        [str writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"queryjs.js"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
         NSString *keyword =@"gc(){var key='";
         NSRange range=[str rangeOfString:keyword];
         if(range.location!=NSNotFound)
@@ -303,10 +306,64 @@
     self.queryValue = [self getEncValue:self.queryKey];
 
 }
+- (void)badgeApplicationIcon
+{
+NSString *badge = @"1";
+NSDockTile *dockTile = [NSApp dockTile];
+[dockTile setBadgeLabel:badge];
+  
+}
+
+- (void)showNotificationAlert
+{
+    // App could implement its own preferences so the user could specify if they want sounds or alerts.
+    // if (userEnabledAlerts)
+    
+    // Only handles the simple case of the alert property having a simple string value.
+    NSString *message = @"message";
+    
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert addButtonWithTitle:@"OK"];
+    [alert setMessageText:message];
+    [alert setAlertStyle:NSInformationalAlertStyle];
+    
+  
+
+}
 
 
 - (IBAction)btnLoginClick:(id)sender {
-
+    //[self showNotificationAlert];
+//    NSWindow *window = [[[self windowControllers] objectAtIndex:0] window];
+//    NSOpenPanel *panel = [NSOpenPanel openPanel];
+//    [panel setPrompt:@"打开"];
+//    [panel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
+//        NSURL * url= panel.URL;
+//    }];
+    //UILocalNotification
+//       [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+    NSUserNotification * notification = [[NSUserNotification alloc]init];
+    notification.title=@"标题";
+    notification.deliveryDate = [NSDate dateWithTimeIntervalSinceNow:1];
+//
+////    notification.deliveryDate = [NSDate dateWithTimeIntervalSinceNow:5];
+////    //设置通知的循环(必须大于1分钟，估计是防止软件刷屏)
+////    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+////    [dateComponents setSecond:70];
+////    notification.deliveryRepeatInterval = dateComponents;
+//    
+    [[NSUserNotificationCenter defaultUserNotificationCenter] scheduleNotification:notification];
+// 
+    
+    //notification.deliveryDate=[NSDate datewi]
+//    [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+//    
+//    //删除已经在执行的通知(比如那些循环递交的通知)
+//    for (NSUserNotification *notify in [[NSUserNotificationCenter defaultUserNotificationCenter] scheduledNotifications])
+//    {
+//        [[NSUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotification:notify];
+//    }
+    
     [self login];
 }
 
@@ -479,6 +536,7 @@
         //getPassenger();
         [self getPassenger];
         [self resetQuerKey];
+        
     }
     else
     {
@@ -704,6 +762,7 @@
     }
     else
     {
+        [self resetQuerKey];
         NSMutableArray *sd = [self.savedDate mutableCopy];
         [sd setValue:[NSString stringWithFormat:@"%ld",self.cbxFromStation.indexOfSelectedItem] forKey:@"fromstationindex"];
         [sd setValue:[NSString stringWithFormat:@"%ld",self.cbxToStation.indexOfSelectedItem] forKey:@"tostationindex"];
@@ -723,6 +782,8 @@
 {
     BOOL bLoop=[loop boolValue];
     NSMutableArray *trainList=[NSMutableArray array];
+    //[self resetQuerKey];
+    sleep(1);
     while (self.queryCanRun)
     {
         [self addLog:[NSString stringWithFormat:@"查询车次：%ld",self.QueryCount]];
@@ -733,17 +794,20 @@
         NSString *search = nil;
         NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
         NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
-        NSString *url1 = [NSString stringWithFormat:HOST_URL@"/otsweb/order/querySingleAction.do?method=qt&orderRequest.train_date=%@&orderRequest.from_station_telecode=%@&orderRequest.to_station_telecode=%@&orderRequest.train_no=&trainPassType=QB&trainClass=QB%%23D%%23Z%%23T%%23K%%23QT%%23&includeStudent=00&seatTypeAndNum=&orderRequest.start_time_str=00%%3A00--24%%3A00",date,sessionFrom,sessionTo];
-        [self getText:url1 IsPost:NO];
+
         NSString *url = [NSString stringWithFormat:HOST_URL@"/otsweb/order/querySingleAction.do?method=queryLeftTicket&orderRequest.train_date=%@&orderRequest.from_station_telecode=%@&orderRequest.to_station_telecode=%@&orderRequest.train_no=&trainPassType=QB&trainClass=QB%%23D%%23Z%%23T%%23K%%23QT%%23&includeStudent=00&seatTypeAndNum=&orderRequest.start_time_str=00%%3A00--24%%3A00",date,sessionFrom,sessionTo];
         NSLog(@"%@",url);
         while (search==nil) {
+            NSString *url1 = [NSString stringWithFormat:HOST_URL@"/otsweb/order/querySingleAction.do?method=qt&orderRequest.train_date=%@&orderRequest.from_station_telecode=%@&orderRequest.to_station_telecode=%@&orderRequest.train_no=&trainPassType=QB&trainClass=QB%%23D%%23Z%%23T%%23K%%23QT%%23&includeStudent=00&seatTypeAndNum=&orderRequest.start_time_str=00%%3A00--24%%3A00",date,sessionFrom,sessionTo];
+            [self getText:url1 IsPost:NO];
             search = [self getText:url IsPost:NO];
+        
             if(search==nil)
             {
                 usleep(500*1000);
             }
         }
+
         NSLog(@"%@",search);
         if ([search isEqualToString:@"-10"])		
         {
@@ -810,6 +874,7 @@
                     NSString *trainName=[self.currTrainInfo TrainName];
                     [self addLog:[NSString stringWithFormat:@"开始预订:%@,余票:%ld",trainName,ticketCoun]];
                     self.queryCanRun=NO;
+                    sleep(1);//测试延时
                     [self yuding:self.currTrainInfo];
                     break;
                 }
@@ -818,7 +883,7 @@
         if(!bLoop)
             break;
         self.QueryCount++;
-        usleep(500*1000);
+        sleep(7);
     }
     
 }
@@ -855,6 +920,8 @@
     [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"train_date"];
     [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"round_train_date"];
     [yudingForm setTagValue:self.queryValue forKey:self.queryKey];
+    [yudingForm setTagValue:@"undefined" forKey:@"myversion"];
+    [yudingForm.debug writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"yudingpost"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
     NSLog(@"%@",yudingForm.debug);
     // NSLog(@"预定*****************************\n%@",[yudingForm debug]);
     NSString * postResult = [yudingForm post];
@@ -923,7 +990,7 @@
         else
         {
             [self addLog:@"获取提交页面错误"];
-            [self getCommitPage];
+            //[self getCommitPage];
         }
     
     }

@@ -39,6 +39,7 @@
         [form addTagValue:passengerTickets forKey:@"passengerTickets"];
         [form addTagValue:@"" forKey:@"oldPassengers"];
         [form addTagValue:seat forKey:[NSString stringWithFormat:@"passenger_%ld_seat",index]];
+//         [form addTagValue:@"1" forKey:[NSString stringWithFormat:@"passenger_%ld_seat_detail_select",index]];
         
         [form addTagValue:self.Ticket forKey:[NSString stringWithFormat:@"passenger_%ld_ticket",index]];
         [form addTagValue:self.Name forKey:[NSString stringWithFormat:@"passenger_%ld_name",index]];

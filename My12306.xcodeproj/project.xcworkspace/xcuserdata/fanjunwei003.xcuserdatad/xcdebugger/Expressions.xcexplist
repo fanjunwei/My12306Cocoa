@@ -23,6 +23,9 @@
          contextName = "-[M12306Document getCommitPage]:M12306Document.m">
          <PersistentStrings>
             <PersistentString
+               value = "strresult">
+            </PersistentString>
+            <PersistentString
                value = "self.token">
             </PersistentString>
             <PersistentString
@@ -58,10 +61,38 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[M12306Document getQueryKeyValueLock]:M12306Document.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.queryKey">
+            </PersistentString>
+            <PersistentString
+               value = "self.queryValue">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[M12306Form post]:M12306Form.m">
          <PersistentStrings>
             <PersistentString
                value = "self.UserAgent">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[M12306Document yuding:]:M12306Document.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.queryKey">
+            </PersistentString>
+            <PersistentString
+               value = "yudingForm.debug">
+            </PersistentString>
+            <PersistentString
+               value = "self.queryValue">
+            </PersistentString>
+            <PersistentString
+               value = "[yudingForm getTagValue:@&quot;to_station_telecode_name&quot;]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
