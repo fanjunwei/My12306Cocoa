@@ -14,6 +14,7 @@
 #import "M12306passengerTicketItem.h"
 #import "M12306PassengerTableView.h"
 #import "M12306QueryTableView.h"
+#import "M12306TrainInfo.h"
 #import <WebKit/WebKit.h>
 #define COMMIT_DELAY_SECOND 5.0
 #define HOST_URL @"https://kyfw.12306.cn"
@@ -53,7 +54,7 @@
 @property BOOL queryCanRun;
 @property NSInteger QueryCount;
 @property NSArray* queryResultData;
-@property (strong,nonatomic) NSDictionary* currTrainInfo;
+@property (strong,nonatomic) M12306TrainInfo* currTrainInfo;
 @property (strong,nonatomic) NSDate * getCommitTime;
 @property (strong,nonatomic) NSString *lefttick;
 @property (strong,nonatomic) NSString *token;
@@ -83,7 +84,6 @@
 - (void)getPassenger;
 - (void)query:(BOOL) loop;
 - (NSString *)formatDate:(NSDate *) date strFormat:(NSString *)format;
-- (void)yuding:(NSDictionary *)info;
 - (void)yudingDoResult:(NSString *)strResult;
 - (void)getCommitPage;
 - (void)getCommitImgCode;

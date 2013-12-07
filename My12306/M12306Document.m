@@ -868,9 +868,9 @@ NSDockTile *dockTile = [NSApp dockTile];
                 {
                     self.currTrainInfo=[trainList objectAtIndex:0];
                     NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
-                    NSInteger ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
+                    NSString * ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
                     NSString *trainName=[self.currTrainInfo TrainName];
-                    [self addLog:[NSString stringWithFormat:@"开始预订:%@,余票:%ld",trainName,ticketCoun]];
+                    [self addLog:[NSString stringWithFormat:@"开始预订:%@,余票:%@",trainName,ticketCoun]];
                     self.queryCanRun=NO;
                     //sleep(1);//测试延时
                     [self yuding:self.currTrainInfo];
@@ -886,7 +886,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     
 }
 
-- (void)yuding:(NSDictionary *)info
+- (void)yuding:(M12306TrainInfo *)info
 {
 
     M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/order/querySingleAction.do?method=submutOrderRequest"];
