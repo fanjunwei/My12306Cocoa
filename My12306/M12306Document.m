@@ -852,8 +852,7 @@ NSDockTile *dockTile = [NSApp dockTile];
 
         NSLog(@"%@",search);
         NSDictionary *json = [search objectFromJSONString];
-        NSArray * data=[json objectForKey:@"data"];
-        self.queryResultData=data;
+        self.queryResultData=[json objectForKey:@"data"];
         [self performSelectorOnMainThread:@selector(setQueryResultToTableView) withObject:nil waitUntilDone:NO];
         NSArray *messages = [json objectForKey:@"messages"];
         if(messages!=nil && messages.count>0)
@@ -862,19 +861,22 @@ NSDockTile *dockTile = [NSApp dockTile];
         }
         if(bLoop)
         {
-            if([trainList count]>0)
-            {
-                if(self.queryCanRun)
+            for (NSDictionary * item  in self.queryResultData) {
+                M12306TrainInfo * info = [[M12306TrainInfo alloc]initWithYuanshi:item];
+                if([info Success:self.txtTrainNameRegx.stringValue])
                 {
-                    self.currTrainInfo=[trainList objectAtIndex:0];
-                    NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
-                    NSString * ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
-                    NSString *trainName=[self.currTrainInfo TrainName];
-                    [self addLog:[NSString stringWithFormat:@"开始预订:%@,余票:%@",trainName,ticketCoun]];
-                    self.queryCanRun=NO;
-                    //sleep(1);//测试延时
-                    [self yuding:self.currTrainInfo];
-                    break;
+                    if(self.queryCanRun)
+                    {
+                        self.currTrainInfo=[trainList objectAtIndex:0];
+                        NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
+                        NSInteger ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
+                        NSString *trainName=self.currTrainInfo.station_train_code;
+                        [self addLog:[NSString stringWithFormat:@"开始预订:%@,余票:%ld",trainName,ticketCoun]];
+                        self.queryCanRun=NO;
+                        //sleep(1);//测试延时
+                        [self yuding:self.currTrainInfo];
+                        break;
+                    }
                 }
             }
         }

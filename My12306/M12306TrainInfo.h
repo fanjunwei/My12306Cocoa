@@ -14,11 +14,12 @@
 @property (strong,nonatomic) NSString *station_train_code ;
 @property (strong,nonatomic) NSDictionary *data;
 @property (strong,nonatomic) NSString *secretStr;
+
 -(id) init;
 
--(id) initWithYuanshi:(NSString *) yuanshi;
+-(id) initWithYuanshi:(NSDictionary *) yuanshi;
 
 - (BOOL) Success:(NSString *)regstr;
 
-- (NSString *) TicketCountForSeat:(NSString *)seat;
+- (NSInteger) TicketCountForSeat:(NSString *)seat;
 @end
