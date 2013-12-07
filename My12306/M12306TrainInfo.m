@@ -12,6 +12,7 @@
 {
     NSDictionary * queryLeftNewDTO;
     NSDictionary * ticketCouts;
+    NSDictionary * mData;
 }
 
 -(id) init
@@ -26,11 +27,11 @@
     self = [self init];
     if(self)
     {
-        self.data=data;
+        mData=data;
         queryLeftNewDTO=[data objectForKey:@"queryLeftNewDTO"];
         self.secretStr=[data objectForKey:@"secretStr"];
-        self.train_no=[queryLeftNewDTO objectForKey:@"train_no"];
-        self.station_train_code=[queryLeftNewDTO objectForKey:@"station_train_code"];
+        self.TrainNo=[queryLeftNewDTO objectForKey:@"train_no"];
+        self.TrainName=[queryLeftNewDTO objectForKey:@"station_train_code"];
         
         ticketCouts=[M12306TrainInfo getCount:[queryLeftNewDTO objectForKey:@"yp_info"]];
     }
@@ -40,8 +41,8 @@
 - (BOOL)Success:(NSString *)regstr
 {
     NSRegularExpression *regx=[NSRegularExpression regularExpressionWithPattern:regstr options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
-    NSRange range= [regx rangeOfFirstMatchInString:self.station_train_code options:0 range:NSMakeRange(0, [self.station_train_code length])];
-    if(range.location==0 && range.length==[self.station_train_code length])
+    NSRange range= [regx rangeOfFirstMatchInString:self.TrainName options:0 range:NSMakeRange(0, [self.TrainName length])];
+    if(range.location==0 && range.length==[self.TrainName length])
     {
         return YES;
     }

@@ -870,7 +870,7 @@ NSDockTile *dockTile = [NSApp dockTile];
                         self.currTrainInfo=[trainList objectAtIndex:0];
                         NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
                         NSInteger ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
-                        NSString *trainName=self.currTrainInfo.station_train_code;
+                        NSString *trainName=self.currTrainInfo.TrainName;
                         [self addLog:[NSString stringWithFormat:@"开始预订:%@,余票:%ld",trainName,ticketCoun]];
                         self.queryCanRun=NO;
                         //sleep(1);//测试延时
@@ -1082,7 +1082,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     
     
     [commitForm setTagValue:date forKey:@"orderRequest.train_date"];
-    [commitForm setTagValue:self.currTrainInfo.TrainCode forKey:@"orderRequest.train_no"];
+    [commitForm setTagValue:self.currTrainInfo.TrainNo forKey:@"orderRequest.train_no"];
     
     [commitForm setTagValue:self.currTrainInfo.TrainName forKey:@"orderRequest.station_train_code"];
     [commitForm setTagValue:self.currTrainInfo.FromStationCode forKey:@"orderRequest.from_station_telecode"];
@@ -1178,7 +1178,7 @@ NSDockTile *dockTile = [NSApp dockTile];
 {
     NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
     NSString * date=[self formatDate:self.dtpDate.dateValue strFormat:@"yyyy-MM-dd"];
-    NSString *url=[NSString stringWithFormat:HOST_URL@"/otsweb/order/confirmPassengerAction.do?method=getQueueCount&train_date=%@&train_no=%@&station=%@&seat=%@&from=%@&to=%@&ticket=%@",date,self.currTrainInfo.TrainCode,self.currTrainInfo.TrainName,seatCode,self.currTrainInfo.FromStationCode,self.currTrainInfo.TotationCode,self.lefttick];
+    NSString *url=[NSString stringWithFormat:HOST_URL@"/otsweb/order/confirmPassengerAction.do?method=getQueueCount&train_date=%@&train_no=%@&station=%@&seat=%@&from=%@&to=%@&ticket=%@",date,self.currTrainInfo.TrainNo,self.currTrainInfo.TrainName,seatCode,self.currTrainInfo.FromStationCode,self.currTrainInfo.TotationCode,self.lefttick];
     NSDictionary *traincount = nil;
     while (traincount == nil)
     {
@@ -1229,7 +1229,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     
     
     [checkForm setTagValue:date forKey:@"orderRequest.train_date"];
-    [checkForm setTagValue:self.currTrainInfo.TrainCode forKey:@"orderRequest.train_no"];
+    [checkForm setTagValue:self.currTrainInfo.TrainNo forKey:@"orderRequest.train_no"];
     
     [checkForm setTagValue:self.currTrainInfo.TrainName forKey:@"orderRequest.station_train_code"];
     [checkForm setTagValue:self.currTrainInfo.FromStationCode forKey:@"orderRequest.from_station_telecode"];

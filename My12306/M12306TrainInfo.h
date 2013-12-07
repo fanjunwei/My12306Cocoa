@@ -10,14 +10,25 @@
 
 @interface M12306TrainInfo : NSObject
 
-@property (strong,nonatomic) NSString *train_no;
-@property (strong,nonatomic) NSString *station_train_code ;
-@property (strong,nonatomic) NSDictionary *data;
-@property (strong,nonatomic) NSString *secretStr;
+@property (strong,nonatomic) NSString *TrainNo;
+@property (strong,nonatomic) NSString *TrainName ;
+@property (strong,nonatomic) NSString *StartTime;
+@property (strong,nonatomic) NSString *ArriveTime ;
+@property (strong,nonatomic) NSString *FromStationName;
+@property (strong,nonatomic) NSString *FromStationCode;
+@property (strong,nonatomic) NSString *ToStationName;
+@property (strong,nonatomic) NSString *TotationCode;
+@property (strong,nonatomic) NSString *Yuanshi;
+@property (strong,nonatomic) NSDictionary *ticketCouts;
+@property (strong,nonatomic) NSMutableDictionary *info;
+
+@property (strong,nonatomic)NSString *secretStr;
 
 -(id) init;
 
--(id) initWithYuanshi:(NSDictionary *) yuanshi;
+-(id) initWithYuanshi:(NSString *) yuanshi;
+
++ (NSDictionary *)getCount:(NSString *) ypInfoDetail;
 
 - (BOOL) Success:(NSString *)regstr;
 
