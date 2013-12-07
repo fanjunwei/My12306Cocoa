@@ -6,13 +6,16 @@
          contextName = "-[M12306Document queryLock:]:M12306Document.m">
          <PersistentStrings>
             <PersistentString
-               value = "url">
-            </PersistentString>
-            <PersistentString
                value = "search">
             </PersistentString>
             <PersistentString
+               value = "url">
+            </PersistentString>
+            <PersistentString
                value = "table">
+            </PersistentString>
+            <PersistentString
+               value = "self.queryResultData">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -23,13 +26,13 @@
          contextName = "-[M12306Document getCommitPage]:M12306Document.m">
          <PersistentStrings>
             <PersistentString
+               value = "self.lefttick">
+            </PersistentString>
+            <PersistentString
                value = "strresult">
             </PersistentString>
             <PersistentString
                value = "self.token">
-            </PersistentString>
-            <PersistentString
-               value = "self.lefttick">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -38,6 +41,17 @@
          <PersistentStrings>
             <PersistentString
                value = "[array indexOfObject:cardNo]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[M12306Document getQueryKeyValueLock]:M12306Document.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.queryKey">
+            </PersistentString>
+            <PersistentString
+               value = "self.queryValue">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -57,17 +71,6 @@
             </PersistentString>
             <PersistentString
                value = "[self.txtLogParent getView]">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[M12306Document getQueryKeyValueLock]:M12306Document.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.queryKey">
-            </PersistentString>
-            <PersistentString
-               value = "self.queryValue">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

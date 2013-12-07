@@ -384,7 +384,6 @@ NSDockTile *dockTile = [NSApp dockTile];
             NSString *parLoginCheck=[parData objectForKey:@"loginCheck"];
             if(parLoginCheck!=nil  && [parLoginCheck isEqualToString:@"Y"])
             {
-                NSString * temstr = [self getText:@"https://kyfw.12306.cn/otn/confirmPassenger/initDc" IsPost:NO];
                 //登录成功
                 [self addLog:@"登录成功"];
                 self.isLogin = YES;
@@ -822,13 +821,12 @@ NSDockTile *dockTile = [NSApp dockTile];
 - (void)queryLock:(NSString *)loop
 {
     BOOL bLoop=[loop boolValue];
-    NSMutableArray *trainList=[NSMutableArray array];
     //[self resetQuerKey];
     sleep(1);
     while (self.queryCanRun)
     {
         [self addLog:[NSString stringWithFormat:@"查询车次：%ld",self.QueryCount]];
-        //string date = dtpDate.Value.ToString("yyyy-MM-dd");
+        
         NSDateFormatter * formate=[[NSDateFormatter alloc]init];
         [formate setDateFormat:@"yyyy-MM-dd"];
         NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
@@ -837,7 +835,6 @@ NSDockTile *dockTile = [NSApp dockTile];
         NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
 
         NSString *url = [NSString stringWithFormat:HOST_URL@"/otn/leftTicket/query?leftTicketDTO.train_date=%@&leftTicketDTO.from_station=%@&leftTicketDTO.to_station=%@&purpose_codes=ADULT",date,sessionFrom,sessionTo];
-        NSLog(@"%@",url);
         while (YES) {
             search = [self getText:url IsPost:NO];
             if(search==nil)
@@ -862,18 +859,17 @@ NSDockTile *dockTile = [NSApp dockTile];
         if(bLoop)
         {
             for (NSDictionary * item  in self.queryResultData) {
-                M12306TrainInfo * info = [[M12306TrainInfo alloc]initWithYuanshi:item];
+                M12306TrainInfo * info = [[M12306TrainInfo alloc]initWithDictionary:item];
                 if([info Success:self.txtTrainNameRegx.stringValue])
                 {
                     if(self.queryCanRun)
                     {
-                        self.currTrainInfo=[trainList objectAtIndex:0];
+                        self.currTrainInfo=info;
                         NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
                         NSInteger ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
                         NSString *trainName=self.currTrainInfo.TrainName;
                         [self addLog:[NSString stringWithFormat:@"开始预订:%@,余票:%ld",trainName,ticketCoun]];
                         self.queryCanRun=NO;
-                        //sleep(1);//测试延时
                         [self yuding:self.currTrainInfo];
                         break;
                     }
@@ -891,24 +887,33 @@ NSDockTile *dockTile = [NSApp dockTile];
 - (void)yuding:(M12306TrainInfo *)info
 {
 
-    M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otsweb/order/querySingleAction.do?method=submutOrderRequest"];
-    [self setYuanshiForFile:@"yudingform" forFrom:yudingForm];
-    NSArray * commsp=[info.Yuanshi componentsSeparatedByString:@"#"];
-    NSArray * setField = [NSArray arrayWithObjects:@"station_train_code", @"lishi", @"train_start_time", @"trainno4", @"from_station_telecode", @"to_station_telecode", @"arrive_time", @"from_station_name", @"to_station_name", @"from_station_no", @"to_station_no", @"ypInfoDetail", @"mmStr", @"locationCode", nil];
-    for (int i=0; i<[setField count]; i++) {
-        [yudingForm setTagValue:[commsp objectAtIndex:i] forKey:[setField objectAtIndex:i]];
+    M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otn/confirmPassenger/autoSubmitOrderRequest"];
+    NSString *sessionFromName =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"display"];
+    NSString *sessionToName =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"display"];
+    NSString * date=[self formatDate:self.dtpDate.dateValue strFormat:@"yyyy-MM-dd"];
+    NSString *seat=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
+    [yudingForm setValue:info.secretStr forKey:@"secretStr"];
+    [yudingForm setValue:date forKey:@"train_date"];
+    [yudingForm setValue:@"dc" forKey:@"tour_flag"];
+    [yudingForm setValue:@"ADULT" forKey:@"purpose_codes"];
+    [yudingForm setValue:sessionFromName forKey:@"query_from_station_name"];
+    [yudingForm setValue:sessionToName forKey:@"query_to_station_name"];
+    [yudingForm setValue:@"2" forKey:@"cancel_flag"];
+    [yudingForm setValue:@"000000000000000000000000000000" forKey:@"bed_level_order_num"];
+    
+    NSString *passengerTicketStr=@"";
+    NSString *oldPassengerStr=@"";
+    for (int i=0; i<[self.tablePassenger.data count]; i++) {
+        M12306passengerTicketItem * item =[self.tablePassenger.data objectAtIndex:i];
+        if(item.state)
+        {
+            passengerTicketStr=[passengerTicketStr stringByAppendingFormat:@"%@,0,%@,%@,%@,%@,%@,N_",seat,item.Ticket,item.Name,item.Cardtype,item.Cardno,item.Mobileno];
+            oldPassengerStr=[oldPassengerStr stringByAppendingFormat:@"%@,%@,%@,%@_",item.Name,item.Cardtype,item.Cardno,item.Ticket];
+        }
     }
-
-    [yudingForm setTagValue:[yudingForm getTagValue:@"from_station_name"] forKey:@"from_station_telecode_name"];
-
-    [yudingForm setTagValue:[yudingForm getTagValue:@"to_station_name"] forKey:@"to_station_telecode_name"];
-    [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"train_date"];
-    [yudingForm setTagValue:[self formatDate:[self.dtpDate dateValue] strFormat:@"yyyy-MM-dd"] forKey:@"round_train_date"];
-    [yudingForm setTagValue:self.queryValue forKey:self.queryKey];
-    [yudingForm setTagValue:@"undefined" forKey:@"myversion"];
-    [yudingForm.debug writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"yudingpost"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
-    NSLog(@"%@",yudingForm.debug);
-  
+    passengerTicketStr=[passengerTicketStr substringWithRange:NSMakeRange(0, [passengerTicketStr length]-1)];
+    [yudingForm setValue:passengerTicketStr forKey:@"passengerTicketStr"];
+    [yudingForm setValue:oldPassengerStr forKey:@"oldPassengerStr"];
     NSString * postResult = [yudingForm post];
 
     [self yudingDoResult:postResult];

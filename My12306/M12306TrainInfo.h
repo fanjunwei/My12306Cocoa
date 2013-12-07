@@ -26,7 +26,7 @@
 
 -(id) init;
 
--(id) initWithYuanshi:(NSString *) yuanshi;
+-(id) initWithDictionary:(NSDictionary *) yuanshi;
 
 + (NSDictionary *)getCount:(NSString *) ypInfoDetail;
 
