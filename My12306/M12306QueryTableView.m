@@ -24,9 +24,10 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        NSArray *cname =[NSArray arrayWithObjects:@"序号",@"车次",@"发站",@"到站",@"历时",@"商务座",@"特等座",@"一等座",@"二等座",@"高级软卧",@"软卧",@"硬卧",@"软座",@"硬座",@"无座",@"其他",@"购票", nil];
+        NSArray *cname =[NSArray arrayWithObjects:@"车次",@"发站",@"到站",@"历时",@"商务座",@"特等座",@"一等座",@"二等座",@"高级软卧",@"软卧",@"硬卧",@"软座",@"硬座",@"无座",@"其他",@"备注", nil];
+        NSArray *identifiers =[NSArray arrayWithObjects:@"station_train_code",@"start_station_name",@"end_station_name",@"lishi",@"swz_num",@"tz_num",@"zy_num",@"ze_num",@"gr_num",@"rw_num",@"yw_num",@"rz_num",@"yz_num",@"wz_num",@"qt_num",@"buttonTextInfo", nil];
         for (int i=0; i<[cname count]; i++) {
-            NSTableColumn * column = [[NSTableColumn alloc]initWithIdentifier:[cname objectAtIndex:i]];
+            NSTableColumn * column = [[NSTableColumn alloc]initWithIdentifier:[identifiers objectAtIndex:i]];
             [column.headerCell setTitle:[cname objectAtIndex:i]];
             [column setWidth:50];
             [column.dataCell setEditable:NO];
@@ -55,11 +56,27 @@
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
     NSDictionary *item=[self.data objectAtIndex:row];
-    NSString *cname=tableColumn.identifier;
+    NSString *idname=tableColumn.identifier;
+    if([idname isEqualToString:@"buttonTextInfo"])
+    {
+        NSString * canWebBuy =[[item objectForKey:@"queryLeftNewDTO"] objectForKey:@"canWebBuy"];
+        if([canWebBuy isEqualToString:@"Y"])
+        {
+            return @"可预订";
+        }
+        else
+        {
+            return [item objectForKey:idname];
+        }
+    }
+    else
+    {
+        return [[item objectForKey:@"queryLeftNewDTO"] objectForKey:idname];
+    }
 //    NSTextFieldCell * cell=[tableColumn dataCellForRow:row];
 //    cell.stringValue=[item objectForKey:cname];
     //[cell setAllowsEditingTextAttributes:NO];
-    return [item objectForKey:cname];
+    
 }
 
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
