@@ -22,7 +22,7 @@
 @property (strong,nonatomic) NSDictionary *ticketCouts;
 @property (strong,nonatomic) NSMutableDictionary *info;
 
-@property (strong,nonatomic)NSString *secretStr;
+@property (strong,nonatomic) NSString *secretStr;
 
 -(id) init;
 

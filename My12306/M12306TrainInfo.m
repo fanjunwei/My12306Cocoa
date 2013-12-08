@@ -29,7 +29,7 @@
     {
         mData=data;
         queryLeftNewDTO=[data objectForKey:@"queryLeftNewDTO"];
-        self.secretStr=[data objectForKey:@"secretStr"];
+        self.secretStr=[[data objectForKey:@"secretStr"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         self.TrainNo=[queryLeftNewDTO objectForKey:@"train_no"];
         self.TrainName=[queryLeftNewDTO objectForKey:@"station_train_code"];
         

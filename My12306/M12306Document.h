@@ -18,7 +18,30 @@
 #import <WebKit/WebKit.h>
 #define COMMIT_DELAY_SECOND 5.0
 #define HOST_URL @"https://kyfw.12306.cn"
+
+typedef enum YUDING_STATUS_
+{
+    YUDING_STATUS_NONE,
+    YUDING_STATUS_QUERY,
+    YUDING_STATUS_YUDING,
+    YUDING_STATUS_GET_IMG_CODE,
+    YUDING_STATUS_WAIT_INPUT_IMG_CODE,
+    YUDING_STATUS_CHECK_IMG_CODE,
+    YUDING_STATUS_YUDING_CHECK,
+    YUDING_STATUS_WAIT_ORDER,
+    
+}YUDING_STATUS;
+
 @interface M12306Document : NSDocument
+//$$$$$$$$$$$$$$$$$$$$$$$$
+@property (nonatomic) BOOL yudingLoopRun;
+@property (nonatomic) BOOL yudingLoopRuning;
+@property (nonatomic) YUDING_STATUS yudingStatus;
+@property (nonatomic,strong) NSString * yudingResult;
+
+//$$$$$$$$$$$$$$$$$$$$$$$
+
+
 - (IBAction)tablePassengerChange:(id)sender;
 - (IBAction)btnStopYudingClick:(id)sender;
 - (IBAction)btnYudingClick:(id)sender;
@@ -51,7 +74,6 @@
 @property (strong,nonatomic) NSArray * stations;
 @property BOOL isLogin;
 @property (strong,nonatomic) NSArray* allPassengers;
-@property BOOL queryCanRun;
 @property NSInteger QueryCount;
 @property NSArray* queryResultData;
 @property (strong,nonatomic) M12306TrainInfo* currTrainInfo;
@@ -66,6 +88,7 @@
 
 @property (strong,nonatomic)NSString *queryKey;
 @property (strong,nonatomic)NSString *queryValue;
+
 - (void) myinit;
 - (void) addLog:(NSString *) log;
 - (void) addLogLock:(NSString *)log;
@@ -82,10 +105,9 @@
 - (void)getStations;
 - (void)loginDidResult:(NSString *)result;
 - (void)getPassenger;
-- (void)query:(BOOL) loop;
 - (NSString *)formatDate:(NSDate *) date strFormat:(NSString *)format;
 - (void)yudingDoResult:(NSString *)strResult;
-- (void)getCommitPage;
+//- (void)getCommitPage;
 - (void)getCommitImgCode;
 - (void)getCommitImgCodeLock;
 - (void)setCommitImgCodeLock:(NSImage *)image;

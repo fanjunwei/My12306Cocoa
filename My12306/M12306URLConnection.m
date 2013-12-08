@@ -30,6 +30,7 @@
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+    self.finish=YES;
 }
 - (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection{
     return NO;
