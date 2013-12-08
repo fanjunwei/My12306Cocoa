@@ -34,8 +34,9 @@ typedef enum YUDING_STATUS_
 
 typedef enum TASK_RESULT_
 {
-    TASK_RESULT_NO,
+    TASK_RESULT_NONE,
     TASK_RESULT_YES,
+    TASK_RESULT_ERROR,
 }TASK_RESULT;
 
 @interface M12306Document : NSDocument
@@ -51,6 +52,7 @@ typedef enum TASK_RESULT_
 - (IBAction)tablePassengerChange:(id)sender;
 - (IBAction)btnStopYudingClick:(id)sender;
 - (IBAction)btnYudingClick:(id)sender;
+- (IBAction)loginOutClick:(id)sender;
 @property (weak) IBOutlet NSImageView *imgCommitCode;
 @property (weak) IBOutlet M12306TextField *txtCommitCode;
 @property (weak) IBOutlet NSTextField *lblDelayCommit;
@@ -95,37 +97,37 @@ typedef enum TASK_RESULT_
 @property (strong,nonatomic)NSString *queryKey;
 @property (strong,nonatomic)NSString *queryValue;
 
-- (void) myinit;
-- (void) addLog:(NSString *) log;
-- (void) addLogLock:(NSString *)log;
-- (void) getLoginImgCode;
-- (NSImage *) getImageWithUrl:(NSString *)url refUrl:(NSString *)refUrl;
-- (void)delayLogin;
-- (void)login;
-- (void)loginLock;
-- (void)reLogin;
-- (NSData *)getData:(NSString *)url IsPost:(BOOL)isPost;
-- (NSString *)getText:(NSString *)url IsPost:(BOOL)isPost;
-- (id)getJson:(NSString *)url IsPost:(BOOL)isPost;
-- (void)initSeat;
-- (void)getStations;
-- (void)loginDidResult:(NSString *)result;
-- (void)getPassenger;
-- (NSString *)formatDate:(NSDate *) date strFormat:(NSString *)format;
-- (void)yudingDoResult:(NSString *)strResult;
-//- (void)getCommitPage;
-- (void)getCommitImgCode;
-- (void)getCommitImgCodeLock;
-- (void)setCommitImgCodeLock:(NSImage *)image;
--(void)txtCommitCodeTextChageAction;
-- (void)delayCommit;
-- (void)commitForLefttick:(NSString *)lefttick forToken:(NSString *)token forImgCode:(NSString *)imgCode;
--(void)commitDoResult:(NSString *)strresult;
-- (void)checkForLefttick:(NSString *)lefttick forToken:(NSString *)token forImgCode:(NSString *)imgCode;
-- (BOOL)getTickCount;
-- (void)checkTickDoResult:(NSString *)strresult;
--(void)getOrder;
-- (IBAction)loginOutClick:(id)sender;
+//- (void) myinit;
+//- (void) addLog:(NSString *) log;
+//- (void) addLogLock:(NSString *)log;
+//- (void) getLoginImgCode;
+//- (NSImage *) getImageWithUrl:(NSString *)url refUrl:(NSString *)refUrl;
+//- (void)delayLogin;
+//- (void)login;
+//- (void)loginLock;
+//- (void)reLogin;
+//- (NSData *)getData:(NSString *)url IsPost:(BOOL)isPost;
+//- (NSString *)getText:(NSString *)url IsPost:(BOOL)isPost;
+//- (id)getJson:(NSString *)url IsPost:(BOOL)isPost;
+//- (void)initSeat;
+//- (void)getStations;
+//- (void)loginDidResult:(NSString *)result;
+//- (void)getPassenger;
+//- (NSString *)formatDate:(NSDate *) date strFormat:(NSString *)format;
+//- (void)yudingDoResult:(NSString *)strResult;
+////- (void)getCommitPage;
+//- (void)getCommitImgCode;
+//- (void)getCommitImgCodeLock;
+//- (void)setCommitImgCodeLock:(NSImage *)image;
+//-(void)txtCommitCodeTextChageAction;
+//- (void)delayCommit;
+//- (void)commitForLefttick:(NSString *)lefttick forToken:(NSString *)token forImgCode:(NSString *)imgCode;
+//-(void)commitDoResult:(NSString *)strresult;
+//- (void)checkForLefttick:(NSString *)lefttick forToken:(NSString *)token forImgCode:(NSString *)imgCode;
+//- (BOOL)getTickCount;
+//- (void)checkTickDoResult:(NSString *)strresult;
+//-(void)getOrder;
+
 
 
 @end
