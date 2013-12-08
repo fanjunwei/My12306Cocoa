@@ -32,13 +32,19 @@ typedef enum YUDING_STATUS_
     
 }YUDING_STATUS;
 
+typedef enum TASK_RESULT_
+{
+    TASK_RESULT_NO,
+    TASK_RESULT_YES,
+}TASK_RESULT;
+
 @interface M12306Document : NSDocument
 //$$$$$$$$$$$$$$$$$$$$$$$$
 @property (nonatomic) BOOL yudingLoopRun;
 @property (nonatomic) BOOL yudingLoopRuning;
 @property (nonatomic) YUDING_STATUS yudingStatus;
 @property (nonatomic,strong) NSString * yudingResult;
-
+@property (nonatomic) TASK_RESULT taskResult;
 //$$$$$$$$$$$$$$$$$$$$$$$
 
 

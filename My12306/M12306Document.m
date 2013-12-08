@@ -98,19 +98,19 @@
     
     NSString  * html=[self getResFile:@"login.html"];
     [self.webview.mainFrame loadHTMLString:html baseURL:nil];
-
+    
     [NSThread detachNewThreadSelector:@selector(myinitThread) toTarget:self withObject:nil];
 }
 -(void) myinitThread
 {
-
+    
     [self addLog:@"初始化..."];
     [self getStations];
     [self getLoginImgCode];
     [self addLog:@"初始化完成。"];
-
-
-
+    
+    
+    
 }
 
 -(void) addLogLock:(NSString *)log
@@ -146,7 +146,7 @@
 }
 -(void) getLoginImgCodeLock
 {
-
+    
     self.loginKey=nil;
     while (!self.loginKey) {
         [self performSelectorOnMainThread:@selector(getLoginKeyValueLock) withObject:nil waitUntilDone:YES];
@@ -157,7 +157,7 @@
     }
     NSImage *image=nil;
     while (!image) {
-    image = [self getImageWithUrl:HOST_URL@"/otn/passcodeNew/getPassCodeNew?module=login&rand=sjrand" refUrl:HOST_URL@"/otn/login/init"];
+        image = [self getImageWithUrl:HOST_URL@"/otn/passcodeNew/getPassCodeNew?module=login&rand=sjrand" refUrl:HOST_URL@"/otn/login/init"];
         if(!image)
         {
             [self addLog:@"获取验证码错误,重新获取!"];
@@ -170,7 +170,7 @@
 -(void) getLoginImgCode
 {
     [NSThread detachNewThreadSelector:@selector(getLoginImgCodeLock) toTarget:self withObject:nil];
-
+    
 }
 - (NSImage *) getImageWithUrl:(NSString *)url refUrl:(NSString *)refUrl
 {
@@ -179,7 +179,7 @@
     [request setValue:refUrl forHTTPHeaderField:@"Referer"];
     NSData * data=[M12306URLConnection sendSynchronousRequest:request];
     NSImage* image = [[NSImage alloc]initWithData:data];
-
+    
     return image;
 }
 -(NSString *)getLoginKey
@@ -215,21 +215,21 @@
             return  [str substringWithRange:range1];
         }
     }
- 
+    
     return nil;
 }
 -(NSString *)getEncValue:(NSString *)key
 {
     NSString * str=[NSString stringWithFormat:@"myenc('%@')",key];
-   return [self.webview stringByEvaluatingJavaScriptFromString:str];
+    return [self.webview stringByEvaluatingJavaScriptFromString:str];
 }
 -(void)getLoginKeyValueLock
 {
     self.loginKey = [self getLoginKey];
     self.loginValue = [self getEncValue:self.loginKey];
     
-//    self.loginKey = @"tem";
-//    self.loginValue = @"tem";
+    //    self.loginKey = @"tem";
+    //    self.loginValue = @"tem";
     
 }
 
@@ -238,10 +238,10 @@
 
 - (void)badgeApplicationIcon
 {
-NSString *badge = @"1";
-NSDockTile *dockTile = [NSApp dockTile];
-[dockTile setBadgeLabel:badge];
-  
+    NSString *badge = @"1";
+    NSDockTile *dockTile = [NSApp dockTile];
+    [dockTile setBadgeLabel:badge];
+    
 }
 
 - (void)showNotificationAlert
@@ -257,42 +257,42 @@ NSDockTile *dockTile = [NSApp dockTile];
     [alert setMessageText:message];
     [alert setAlertStyle:NSInformationalAlertStyle];
     
-  
-
+    
+    
 }
 
 
 - (IBAction)btnLoginClick:(id)sender {
     //[self showNotificationAlert];
-//    NSWindow *window = [[[self windowControllers] objectAtIndex:0] window];
-//    NSOpenPanel *panel = [NSOpenPanel openPanel];
-//    [panel setPrompt:@"打开"];
-//    [panel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
-//        NSURL * url= panel.URL;
-//    }];
+    //    NSWindow *window = [[[self windowControllers] objectAtIndex:0] window];
+    //    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    //    [panel setPrompt:@"打开"];
+    //    [panel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
+    //        NSURL * url= panel.URL;
+    //    }];
     //UILocalNotification
-//       [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+    //       [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
     NSUserNotification * notification = [[NSUserNotification alloc]init];
     notification.title=@"标题";
     notification.deliveryDate = [NSDate dateWithTimeIntervalSinceNow:1];
-//
-////    notification.deliveryDate = [NSDate dateWithTimeIntervalSinceNow:5];
-////    //设置通知的循环(必须大于1分钟，估计是防止软件刷屏)
-////    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
-////    [dateComponents setSecond:70];
-////    notification.deliveryRepeatInterval = dateComponents;
-//    
+    //
+    ////    notification.deliveryDate = [NSDate dateWithTimeIntervalSinceNow:5];
+    ////    //设置通知的循环(必须大于1分钟，估计是防止软件刷屏)
+    ////    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    ////    [dateComponents setSecond:70];
+    ////    notification.deliveryRepeatInterval = dateComponents;
+    //
     [[NSUserNotificationCenter defaultUserNotificationCenter] scheduleNotification:notification];
-// 
+    //
     
     //notification.deliveryDate=[NSDate datewi]
-//    [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
-//    
-//    //删除已经在执行的通知(比如那些循环递交的通知)
-//    for (NSUserNotification *notify in [[NSUserNotificationCenter defaultUserNotificationCenter] scheduledNotifications])
-//    {
-//        [[NSUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotification:notify];
-//    }
+    //    [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+    //
+    //    //删除已经在执行的通知(比如那些循环递交的通知)
+    //    for (NSUserNotification *notify in [[NSUserNotificationCenter defaultUserNotificationCenter] scheduledNotifications])
+    //    {
+    //        [[NSUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotification:notify];
+    //    }
     
     [self login];
 }
@@ -341,25 +341,25 @@ NSDockTile *dockTile = [NSApp dockTile];
     [self addLog:@"开始登录"];
     M12306Form * form =[[M12306Form alloc]initWithActionURL:HOST_URL@"/otn/login/loginAysnSuggest"];
     [self setYuanshiForFile:@"loginform" forFrom:form];
-
-//    while (YES){
-//        NSData * data = [self getData:HOST_URL@"/otsweb/loginAction.do?method=loginAysnSuggest" IsPost:YES];
-//        if(data!=nil)
-//        {
-//            NSDictionary* items= [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
-//            if( [(NSString *)[items objectForKey:@"randError"] isEqualToString:@"Y" ])
-//            {
-//                [form setTagValue:[items objectForKey:@"loginRand"] forKey:@"loginRand"];
-//                break;
-//            }
-//        }
-//        [self addLog:@"获取TOKEN错误，重新获取"];
-//    }
-
+    
+    //    while (YES){
+    //        NSData * data = [self getData:HOST_URL@"/otsweb/loginAction.do?method=loginAysnSuggest" IsPost:YES];
+    //        if(data!=nil)
+    //        {
+    //            NSDictionary* items= [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+    //            if( [(NSString *)[items objectForKey:@"randError"] isEqualToString:@"Y" ])
+    //            {
+    //                [form setTagValue:[items objectForKey:@"loginRand"] forKey:@"loginRand"];
+    //                break;
+    //            }
+    //        }
+    //        [self addLog:@"获取TOKEN错误，重新获取"];
+    //    }
+    
     [form setTagValue:self.txtUsername.stringValue forKey:@"loginUserDTO.user_name"];
     [form setTagValue:self.txtPassword.stringValue forKey:@"userDTO.password"];
     [form setTagValue:self.txtImgcode.stringValue forKey:@"randCode"];
-   
+    
     [form setTagValue:self.loginValue  forKey:self.loginKey];
     
     //form.referer=HOST_URL@"/otsweb/loginAction.do?method=init";
@@ -430,9 +430,9 @@ NSDockTile *dockTile = [NSApp dockTile];
             }
             else if ([allMessages rangeOfString:@"系统维护"].location!=NSNotFound)
             {
-
+                
             }
-    
+            
             error=YES;
             errormsg=allMessages;
             
@@ -446,7 +446,7 @@ NSDockTile *dockTile = [NSApp dockTile];
         [self addLog:@"登录失败，重新登录"];
         [self delayLogin];
     }
-
+    
     
     if (error)
     {
@@ -455,7 +455,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     }
     else
     {
-      
+        
     }
     return;
     //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -473,12 +473,12 @@ NSDockTile *dockTile = [NSApp dockTile];
         NSMutableArray * mathcStrs = [NSMutableArray array];
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\"(密码输入错误.*?)\"" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
         [regex enumerateMatchesInString:strresult options:0 range:NSMakeRange(0, strresult.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
-        {
-            if([result numberOfRanges]>0)
-            {
-             [mathcStrs addObject: [strresult substringWithRange:[result rangeAtIndex:1]]];
-            }
-        } ];
+         {
+             if([result numberOfRanges]>0)
+             {
+                 [mathcStrs addObject: [strresult substringWithRange:[result rangeAtIndex:1]]];
+             }
+         } ];
         
         if (mathcStrs.count>0)
         {
@@ -496,7 +496,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     {
         NSMutableArray * mathcStrs = [NSMutableArray array];
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\"(您的用户已经被锁定.*?)\"" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
-    
+        
         [regex enumerateMatchesInString:strresult options:0 range:NSMakeRange(0, strresult.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
             if([result numberOfRanges]>0)
             {
@@ -520,7 +520,7 @@ NSDockTile *dockTile = [NSApp dockTile];
         self.txtPassword.stringValue=@"";
         self.txtUsername.stringValue=@"";
         [self.txtUsername becomeFirstResponder];
-    
+        
         errormsg = @"登录名不存在";
         error = YES;
     }
@@ -601,8 +601,8 @@ NSDockTile *dockTile = [NSApp dockTile];
         }
         //NSLog(@"%@",[[NSString alloc] initWithData:tem1 encoding:NSUTF8StringEncoding]);
         json = [tem1 objectFromJSONString];
-   
-    
+        
+        
         if(!json)
         {
             [self addLog:@"初始化常用联系人错误，稍候重试"];
@@ -635,17 +635,17 @@ NSDockTile *dockTile = [NSApp dockTile];
     }
     self.allPassengers=[tempassenger copy];
     [self performSelectorOnMainThread:@selector(setPassenger) withObject:nil waitUntilDone:YES];
-//    {
-//        passengerTicketItem item = new passengerTicketItem(0);
-//        item.Cardno = p["passenger_id_no"].ToString();
-//        item.Cardtype = p["passenger_id_type_code"].ToString();
-//        item.Mobileno = p["mobile_no"].ToString();
-//        item.Name = p["passenger_name"].ToString();
-//        item.Ticket = p["passenger_type"].ToString();
-//        allPassengers.Add(item);
-//        
-//    }
-//    AddPassengerToList();
+    //    {
+    //        passengerTicketItem item = new passengerTicketItem(0);
+    //        item.Cardno = p["passenger_id_no"].ToString();
+    //        item.Cardtype = p["passenger_id_type_code"].ToString();
+    //        item.Mobileno = p["mobile_no"].ToString();
+    //        item.Name = p["passenger_name"].ToString();
+    //        item.Ticket = p["passenger_type"].ToString();
+    //        allPassengers.Add(item);
+    //
+    //    }
+    //    AddPassengerToList();
 }
 - (void)getPassenger
 {
@@ -660,7 +660,7 @@ NSDockTile *dockTile = [NSApp dockTile];
 //        NSArray * kv =[[lines objectAtIndex:i]componentsSeparatedByString:@"#"];
 //        [form setTagValue:[kv objectAtIndex:1] forKey:[kv objectAtIndex:0]];
 //    }
-//    
+//
 //}
 
 - (void)setYuanshiForFile:(NSString *)filename forFrom:(M12306Form *)form
@@ -715,7 +715,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     {
         [self.popupSeat selectItemAtIndex:[index intValue]];
     }
-
+    
 }
 - (IBAction)popupSeat:(id)sender {
     //NSString * set=[self.popupSeat selectedItem].title;
@@ -729,14 +729,14 @@ NSDockTile *dockTile = [NSApp dockTile];
     [self.cbxFromStation reloadData];
     NSString * fromstationindex = [self.savedDate objectForKey:@"fromstationindex"];
     NSString *tostationindex = [self.savedDate objectForKey:@"tostationindex"];
-
+    
     if(fromstationindex!=nil && tostationindex!=nil)
     {
         [self.cbxFromStation selectItemAtIndex:[fromstationindex intValue]];
         [self.cbxToStation selectItemAtIndex:[tostationindex intValue]];
     }
-
-   
+    
+    
     
 }
 - (void)getStations
@@ -750,7 +750,7 @@ NSDockTile *dockTile = [NSApp dockTile];
             usleep(500*1000);
         }
     }
-
+    
     NSMutableArray * mathcStrs = [NSMutableArray array];
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"var station_names=\"(.*?)\"" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
     
@@ -778,7 +778,7 @@ NSDockTile *dockTile = [NSApp dockTile];
 }
 
 - (IBAction)btnSearchClick:(id)sender {
-  if([self.cbxFromStation indexOfSelectedItem]<0)
+    if([self.cbxFromStation indexOfSelectedItem]<0)
     {
         NSAlert * alert=[[NSAlert alloc]init];
         [alert addButtonWithTitle:@"确定"];
@@ -794,13 +794,13 @@ NSDockTile *dockTile = [NSApp dockTile];
         [alert setAlertStyle:NSWarningAlertStyle];
         [alert runModal];
     }
-//    else if (!self.isLogin) {
-//        NSAlert * alert=[[NSAlert alloc]init];
-//        [alert addButtonWithTitle:@"确定"];
-//        [alert setMessageText:@"未登录"];
-//        [alert setAlertStyle:NSWarningAlertStyle];
-//        [alert runModal];
-//    }
+    //    else if (!self.isLogin) {
+    //        NSAlert * alert=[[NSAlert alloc]init];
+    //        [alert addButtonWithTitle:@"确定"];
+    //        [alert setMessageText:@"未登录"];
+    //        [alert setAlertStyle:NSWarningAlertStyle];
+    //        [alert runModal];
+    //    }
     else
     {
         NSMutableArray *sd = [self.savedDate mutableCopy];
@@ -820,63 +820,63 @@ NSDockTile *dockTile = [NSApp dockTile];
 - (void)queryLock
 {
     //[self resetQuerKey];
-        [self addLog:[NSString stringWithFormat:@"查询车次：%ld",self.QueryCount]];
-        
-        NSDateFormatter * formate=[[NSDateFormatter alloc]init];
-        [formate setDateFormat:@"yyyy-MM-dd"];
-        NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
-        NSString *search = nil;
-        NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
-        NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
-
-        NSString *url = [NSString stringWithFormat:HOST_URL@"/otn/leftTicket/query?leftTicketDTO.train_date=%@&leftTicketDTO.from_station=%@&leftTicketDTO.to_station=%@&purpose_codes=ADULT",date,sessionFrom,sessionTo];
-        while (YES) {
-            search = [self getText:url IsPost:NO];
-            if(search==nil)
+    [self addLog:[NSString stringWithFormat:@"查询车次：%ld",self.QueryCount]];
+    
+    NSDateFormatter * formate=[[NSDateFormatter alloc]init];
+    [formate setDateFormat:@"yyyy-MM-dd"];
+    NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
+    NSString *search = nil;
+    NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
+    NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
+    
+    NSString *url = [NSString stringWithFormat:HOST_URL@"/otn/leftTicket/query?leftTicketDTO.train_date=%@&leftTicketDTO.from_station=%@&leftTicketDTO.to_station=%@&purpose_codes=ADULT",date,sessionFrom,sessionTo];
+    while (YES) {
+        search = [self getText:url IsPost:NO];
+        if(search==nil)
+        {
+            usleep(500*1000);
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+    NSLog(@"%@",search);
+    NSDictionary *json = [search objectFromJSONString];
+    self.queryResultData=[json objectForKey:@"data"];
+    [self performSelectorOnMainThread:@selector(setQueryResultToTableView) withObject:nil waitUntilDone:NO];
+    NSArray *messages = [json objectForKey:@"messages"];
+    if(messages!=nil && messages.count>0)
+    {
+        [self addLog:[messages objectAtIndex:0]];
+    }
+    if(self.yudingLoopRun)
+    {
+        for (NSDictionary * item  in self.queryResultData) {
+            M12306TrainInfo * info = [[M12306TrainInfo alloc]initWithDictionary:item];
+            if([info Success:self.txtTrainNameRegx.stringValue])
             {
-                usleep(500*1000);
-            }
-            else
-            {
+                
+                self.currTrainInfo=info;
+                NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
+                NSInteger ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
+                NSString *trainName=self.currTrainInfo.TrainName;
+                [self addLog:[NSString stringWithFormat:@"开始预订:%@,余票:%ld",trainName,ticketCoun]];
+                self.taskResult=TASK_RESULT_YES;
+                //[self yuding:self.currTrainInfo];
                 break;
             }
         }
-
-        NSLog(@"%@",search);
-        NSDictionary *json = [search objectFromJSONString];
-        self.queryResultData=[json objectForKey:@"data"];
-        [self performSelectorOnMainThread:@selector(setQueryResultToTableView) withObject:nil waitUntilDone:NO];
-        NSArray *messages = [json objectForKey:@"messages"];
-        if(messages!=nil && messages.count>0)
-        {
-            [self addLog:[messages objectAtIndex:0]];
-        }
-        if(self.yudingLoopRun)
-        {
-            for (NSDictionary * item  in self.queryResultData) {
-                M12306TrainInfo * info = [[M12306TrainInfo alloc]initWithDictionary:item];
-                if([info Success:self.txtTrainNameRegx.stringValue])
-                {
-                  
-                        self.currTrainInfo=info;
-                        NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
-                        NSInteger ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
-                        NSString *trainName=self.currTrainInfo.TrainName;
-                        [self addLog:[NSString stringWithFormat:@"开始预订:%@,余票:%ld",trainName,ticketCoun]];
-                        self.yudingStatus=YUDING_STATUS_YUDING;
-                        //[self yuding:self.currTrainInfo];
-                        break;
-                }
-            }
-        }
+    }
     
-   
+    
     
 }
 
 - (void)yuding:(M12306TrainInfo *)info
 {
-
+    
     M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otn/confirmPassenger/autoSubmitOrderRequest"];
     NSString *sessionFromName =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"display"];
     NSString *sessionToName =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"display"];
@@ -907,7 +907,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     [yudingForm setTagValue:oldPassengerStr forKey:@"oldPassengerStr"];
     NSLog(@"%@", [yudingForm debug]);
     NSString * postResult = [yudingForm post];
-
+    
     [self yudingDoResult:postResult];
 }
 - (void)yudingDoResult:(NSString *)strResult
@@ -916,28 +916,37 @@ NSDockTile *dockTile = [NSApp dockTile];
     NSNumber *status=[json objectForKey:@"status"];
     NSNumber *httpstatus=[json objectForKey:@"httpstatus"];
     NSArray *messages=[json objectForKey:@"messages"];
-        if(status.boolValue && httpstatus.intValue==200)
+    if(status.boolValue && httpstatus.intValue==200)
+    {
+        NSDictionary *data=[json objectForKey:@"data"];
+        NSString * result = [data objectForKey:@"result"];
+        NSNumber * submitStatus = [data objectForKey:@"submitStatus"];
+        if(submitStatus.boolValue)
         {
-            NSDictionary *data=[json objectForKey:@"data"];
-            NSString * result = [data objectForKey:@"result"];
-            NSNumber * submitStatus = [data objectForKey:@"submitStatus"];
-            if(submitStatus.boolValue)
-            {
-                self.yudingResult=result;
-                self.yudingStatus=YUDING_STATUS_GET_IMG_CODE;
-                return;
-            }
-
+            self.yudingResult=result;
+            self.taskResult=TASK_RESULT_YES;
+            return;
         }
-        if(messages && messages.count>0)
+        
+    }
+    if(messages && messages.count>0)
+    {
+        
+        if([[messages objectAtIndex:0]rangeOfString:@"未完成订单"].location != NSNotFound )
         {
-            [self addLog:[messages objectAtIndex:0]];
+            [self stopYudingLoop];
+            [self addLog:@"含有未完成订单！！！！"];
         }
         else
         {
-            [self addLog:@"预订错误"];
+            [self addLog:[messages objectAtIndex:0]];
         }
-        sleep(1);
+    }
+    else
+    {
+        [self addLog:@"预订错误"];
+    }
+    sleep(1);
     
 }
 
@@ -946,7 +955,7 @@ NSDockTile *dockTile = [NSApp dockTile];
 {
     
     M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otn/confirmPassenger/checkRandCode"];
-
+    
     [yudingForm setTagValue:@"sjrand" forKey:@"rand"];
     [yudingForm setTagValue:self.txtCommitCode.stringValue forKey:@"randCode"];
     
@@ -964,11 +973,11 @@ NSDockTile *dockTile = [NSApp dockTile];
     if(status.boolValue && httpstatus.intValue==200)
     {
         NSDictionary *data=[json objectForKey:@"data"];
-  
+        
         NSNumber * submitStatus = [data objectForKey:@"submitStatus"];
         if(submitStatus.boolValue)
         {
-            self.yudingStatus=YUDING_STATUS_YUDING_CHECK;
+            self.taskResult=TASK_RESULT_YES;
             return;
         }
         
@@ -1029,7 +1038,7 @@ NSDockTile *dockTile = [NSApp dockTile];
         NSNumber * submitStatus = [data objectForKey:@"submitStatus"];
         if(submitStatus.boolValue)
         {
-            self.yudingStatus=YUDING_STATUS_WAIT_ORDER;
+            self.taskResult=TASK_RESULT_YES;
             //[self stopYudingLoop];
             return;
         }
@@ -1068,7 +1077,7 @@ NSDockTile *dockTile = [NSApp dockTile];
             if(waitTime.intValue==-1)
             {
                 [self addLog:[NSString stringWithFormat:@"订票成功，订单号:%@",orderId]];
-                [self stopYudingLoop];
+                self.taskResult=TASK_RESULT_YES;
                 
             }
             else
@@ -1116,7 +1125,7 @@ NSDockTile *dockTile = [NSApp dockTile];
 //        [regex enumerateMatchesInString:strresult options:0 range:NSMakeRange(0, [strresult length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
 //            self.lefttick=[strresult substringWithRange:[result rangeAtIndex:1]];
 //        }];
-//        
+//
 //        NSRegularExpression *tokenReg = [NSRegularExpression regularExpressionWithPattern:@"<input.*?name=\"org\\.apache\\.struts\\.taglib\\.html\\.TOKEN\".*?value=\"(.*?)\".*?/>" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
 //        [tokenReg enumerateMatchesInString:strresult options:0 range:NSMakeRange(0, [strresult length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
 //            self.token=[strresult substringWithRange:[result rangeAtIndex:1]];
@@ -1131,9 +1140,9 @@ NSDockTile *dockTile = [NSApp dockTile];
 //            [self addLog:@"获取提交页面错误"];
 //            //[self getCommitPage];
 //        }
-//    
+//
 //    }
-//    
+//
 //}
 - (void)getCommitImgCode
 {
@@ -1155,7 +1164,7 @@ NSDockTile *dockTile = [NSApp dockTile];
             break;
         }
     }
-    self.yudingStatus=YUDING_STATUS_WAIT_INPUT_IMG_CODE;
+    self.taskResult=TASK_RESULT_YES;
     [self performSelectorOnMainThread:@selector(setCommitImgCodeLock:) withObject:map waitUntilDone:YES];
 }
 - (void)setCommitImgCodeLock:(NSImage *)image
@@ -1173,7 +1182,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     }
     else if ([self.txtCommitCode.stringValue length] == 4)
     {
-        self.yudingStatus=YUDING_STATUS_CHECK_IMG_CODE;
+        self.taskResult=TASK_RESULT_YES;
     }
 }
 - (void)doLblDelayCommit:(NSString *)str
@@ -1268,7 +1277,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     NSString *check608=[json objectForKey:@"check608"];
     NSLog(@"%@",strresult);
     //[self addLog:strresult];
-  
+    
     if ([checkHuimd isEqualToString:@"Y"] && [check608 isEqualToString:@"Y"]&&[error isEqualToString:@"Y"]) {
         if ([self getTickCount])
         {
@@ -1283,7 +1292,7 @@ NSDockTile *dockTile = [NSApp dockTile];
                 [self commitForLefttick:self.lefttick forToken:self.token forImgCode:self.txtCommitCode.stringValue];
             }
         }
-         
+        
     }
     else
     {
@@ -1310,7 +1319,7 @@ NSDockTile *dockTile = [NSApp dockTile];
         }
         
     }
-   
+    
 }
 -(BOOL)getTickCount
 {
@@ -1328,7 +1337,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     int waiteCount = 0;
     NSString *waito=[traincount objectForKey:@"count"];
     NSString *op_2=[traincount objectForKey:@"op_2"];
-
+    
     if (waito != nil)
     {
         waiteCount = [waito intValue];
@@ -1387,7 +1396,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     NSString * strresult=[checkForm post];
     NSLog(@"%@",strresult);
     [self checkTickDoResult:strresult];
-
+    
 }
 -(void)checkTickDoResult:(NSString *)strresult
 {
@@ -1456,7 +1465,7 @@ NSDockTile *dockTile = [NSApp dockTile];
     while (YES)
     {
         NSDictionary* json=[self getJson:HOST_URL@"/otsweb/order/myOrderAction.do?method=queryOrderWaitTime&tourFlag=dc" IsPost:NO];
-      
+        
         NSString *oWaiteTime = [json objectForKey:@"waitTime"];
         NSString *oWaiteCount = [json objectForKey:@"waitCount"];
         NSString *oOrderId = [json objectForKey:@"orderId"];
@@ -1467,7 +1476,7 @@ NSDockTile *dockTile = [NSApp dockTile];
             int count = [oWaiteCount intValue];
             int minutes = waiteTime/60;
             int second =waiteTime%60;
-
+            
             if (waiteTime >= 0)
             {
                 NSString * log=[NSString stringWithFormat:@"排队时间：%d分钟%d秒,排队人数：%d",minutes,second,count];
@@ -1485,7 +1494,7 @@ NSDockTile *dockTile = [NSApp dockTile];
                 {
                     NSString * log=[NSString stringWithFormat:@"出票失败:%@,重新购票.",msg];
                     [self addLog:log];
-
+                    
                     if (self.yudingLoopRun)
                     {
                         
@@ -1625,7 +1634,7 @@ NSDockTile *dockTile = [NSApp dockTile];
         
         return _savedDate;
     }
-
+    
 }
 -(void)setSavedDate:(NSDictionary *)savedDate
 {
@@ -1673,6 +1682,8 @@ NSDockTile *dockTile = [NSApp dockTile];
 -(void)yudingLoop
 {
     while (self.yudingLoopRun) {
+        [self addLog:[NSString stringWithFormat:@"task status:%d",self.yudingStatus]];
+        self.taskResult=TASK_RESULT_NO;
         switch (self.yudingStatus) {
             case YUDING_STATUS_QUERY:
                 [self queryLock];
@@ -1682,6 +1693,12 @@ NSDockTile *dockTile = [NSApp dockTile];
                 break;
             case YUDING_STATUS_GET_IMG_CODE:
                 [self getCommitImgCodeLock];
+                break;
+            case YUDING_STATUS_WAIT_INPUT_IMG_CODE:
+                while(self.taskResult==TASK_RESULT_NO)
+                {
+                    usleep(100*1000);
+                }
                 break;
             case YUDING_STATUS_CHECK_IMG_CODE:
                 [self checkImgCode];
@@ -1696,6 +1713,35 @@ NSDockTile *dockTile = [NSApp dockTile];
                 usleep(100*1000);
                 break;
         }
+        if(self.taskResult!=TASK_RESULT_NO)
+        {
+            switch (self.yudingStatus) {
+                case YUDING_STATUS_NONE:
+                    break;
+                case YUDING_STATUS_QUERY:
+                    self.yudingStatus=YUDING_STATUS_YUDING;
+                    break;
+                case YUDING_STATUS_YUDING:
+                    self.yudingStatus=YUDING_STATUS_GET_IMG_CODE;
+                    break;
+                case YUDING_STATUS_GET_IMG_CODE:
+                    self.yudingStatus=YUDING_STATUS_WAIT_INPUT_IMG_CODE;
+                    break;
+                case YUDING_STATUS_WAIT_INPUT_IMG_CODE:
+                    self.yudingStatus=YUDING_STATUS_CHECK_IMG_CODE;
+                    break;
+                case YUDING_STATUS_CHECK_IMG_CODE:
+                    self.yudingStatus=YUDING_STATUS_YUDING_CHECK;
+                    break;
+                case YUDING_STATUS_YUDING_CHECK:
+                    self.yudingStatus=YUDING_STATUS_WAIT_ORDER;
+                    break;
+                case YUDING_STATUS_WAIT_ORDER:
+                    [self stopYudingLoop];
+                    break;
+            }
+        }
+        
     }
     self.yudingLoopRuning=NO;
 }
