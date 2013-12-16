@@ -18,7 +18,7 @@
 @property (strong,nonatomic) NSString *FromStationCode;
 @property (strong,nonatomic) NSString *ToStationName;
 @property (strong,nonatomic) NSString *TotationCode;
-@property (strong,nonatomic) NSString *Yuanshi;
+@property (strong,nonatomic) NSDictionary *mData;
 @property (strong,nonatomic) NSMutableDictionary *info;
 
 @property (strong,nonatomic) NSString *secretStr;

@@ -26,13 +26,13 @@
          contextName = "-[M12306Document getCommitPage]:M12306Document.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.lefttick">
+               value = "self.token">
             </PersistentString>
             <PersistentString
                value = "strresult">
             </PersistentString>
             <PersistentString
-               value = "self.token">
+               value = "self.lefttick">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -104,6 +104,14 @@
          <PersistentStrings>
             <PersistentString
                value = "fromstation">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[M12306Document yudingLoop]:M12306Document.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.taskResult">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

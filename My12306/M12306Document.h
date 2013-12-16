@@ -37,6 +37,7 @@ typedef enum TASK_RESULT_
     TASK_RESULT_NONE,
     TASK_RESULT_YES,
     TASK_RESULT_ERROR,
+    TASK_RESULT_ERROR_TO_QUERY,
 }TASK_RESULT;
 
 @interface M12306Document : NSDocument

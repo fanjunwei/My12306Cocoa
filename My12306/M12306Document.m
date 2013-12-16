@@ -9,6 +9,7 @@
 #import "M12306Document.h"
 #import "M12306Base32.h"
 #import "JSONKit.h"
+#include "base64.h"
 
 @implementation M12306Document
 {
@@ -452,7 +453,7 @@
 {
     NSString * str;
     while (str==nil) {
-        str=[self getText:HOST_URL@"/otn/resources/merged/queryLeftTicket_end_js.js?scriptVersion=1.01" IsPost:NO];
+        str=[self getText:HOST_URL@"/otn/resources/js/framework/station_name.js" IsPost:NO];
         if (str == nil)
         {
             [self addLog:@"获取车站信息错误，稍候重试"];
@@ -461,7 +462,7 @@
     }
     
     NSMutableArray * mathcStrs = [NSMutableArray array];
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"var station_names=\"(.*?)\"" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"var station_names ='(.*?)'" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
     
     [regex enumerateMatchesInString:str options:0 range:NSMakeRange(0, str.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         if([result numberOfRanges]>0)
@@ -551,12 +552,14 @@
     {
         [self addLog:[messages objectAtIndex:0]];
     }
-    if(self.yudingLoopRun)
-    {
         for (NSDictionary * item  in self.queryResultData) {
             M12306TrainInfo * info = [[M12306TrainInfo alloc]initWithDictionary:item];
+            
             if([info Success:self.txtTrainNameRegx.stringValue])
             {
+               
+                NSLog(@"%@\n%@",[base64 decodeBase64String: info.secretStr],[[info.mData objectForKey:@"queryLeftNewDTO"] objectForKey:@"yp_info"]);
+                
                 
                 self.currTrainInfo=info;
                 NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
@@ -567,10 +570,6 @@
                 break;
             }
         }
-    }
-    
-    
-    
 }
 
 - (void)yuding:(M12306TrainInfo *)info
@@ -640,6 +639,13 @@
         {
             [self stopYudingLoop];
             [self addLog:@"含有未完成订单！！！！"];
+        }
+        else if([[messages objectAtIndex:0]rangeOfString:@"非法的席别"].location != NSNotFound )
+        {
+            //[self stopYudingLoop];
+            self.taskResult=TASK_RESULT_ERROR_TO_QUERY;
+            [self addLog:@"非法的席别"];
+            return;
         }
         else
         {
@@ -795,13 +801,13 @@
             {
                 NSString * log=[NSString stringWithFormat:@"购票成功，订单号：%@.快去付款！",orderId];
                 [self addLog:log];
-                
+                self.taskResult = TASK_RESULT_YES;
             }
             else if (waitTime.intValue == -2)
             {
                 NSString * log=[NSString stringWithFormat:@"出票失败,重新购票."];
                 [self addLog:log];
-                self.yudingStatus=YUDING_STATUS_YUDING;
+                self.taskResult = TASK_RESULT_ERROR;
             }
             else if (waitTime.intValue == -3)
             {
@@ -1070,16 +1076,22 @@
                 case YUDING_STATUS_NONE:
                     break;
                 case YUDING_STATUS_QUERY:
-                    self.yudingStatus=YUDING_STATUS_YUDING;
+                    if(self.taskResult == TASK_RESULT_YES)
+                        self.yudingStatus=YUDING_STATUS_YUDING;
                     break;
                 case YUDING_STATUS_YUDING:
-                    self.yudingStatus=YUDING_STATUS_YUDING_CHECK;//跳过验证码
+                    if(self.taskResult == TASK_RESULT_YES)
+                        self.yudingStatus=YUDING_STATUS_YUDING_CHECK;//跳过验证码
+                    else if(self.taskResult == TASK_RESULT_ERROR_TO_QUERY)
+                        self.yudingStatus=YUDING_STATUS_QUERY;
                     break;
                 case YUDING_STATUS_GET_IMG_CODE:
-                    self.yudingStatus=YUDING_STATUS_WAIT_INPUT_IMG_CODE;
+                    if(self.taskResult == TASK_RESULT_YES)
+                        self.yudingStatus=YUDING_STATUS_WAIT_INPUT_IMG_CODE;
                     break;
                 case YUDING_STATUS_WAIT_INPUT_IMG_CODE:
-                    self.yudingStatus=YUDING_STATUS_CHECK_IMG_CODE;
+                    if(self.taskResult == TASK_RESULT_YES)
+                        self.yudingStatus=YUDING_STATUS_CHECK_IMG_CODE;
                     break;
                 case YUDING_STATUS_CHECK_IMG_CODE:
                     if(self.taskResult == TASK_RESULT_YES)
@@ -1096,6 +1108,8 @@
                 case YUDING_STATUS_WAIT_ORDER:
                     if(self.taskResult == TASK_RESULT_YES)
                         [self stopYudingLoop];
+                    else if(self.taskResult==TASK_RESULT_ERROR)
+                        self.yudingStatus=YUDING_STATUS_YUDING;
                     break;
             }
         }

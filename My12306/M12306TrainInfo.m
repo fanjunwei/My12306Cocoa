@@ -12,9 +12,8 @@
 {
     NSDictionary * queryLeftNewDTO;
     NSDictionary * ticketCouts;
-    NSDictionary * mData;
 }
-
+@synthesize mData;
 -(id) init
 {
     self = [super init];
