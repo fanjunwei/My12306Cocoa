@@ -27,9 +27,7 @@
 
 -(id) initWithDictionary:(NSDictionary *) yuanshi;
 
-+ (NSDictionary *)getCount:(NSString *) ypInfoDetail;
-
 - (BOOL) Success:(NSString *)regstr;
 
-- (NSInteger) TicketCountForSeat:(NSString *)seat;
+- (NSString *) TicketCountForSeat:(NSString *)seat;
 @end

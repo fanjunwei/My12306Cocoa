@@ -11,7 +11,6 @@
 @implementation M12306TrainInfo
 {
     NSDictionary * queryLeftNewDTO;
-    NSDictionary * ticketCouts;
 }
 @synthesize mData;
 -(id) init
@@ -31,8 +30,6 @@
         self.secretStr=[[data objectForKey:@"secretStr"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         self.TrainNo=[queryLeftNewDTO objectForKey:@"train_no"];
         self.TrainName=[queryLeftNewDTO objectForKey:@"station_train_code"];
-        
-        ticketCouts=[M12306TrainInfo getCount:[queryLeftNewDTO objectForKey:@"yp_info"]];
     }
     return self;
 }
@@ -50,54 +47,32 @@
         return NO;
     }
 }
-//-(NSString *)TicketCountForSeat:(NSString *)seat
-//{
-//    NSArray * seatField=[NSArray arrayWithObjects:  @"ze_num",@"zy_num",@"swz_num",@"tz_num",@"gr_num",@"rw_num",@"yw_num",@"rz_num",@"yz_num",@"wz_num", nil];
-//    NSArray *seatValue = [NSArray arrayWithObjects: @"O",@"M",@"9",@"P",@"6",@"4",@"3",@"2",@"1",@"empty", nil];
-//    
-//    NSDictionary * map = [NSDictionary dictionaryWithObjects:seatField forKeys:seatValue];
-//    
-//    return [queryLeftNewDTO objectForKey:[map objectForKey:seat]];
-//    
-//}
 
-
-
-+ (NSDictionary *)getCount:(NSString *) ypInfoDetail
+- (NSString *)TicketCountForSeat:(NSString *)seat
 {
-    NSMutableDictionary *table=[NSMutableDictionary dictionary];
-    NSRegularExpression *reZuo=[NSRegularExpression regularExpressionWithPattern:@"(.)\\*\\*\\*\\*\\*0(\\d\\d\\d)" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
-    [reZuo enumerateMatchesInString:ypInfoDetail options:0 range:NSMakeRange(0, [ypInfoDetail length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        if ([result numberOfRanges]>0) {
-            NSString *seat=[ypInfoDetail substringWithRange:[result rangeAtIndex:1]];
-            NSString *count = [ypInfoDetail substringWithRange:[result rangeAtIndex:2]];
-            [table setValue:count forKey:seat];
+    NSString *ypinfo=[queryLeftNewDTO objectForKey:@"yp_info"];
+    NSString * rt = @"";
+    int seat_1 = -1;
+    int seat_2 = -1;
+    for (int i=0; i<ypinfo.length; i+=10) {
+        NSString *s = [ypinfo substringWithRange:NSMakeRange(i, 10)];
+        NSString *c_seat=[s substringWithRange:NSMakeRange(0, 1)];
+        if ([c_seat isEqualToString: seat]) {
+            NSString * count =[s substringWithRange:NSMakeRange(6, 4)];
+            int intcount = count.intValue;
+            if (intcount < 3000) {
+                seat_1 = intcount;
+            } else {
+                seat_2 = (intcount - 3000);
+            }
         }
-    }];
-    
-    NSRegularExpression *reWu=[NSRegularExpression regularExpressionWithPattern:@"(.)\\*\\*\\*\\*\\*3(\\d\\d\\d)" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
-    [reWu enumerateMatchesInString:ypInfoDetail options:0 range:NSMakeRange(0, [ypInfoDetail length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        if ([result numberOfRanges]>0) {
-            
-            NSString *count = [ypInfoDetail substringWithRange:[result rangeAtIndex:2]];
-            [table setValue:count forKey:@"无座"];
-        }
-    }];
-    //MatchCollection mZuos = reZuo.Matches(ypInfoDetail);
-    return [table copy];
-    
-}
-
-- (NSInteger)TicketCountForSeat:(NSString *)seat
-{
-    NSString * strcount= [ticketCouts objectForKey:seat];
-    if(strcount!=nil)
-    {
-        return  [strcount intValue];
     }
-    else
-    {
-        return 0;
+    if (seat_1 > -1) {
+        rt = [rt stringByAppendingFormat:@"%d",seat_1];
     }
+    if (seat_2 > -1) {
+        rt = [rt stringByAppendingFormat:@",无座%d",seat_2];
+    }
+    return rt;
 }
 @end

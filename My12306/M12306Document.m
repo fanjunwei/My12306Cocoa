@@ -563,9 +563,9 @@
                 
                 self.currTrainInfo=info;
                 NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
-                NSInteger ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
+                NSString * ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
                 NSString *trainName=self.currTrainInfo.TrainName;
-                [self addLog:[NSString stringWithFormat:@"开始预订:%@,余票:%ld",trainName,ticketCoun]];
+                [self addLog:[NSString stringWithFormat:@"%@,余票:%@",trainName,ticketCoun]];
                 self.taskResult=TASK_RESULT_YES;
                 break;
             }
