@@ -16,6 +16,7 @@
 #import "M12306QueryTableView.h"
 #import "M12306TrainInfo.h"
 #import <WebKit/WebKit.h>
+#import "M12306Utility.h"
 #define COMMIT_DELAY_SECOND 5.0
 #define HOST_URL @"https://kyfw.12306.cn"
 
@@ -91,7 +92,6 @@ typedef enum TASK_RESULT_
 @property (strong,nonatomic) NSString *token;
 @property BOOL delayCommitRuning;
 @property (strong,nonatomic)NSDictionary* savedDate;
-@property (weak) IBOutlet WebView *webview;
 @property (strong,nonatomic)NSString *loginKey;
 @property (strong,nonatomic)NSString *loginValue;
 

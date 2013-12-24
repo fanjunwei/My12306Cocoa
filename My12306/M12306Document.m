@@ -36,7 +36,6 @@
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
     
     //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    
     [self myinit];
 }
 
@@ -95,11 +94,6 @@
     
     [(M12306TextField *) self.txtImgcode setTextChangeAction:@selector(txtImgLoginCodeAction) toTarget:self];
     [self.txtCommitCode setTextChangeAction:@selector(txtCommitCodeTextChageAction) toTarget:self];
-    
-    
-    NSString  * html=[self getResFile:@"login.html"];
-    [self.webview.mainFrame loadHTMLString:html baseURL:nil];
-    
     [NSThread detachNewThreadSelector:@selector(myinitThread) toTarget:self withObject:nil];
 }
 -(void) myinitThread
@@ -108,8 +102,31 @@
     [self addLog:@"初始化..."];
     [self getStations];
     [self getLoginImgCode];
+    NSString * str=[self getText:HOST_URL@"/otn/login/checkUser" IsPost:YES];
+    NSLog(@"%@",str);
     [self addLog:@"初始化完成。"];
     
+}
+
+-(BOOL)checkLogin
+{
+    NSString * str=[self getText:HOST_URL@"/otn/login/checkUser" IsPost:YES];
+    NSDictionary * obj = [str objectFromJSONString];
+    NSNumber *flag = [[obj objectForKey:@"data"] objectForKey:@"flag"];
+    return flag.boolValue;
+}
+
+-(void)checkLoginLoop
+{
+    while (self.isLogin) {
+        NSLog(@"checklogin");
+        if(![self checkLogin])
+        {
+            self.isLogin=NO;
+            [self reLogin];
+        }
+        sleep(3);
+    }
 }
 
 -(void) addLogLock:(NSString *)log
@@ -254,6 +271,7 @@
                 //登录成功
                 [self addLog:@"登录成功"];
                 self.isLogin = YES;
+                [NSThread detachNewThreadSelector:@selector(checkLoginLoop) toTarget:self withObject:nil];
                 NSString *str = [self getText:HOST_URL@"/otn/index/initMy12306" IsPost:NO];
                 
                 NSMutableArray * mathcStrs = [NSMutableArray array];
@@ -530,7 +548,6 @@
     NSString *search = nil;
     NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
     NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
-    
     NSString *url = [NSString stringWithFormat:HOST_URL@"/otn/leftTicket/query?leftTicketDTO.train_date=%@&leftTicketDTO.from_station=%@&leftTicketDTO.to_station=%@&purpose_codes=ADULT",date,sessionFrom,sessionTo];
     while (YES) {
         search = [self getText:url IsPost:NO];
@@ -555,6 +572,24 @@
         for (NSDictionary * item  in self.queryResultData) {
             M12306TrainInfo * info = [[M12306TrainInfo alloc]initWithDictionary:item];
             
+            NSString *secretStr= info.secretStr;
+            NSString *secretStrdec= [base64 decodeBase64String: info.secretStr];
+            
+
+            NSArray *secretStrarray =[secretStrdec componentsSeparatedByString:@"#"];
+            
+            
+            NSString* time=[secretStrarray objectAtIndex:15];
+            float ftime = time.floatValue/1000;
+            NSDate * queryDate = [NSDate dateWithTimeIntervalSince1970:ftime];
+            NSString * dd = [self formatDate:queryDate strFormat:@"yyyy-MM-dd HH:mm:ss"];
+            NSDate *nowDate = [NSDate date];
+            float inter= [nowDate timeIntervalSinceDate:queryDate];
+            
+            NSString * endsec = [NSString stringWithFormat:@"%@\t%@\t%@\t%f\n",secretStrdec,secretStr,dd,inter];
+            endsec = [endsec stringByReplacingOccurrencesOfString:@"#" withString:@"\t"];
+            [self appendTicketToFile:endsec];
+            
             if([info Success:self.txtTrainNameRegx.stringValue])
             {
                
@@ -566,7 +601,10 @@
                 NSString * ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
                 NSString *trainName=self.currTrainInfo.TrainName;
                 [self addLog:[NSString stringWithFormat:@"%@,余票:%@",trainName,ticketCoun]];
+                [self addLog:[NSString stringWithFormat:@"%@#%f",dd,inter]];
                 self.taskResult=TASK_RESULT_YES;
+                //usleep(1000*60);
+                //sleep(60*5+8);
                 break;
             }
         }
@@ -603,6 +641,7 @@
     passengerTicketStr=[passengerTicketStr substringWithRange:NSMakeRange(0, [passengerTicketStr length]-1)];
     [yudingForm setTagValue:passengerTicketStr forKey:@"passengerTicketStr"];
     [yudingForm setTagValue:oldPassengerStr forKey:@"oldPassengerStr"];
+    NSLog(@"%@",[yudingForm debug]);
     NSString * postResult = [yudingForm post];
     if(postResult)
     {
@@ -737,6 +776,7 @@
     [yudingForm setTagValue:[parms objectAtIndex:2] forKey:@"leftTicketStr"];
     [yudingForm setTagValue:[parms objectAtIndex:0] forKey:@"train_location"];
     NSString * postResult = [yudingForm post];
+    NSLog(@"%@",[yudingForm debug]);
     if(postResult)
     {
         [self yudingCheckDoResult:postResult];
@@ -1040,6 +1080,12 @@
 {
     while (self.yudingLoopRun) {
         [self addLog:[NSString stringWithFormat:@"task status:%d",self.yudingStatus]];
+        if(!self.isLogin)
+        {
+            [self addLog:@"未登录"];
+            sleep(1);
+            continue;
+        }
         self.taskResult=TASK_RESULT_NONE;
         switch (self.yudingStatus) {
             case YUDING_STATUS_QUERY:
@@ -1116,5 +1162,21 @@
         
     }
     self.yudingLoopRuning=NO;
+}
+
+- (void) appendTicketToFile:(NSString *)str
+{
+    NSString * path = @"/Users/fanjunwei003/Documents/ticket.txt";
+    if(![[NSFileManager defaultManager]fileExistsAtPath:path])
+    {
+        [[NSFileManager defaultManager]createFileAtPath:path contents:nil attributes:nil];
+    }
+    NSData * data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSFileHandle *logFile= [NSFileHandle fileHandleForWritingAtPath:path];
+    [logFile seekToEndOfFile];
+    [logFile writeData:data];
+    [logFile synchronizeFile];
+    [logFile closeFile];
 }
 @end
