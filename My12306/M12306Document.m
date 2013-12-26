@@ -62,6 +62,19 @@
     @throw exception;
     return YES;
 }
+-(void)initDingshi
+{
+    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDate *now = [NSDate date];
+    unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit;
+    NSDateComponents* nowComponents = [cal components:unitFlags fromDate:now];
+    NSDate * date = self.dpDingshi.dateValue;
+    nowComponents.hour=11;
+    nowComponents.minute=0;
+    nowComponents.second=0;
+    date = [cal dateFromComponents:nowComponents];
+    self.dpDingshi.dateValue=date;
+}
 -(void)myinit
 {
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
@@ -92,6 +105,7 @@
         self.txtTrainNameRegx.stringValue=trainnameregx;
     }
     
+    [self initDingshi];
     [(M12306TextField *) self.txtImgcode setTextChangeAction:@selector(txtImgLoginCodeAction) toTarget:self];
     [self.txtCommitCode setTextChangeAction:@selector(txtCommitCodeTextChageAction) toTarget:self];
     [NSThread detachNewThreadSelector:@selector(myinitThread) toTarget:self withObject:nil];
@@ -555,6 +569,17 @@
         [self query];
     }
 }
+-(void) setQueryProcessAni:(NSNumber *)run
+{
+    if(run.boolValue)
+    {
+        [self.queryProcess startAnimation:self];
+    }
+    else
+    {
+        [self.queryProcess stopAnimation:self];
+    }
+}
 - (void) setQueryResultToTableView
 {
     self.dtQuery.data=self.queryResultData;
@@ -564,7 +589,8 @@
 {
     self.queryResultData=nil;
     [self addLog:[NSString stringWithFormat:@"查询车次：%ld",self.QueryCount]];
-    [self performSelectorOnMainThread:@selector(setQueryResultToTableView) withObject:nil waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(setQueryProcessAni:) withObject:[NSNumber numberWithBool:YES] waitUntilDone:YES];
+    //[self.queryProcess setIndeterminate:YES];
     NSDateFormatter * formate=[[NSDateFormatter alloc]init];
     [formate setDateFormat:@"yyyy-MM-dd"];
     NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
@@ -587,6 +613,7 @@
     NSDictionary *json = [search objectFromJSONString];
     self.queryResultData=[json objectForKey:@"data"];
     [self performSelectorOnMainThread:@selector(setQueryResultToTableView) withObject:nil waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(setQueryProcessAni:) withObject:[NSNumber numberWithBool:NO] waitUntilDone:YES];
     NSArray *messages = [json objectForKey:@"messages"];
     if(messages!=nil && messages.count>0)
     {
@@ -970,6 +997,29 @@
     [dateFormat setDateFormat:format];
     return [dateFormat stringFromDate:date];
 }
+- (IBAction)dingshiClick:(id)sender {
+    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDate *now = [NSDate date];
+    unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit;
+    NSDateComponents* nowComponents = [cal components:unitFlags fromDate:now];
+    NSDate * date = self.dpDingshi.dateValue;
+    unsigned setunitFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+    NSDateComponents* setComponents = [cal components:setunitFlags fromDate:date];
+    nowComponents.hour=setComponents.hour;
+    nowComponents.minute=setComponents.minute;
+    nowComponents.second=setComponents.second;
+    date = [cal dateFromComponents:nowComponents];
+    if([date timeIntervalSinceNow]<0)
+    {
+        date=[date dateByAddingTimeInterval:24*60*60];
+    }
+    NSString * dd = [self formatDate:date strFormat:@"yyyy-MM-dd HH:mm:ss"];
+    [self addLog:[NSString stringWithFormat:@"定时在：%@开始预订",dd]];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startYudingLoop) object:nil];
+    [self performSelector:@selector(startYudingLoop) withObject:nil afterDelay:[date timeIntervalSinceNow]];
+    
+}
+
 - (IBAction)tablePassengerChange:(id)sender {
     NSArray * array = self.tablePassenger.getSelectedCardNoArray;
     NSMutableArray *sd = [self.savedDate mutableCopy];
@@ -979,6 +1029,7 @@
 
 - (IBAction)btnStopYudingClick:(id)sender {
     self.QueryCount = 0;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startYudingLoop) object:nil];
     [self stopYudingLoop];
 }
 

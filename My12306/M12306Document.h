@@ -49,7 +49,11 @@ typedef enum TASK_RESULT_
 @property (nonatomic,strong) NSString * yudingResult;
 @property (nonatomic) TASK_RESULT taskResult;
 //$$$$$$$$$$$$$$$$$$$$$$$
+@property (weak) IBOutlet NSProgressIndicator *queryProcess;
 
+@property (weak) IBOutlet NSDatePicker *dpDingshi;
+
+- (IBAction)dingshiClick:(id)sender;
 
 - (IBAction)tablePassengerChange:(id)sender;
 - (IBAction)btnStopYudingClick:(id)sender;
