@@ -98,32 +98,54 @@
 }
 -(void) myinitThread
 {
-    
     [self addLog:@"初始化..."];
     [self getStations];
     [self getLoginImgCode];
-    NSString * str=[self getText:HOST_URL@"/otn/login/checkUser" IsPost:YES];
-    NSLog(@"%@",str);
+//    NSString * str=[self getText:HOST_URL@"/otn/login/checkUser" IsPost:YES];
+//    NSLog(@"%@",str);
     [self addLog:@"初始化完成。"];
     
 }
 
--(BOOL)checkLogin
+-(int)checkLogin
 {
-    NSString * str=[self getText:HOST_URL@"/otn/login/checkUser" IsPost:YES];
-    NSDictionary * obj = [str objectFromJSONString];
+    NSString * str=nil;
+    NSDictionary * obj=nil;
+    while (!str || ! obj) {
+        str=[self getText:HOST_URL@"/otn/login/checkUser" IsPost:YES];
+        obj = [str objectFromJSONString];
+    }
+    NSNumber *status =[obj objectForKey:@"status"];
+    if(!status.boolValue)
+    {
+        return -1;
+    }
     NSNumber *flag = [[obj objectForKey:@"data"] objectForKey:@"flag"];
-    return flag.boolValue;
+    if(flag.boolValue)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 -(void)checkLoginLoop
 {
     while (self.isLogin) {
         NSLog(@"checklogin");
-        if(![self checkLogin])
+        int flag =[self checkLogin];
+        while (flag==-1) {
+            flag = [self checkLogin];
+        }
+        if(flag==0)
         {
             self.isLogin=NO;
-            [self reLogin];
+            [self addLog:@"已不在线"];
+            self.lblLoginMsg.stringValue=@"【未登录】";
+            self.isLogin=NO;
+            [self getLoginImgCode];
         }
         sleep(3);
     }
@@ -540,8 +562,9 @@
 }
 - (void)queryLock
 {
+    self.queryResultData=nil;
     [self addLog:[NSString stringWithFormat:@"查询车次：%ld",self.QueryCount]];
-    
+    [self performSelectorOnMainThread:@selector(setQueryResultToTableView) withObject:nil waitUntilDone:YES];
     NSDateFormatter * formate=[[NSDateFormatter alloc]init];
     [formate setDateFormat:@"yyyy-MM-dd"];
     NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
