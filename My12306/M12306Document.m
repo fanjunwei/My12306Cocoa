@@ -494,13 +494,29 @@
     self.cbxToStation.data=self.stations;
     [self.cbxToStation reloadData];
     [self.cbxFromStation reloadData];
-    NSString * fromstationindex = [self.savedDate objectForKey:@"fromstationindex"];
-    NSString *tostationindex = [self.savedDate objectForKey:@"tostationindex"];
-    
-    if(fromstationindex!=nil && tostationindex!=nil)
+//    NSString * fromstationindex = [self.savedDate objectForKey:@"fromstationindex"];
+//    NSString *tostationindex = [self.savedDate objectForKey:@"tostationindex"];
+//    
+//    if(fromstationindex!=nil && tostationindex!=nil)
+//    {
+//        [self.cbxFromStation selectItemAtIndex:[fromstationindex intValue]];
+//        [self.cbxToStation selectItemAtIndex:[tostationindex intValue]];
+//    }
+       NSString * fromstation = [self.savedDate objectForKey:@"fromstation"];
+       NSString *tostation = [self.savedDate objectForKey:@"tostation"];
+    for(int i=0;i<self.stations.count;i++)
     {
-        [self.cbxFromStation selectItemAtIndex:[fromstationindex intValue]];
-        [self.cbxToStation selectItemAtIndex:[tostationindex intValue]];
+        NSString *display =[[self.stations objectAtIndex:i]objectForKey:@"display"];
+        if([display isEqualToString:fromstation])
+        {
+            [self.cbxFromStation selectItemAtIndex:i];
+        }
+        
+        if([display isEqualToString:tostation])
+        {
+            [self.cbxToStation selectItemAtIndex:i];
+        }
+        
     }
 }
 - (void)getStations
@@ -560,10 +576,8 @@
     }
     else
     {
-        NSMutableArray *sd = [self.savedDate mutableCopy];
-        [sd setValue:[NSString stringWithFormat:@"%ld",self.cbxFromStation.indexOfSelectedItem] forKey:@"fromstationindex"];
-        [sd setValue:[NSString stringWithFormat:@"%ld",self.cbxToStation.indexOfSelectedItem] forKey:@"tostationindex"];
-        self.savedDate=(NSDictionary *)sd;
+        
+        [self saveYundingInfo];
         
         self.QueryCount = 0;
         [self query];
@@ -1075,16 +1089,24 @@
     }
     else
     {
-        NSMutableArray *sd = [self.savedDate mutableCopy];
-        [sd setValue:[NSString stringWithFormat:@"%ld",self.cbxFromStation.indexOfSelectedItem] forKey:@"fromstationindex"];
-        [sd setValue:[NSString stringWithFormat:@"%ld",self.cbxToStation.indexOfSelectedItem] forKey:@"tostationindex"];
-        [sd setValue:self.txtTrainNameRegx.stringValue forKey:@"trainnameregx"];
-        [sd setValue:[NSString stringWithFormat:@"%ld",self.popupSeat.indexOfSelectedItem] forKey:@"seatindex"];
-        self.savedDate=(NSDictionary *)sd;
+        [self saveYundingInfo];
         self.QueryCount = 0;
         [self startYudingLoop];
     }
 }
+-(void)saveYundingInfo
+{
+    NSMutableArray *sd = [self.savedDate mutableCopy];
+    [sd setValue:[NSString stringWithFormat:@"%ld",self.cbxFromStation.indexOfSelectedItem] forKey:@"fromstationindex"];
+    [sd setValue:[NSString stringWithFormat:@"%ld",self.cbxToStation.indexOfSelectedItem] forKey:@"tostationindex"];
+    [sd setValue:self.cbxFromStation.stringValue forKey:@"fromstation"];
+    [sd setValue:self.cbxToStation.stringValue forKey:@"tostation"];
+    [sd setValue:self.txtTrainNameRegx.stringValue forKey:@"trainnameregx"];
+    [sd setValue:[NSString stringWithFormat:@"%ld",self.popupSeat.indexOfSelectedItem] forKey:@"seatindex"];
+    self.savedDate=(NSDictionary *)sd;
+
+}
+
 -(NSDictionary *)savedDate
 {
     @synchronized(self)
