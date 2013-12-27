@@ -34,8 +34,6 @@
 {
     [super windowControllerDidLoadNib:aController];
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
-    
-    //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     [self myinit];
 }
 
@@ -71,7 +69,7 @@
     NSDate * date = self.dpDingshi.dateValue;
     nowComponents.hour=11;
     nowComponents.minute=0;
-    nowComponents.second=0;
+    nowComponents.second=20;
     date = [cal dateFromComponents:nowComponents];
     self.dpDingshi.dateValue=date;
 }
@@ -242,6 +240,18 @@
     {
         [self login];
     }
+}
+
+- (IBAction)getAddrClick:(id)sender {
+    
+    NSDateFormatter * formate=[[NSDateFormatter alloc]init];
+    [formate setDateFormat:@"yyyy-MM-dd"];
+    NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
+
+    NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
+    NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
+    NSString *url = [NSString stringWithFormat:HOST_URL@"/otn/leftTicket/query?leftTicketDTO.train_date=%@&leftTicketDTO.from_station=%@&leftTicketDTO.to_station=%@&purpose_codes=ADULT",date,sessionFrom,sessionTo];
+    self.txtAddr.stringValue=url;
 }
 - (void)delayLoginLock
 {
@@ -654,6 +664,7 @@
             endsec = [endsec stringByReplacingOccurrencesOfString:@"#" withString:@"\t"];
             [self appendTicketToFile:endsec];
             
+            
             if([info Success:self.txtTrainNameRegx.stringValue])
             {
                
@@ -666,6 +677,7 @@
                 NSString *trainName=self.currTrainInfo.TrainName;
                 [self addLog:[NSString stringWithFormat:@"%@,余票:%@",trainName,ticketCoun]];
                 [self addLog:[NSString stringWithFormat:@"%@#%f",dd,inter]];
+                [self addLog:time];
                 self.taskResult=TASK_RESULT_YES;
                 //usleep(1000*60);
                 //sleep(60*5+8);

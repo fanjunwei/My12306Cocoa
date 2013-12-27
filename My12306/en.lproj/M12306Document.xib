@@ -20,6 +20,7 @@
                 <outlet property="queryProcess" destination="tYS-93-CGx" id="B8l-RL-4LF"/>
                 <outlet property="tablePassenger" destination="100540" id="100608"/>
                 <outlet property="tableViewQuery" destination="100581" id="100615"/>
+                <outlet property="txtAddr" destination="uyf-jk-RNU" id="x23-ii-FrT"/>
                 <outlet property="txtCommitCode" destination="100595" id="100627"/>
                 <outlet property="txtImgcode" destination="100095" id="100331"/>
                 <outlet property="txtLog" destination="100154" id="100327"/>
@@ -468,6 +469,26 @@ DQ
                         <rect key="frame" x="490" y="321" width="16" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </progressIndicator>
+                    <textField verticalHuggingPriority="750" id="uyf-jk-RNU">
+                        <rect key="frame" x="643" y="589" width="349" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="hh3-wL-qgO">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" id="8hc-HH-Z4O">
+                        <rect key="frame" x="678" y="558" width="91" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="getAddr" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uRj-Ug-1Y1">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="getAddrClick:" target="-2" id="2Mj-EA-jYa"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <connections>
