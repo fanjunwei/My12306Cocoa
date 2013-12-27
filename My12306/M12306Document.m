@@ -1209,7 +1209,7 @@
                 }
                 else
                 {
-                    //[self queryLock];
+                    [self queryLock];
                 }
                  if(self.taskResult != TASK_RESULT_YES)
                      usleep(100*1000);
@@ -1324,9 +1324,9 @@
     [task setLaunchPath: @"/Library/Frameworks/Python.framework/Versions/2.7/bin/python"];
     NSString * respath = [[NSBundle mainBundle] resourcePath];
     NSString *scriptPath=[respath stringByAppendingPathComponent:@"query.py"];
-    NSString *proxyFilePath=[respath stringByAppendingPathComponent:@"query.py"];
+    NSString *proxyFilePath=[respath stringByAppendingPathComponent:@"enableProxy.txt"];
     NSArray *arguments;
-    arguments = [NSArray arrayWithObjects: proxyFilePath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat,nil];
+    arguments = [NSArray arrayWithObjects: scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat,nil];
     [task setArguments: arguments];
     
     NSPipe *pipe;
@@ -1344,6 +1344,7 @@
     NSString *string;
     string = [[NSString alloc] initWithData: data
                                    encoding: NSUTF8StringEncoding];
+    NSLog(@"%@",string);
     self.yudingSecretStr=string;
 }
 @end
