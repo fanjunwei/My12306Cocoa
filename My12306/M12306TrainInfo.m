@@ -7,12 +7,9 @@
 //
 
 #import "M12306TrainInfo.h"
-
+#import "base64.h"
 @implementation M12306TrainInfo
-{
-    NSDictionary * queryLeftNewDTO;
-}
-@synthesize mData;
+@synthesize ypinfo;
 -(id) init
 {
     self = [super init];
@@ -22,14 +19,20 @@
 
 -(id) initWithDictionary:(NSDictionary *)data
 {
+    NSString* secretStr=[[data objectForKey:@"secretStr"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    return [self initWithSecretStr:secretStr];
+}
+
+-(id) initWithSecretStr:(NSString *)secretStr
+{
     self = [self init];
     if(self)
     {
-        mData=data;
-        queryLeftNewDTO=[data objectForKey:@"queryLeftNewDTO"];
-        self.secretStr=[[data objectForKey:@"secretStr"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        self.TrainNo=[queryLeftNewDTO objectForKey:@"train_no"];
-        self.TrainName=[queryLeftNewDTO objectForKey:@"station_train_code"];
+        self.secretStr=secretStr;
+        NSString *secretStrdec= [base64 decodeBase64String: secretStr];
+        NSArray *args=[secretStrdec componentsSeparatedByString:@"#"];
+        self.TrainName=[args objectAtIndex:2];
+        ypinfo=[args objectAtIndex:13];
     }
     return self;
 }
@@ -48,12 +51,11 @@
     }
 }
 
-- (NSString *)TicketCountForSeat:(NSString *)seat
+- (int)TicketCountForSeat:(NSString *)seat
 {
-    NSString *ypinfo=[queryLeftNewDTO objectForKey:@"yp_info"];
-    NSString * rt = @"";
-    int seat_1 = -1;
-    int seat_2 = -1;
+    //NSString *ypinfo=[queryLeftNewDTO objectForKey:@"yp_info"];
+    int seat_1 = 0;
+    //int seat_2 = -1;
     for (int i=0; i<ypinfo.length; i+=10) {
         NSString *s = [ypinfo substringWithRange:NSMakeRange(i, 10)];
         NSString *c_seat=[s substringWithRange:NSMakeRange(0, 1)];
@@ -62,17 +64,13 @@
             int intcount = count.intValue;
             if (intcount < 3000) {
                 seat_1 = intcount;
-            } else {
-                seat_2 = (intcount - 3000);
             }
+//            else {
+//                seat_2 = (intcount - 3000);
+//            }
         }
     }
-    if (seat_1 > -1) {
-        rt = [rt stringByAppendingFormat:@"%d",seat_1];
-    }
-    if (seat_2 > -1) {
-        rt = [rt stringByAppendingFormat:@",无座%d",seat_2];
-    }
-    return rt;
+
+    return seat_1;
 }
 @end

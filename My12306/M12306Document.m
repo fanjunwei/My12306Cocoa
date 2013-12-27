@@ -9,11 +9,12 @@
 #import "M12306Document.h"
 #import "M12306Base32.h"
 #import "JSONKit.h"
-#include "base64.h"
+#import "base64.h"
 
 @implementation M12306Document
 {
     NSDictionary *_savedDate;
+    NSTask *task;
 }
 - (id)init
 {
@@ -668,20 +669,23 @@
             if([info Success:self.txtTrainNameRegx.stringValue])
             {
                
-                NSLog(@"%@\n%@",[base64 decodeBase64String: info.secretStr],[[info.mData objectForKey:@"queryLeftNewDTO"] objectForKey:@"yp_info"]);
+//                NSLog(@"%@\n%@",[base64 decodeBase64String: info.secretStr],[[info.mData objectForKey:@"queryLeftNewDTO"] objectForKey:@"yp_info"]);
                 
                 
                 self.currTrainInfo=info;
                 NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
-                NSString * ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
+                int ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
                 NSString *trainName=self.currTrainInfo.TrainName;
-                [self addLog:[NSString stringWithFormat:@"%@,余票:%@",trainName,ticketCoun]];
+                [self addLog:[NSString stringWithFormat:@"%@,余票:%d",trainName,ticketCoun]];
                 [self addLog:[NSString stringWithFormat:@"%@#%f",dd,inter]];
                 [self addLog:time];
-                self.taskResult=TASK_RESULT_YES;
+                if(seatCode>0)
+                {
+                    self.taskResult=TASK_RESULT_YES;
                 //usleep(1000*60);
                 //sleep(60*5+8);
-                break;
+                    break;
+                }
             }
         }
 }
@@ -1177,6 +1181,7 @@
         self.yudingLoopRuning=YES;
         self.yudingLoopRun=YES;
         self.yudingStatus=YUDING_STATUS_QUERY;
+        [self exeScript];
         [NSThread detachNewThreadSelector:@selector(yudingLoop) toTarget:self withObject:nil];
     }
 }
@@ -1197,7 +1202,17 @@
         self.taskResult=TASK_RESULT_NONE;
         switch (self.yudingStatus) {
             case YUDING_STATUS_QUERY:
-                [self queryLock];
+                if(self.yudingSecretStr && self.yudingSecretStr.length>5)
+                {
+                    self.currTrainInfo=[[M12306TrainInfo alloc]initWithSecretStr:self.yudingSecretStr];
+                    self.taskResult=TASK_RESULT_YES;
+                }
+                else
+                {
+                    [self queryLock];
+                }
+                 if(self.taskResult != TASK_RESULT_YES)
+                     usleep(100*1000);
                 break;
             case YUDING_STATUS_YUDING:
                 [self yuding:self.currTrainInfo];
@@ -1286,5 +1301,47 @@
     [logFile writeData:data];
     [logFile synchronizeFile];
     [logFile closeFile];
+}
+-(void)exeScript
+{
+    if(task)
+    {
+        [task interrupt];
+    }
+    [NSThread detachNewThreadSelector:@selector(exeScriptThread) toTarget:self withObject:nil];
+}
+-(void)exeScriptThread
+{
+    self.yudingSecretStr=nil;
+    NSDateFormatter * formate=[[NSDateFormatter alloc]init];
+    [formate setDateFormat:@"yyyy-MM-dd"];
+    NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
+    NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
+    NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
+    NSString *trainCode =self.txtTrainNameRegx.stringValue;
+    NSString *seat=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
+    task = [[NSTask alloc] init];
+    [task setLaunchPath: @"/Library/Frameworks/Python.framework/Versions/2.7/bin/python"];
+    
+    NSArray *arguments;
+    arguments = [NSArray arrayWithObjects: @"/Users/fanjunwei003/Documents/PycharmProjects/my12306/query.py",date,sessionFrom,sessionTo,trainCode,seat,nil];
+    [task setArguments: arguments];
+    
+    NSPipe *pipe;
+    pipe = [NSPipe pipe];
+    [task setStandardOutput: pipe];
+    NSFileHandle *file;
+    file = [pipe fileHandleForReading];
+    
+    [task launch];
+    
+    
+    NSData *data;
+    data = [file readDataToEndOfFile];
+    
+    NSString *string;
+    string = [[NSString alloc] initWithData: data
+                                   encoding: NSUTF8StringEncoding];
+    self.yudingSecretStr=string;
 }
 @end

@@ -85,7 +85,7 @@ typedef enum TASK_RESULT_
 - (void)txtImgLoginCodeAction;
 - (IBAction)getAddrClick:(id)sender;
 @property (weak) IBOutlet NSTextField *txtAddr;
-
+@property (strong)NSString* yudingSecretStr;
 @property (strong,nonatomic) NSDictionary *seatData;
 @property (strong,nonatomic) NSArray * stations;
 @property BOOL isLogin;

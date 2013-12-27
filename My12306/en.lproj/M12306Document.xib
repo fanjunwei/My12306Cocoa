@@ -470,7 +470,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </progressIndicator>
                     <textField verticalHuggingPriority="750" id="uyf-jk-RNU">
-                        <rect key="frame" x="643" y="589" width="349" height="22"/>
+                        <rect key="frame" x="643" y="589" width="260" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="hh3-wL-qgO">
                             <font key="font" metaFont="system"/>
@@ -479,7 +479,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" id="8hc-HH-Z4O">
-                        <rect key="frame" x="678" y="558" width="91" height="32"/>
+                        <rect key="frame" x="905" y="583" width="91" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="getAddr" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uRj-Ug-1Y1">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
