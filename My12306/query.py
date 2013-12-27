@@ -26,7 +26,7 @@ index=0
 proxyadds =[]
 mFinded=False
 def propxy(url,proxyUrl):
-    #print proxyUrl
+    sys.stderr.write(proxyUrl+'\n')
     starts = time.time()
     proxy_support = urllib2.ProxyHandler({"http":"http://"+proxyUrl})
     opener = urllib2.build_opener(proxy_support)

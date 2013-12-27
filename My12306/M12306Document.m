@@ -10,7 +10,7 @@
 #import "M12306Base32.h"
 #import "JSONKit.h"
 #import "base64.h"
-
+#import "DDFileReader.h"
 @implementation M12306Document
 {
     NSDictionary *_savedDate;
@@ -592,6 +592,7 @@
         
         self.QueryCount = 0;
         [self query];
+        [self exeScript];
     }
 }
 -(void) setQueryProcessAni:(NSNumber *)run
@@ -1060,6 +1061,10 @@
 - (IBAction)btnStopYudingClick:(id)sender {
     self.QueryCount = 0;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startYudingLoop) object:nil];
+    if(task)
+    {
+        [task interrupt];
+    }
     [self stopYudingLoop];
 }
 
@@ -1209,7 +1214,7 @@
                 }
                 else
                 {
-                    [self queryLock];
+                    //[self queryLock];
                 }
                  if(self.taskResult != TASK_RESULT_YES)
                      usleep(100*1000);
@@ -1335,9 +1340,20 @@
     NSFileHandle *file;
     file = [pipe fileHandleForReading];
     
+    
+    NSPipe *pipeerr;
+    pipeerr = [NSPipe pipe];
+    [task setStandardError: pipeerr];
+    NSFileHandle *fileerr;
+    fileerr = [pipeerr fileHandleForReading];
+    
     [task launch];
     
-    
+    DDFileReader *reader = [[DDFileReader alloc]initWithFileHandle:fileerr];
+    NSString *line;
+    while ((line=reader.readLine)) {
+        NSLog(@"%@",line);
+    }
     NSData *data;
     data = [file readDataToEndOfFile];
     
