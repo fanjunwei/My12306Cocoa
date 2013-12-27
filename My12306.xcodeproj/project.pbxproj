@@ -15,6 +15,8 @@
 		E6478E4817EAF53C007C8138 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6478E4717EAF53C007C8138 /* Images.xcassets */; };
 		E653AD28178FB92100487ADE /* M12306Form.m in Sources */ = {isa = PBXBuildFile; fileRef = E653AD27178FB92100487ADE /* M12306Form.m */; };
 		E65994301793B5D00097C42D /* M12306QueryTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = E659942F1793B5D00097C42D /* M12306QueryTableView.m */; };
+		E665800E186D803C0008014A /* enableProxy.txt in Resources */ = {isa = PBXBuildFile; fileRef = E665800D186D803C0008014A /* enableProxy.txt */; };
+		E6658010186D80FE0008014A /* query.py in Resources */ = {isa = PBXBuildFile; fileRef = E665800F186D80FE0008014A /* query.py */; };
 		E666A3F417E2BE380053CC8F /* M12306Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = E666A3F317E2BE380053CC8F /* M12306Utility.m */; };
 		E682B3671790407F00979A51 /* M12306TextField.m in Sources */ = {isa = PBXBuildFile; fileRef = E682B3661790407F00979A51 /* M12306TextField.m */; };
 		E683C7E017E1A59700FF16B3 /* M12306Base32.m in Sources */ = {isa = PBXBuildFile; fileRef = E683C7DF17E1A59700FF16B3 /* M12306Base32.m */; };
@@ -57,6 +59,8 @@
 		E653AD27178FB92100487ADE /* M12306Form.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306Form.m; sourceTree = "<group>"; };
 		E659942E1793B5D00097C42D /* M12306QueryTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306QueryTableView.h; sourceTree = "<group>"; };
 		E659942F1793B5D00097C42D /* M12306QueryTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306QueryTableView.m; sourceTree = "<group>"; };
+		E665800D186D803C0008014A /* enableProxy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = enableProxy.txt; sourceTree = "<group>"; };
+		E665800F186D80FE0008014A /* query.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = query.py; sourceTree = "<group>"; };
 		E666A3F217E2BE380053CC8F /* M12306Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306Utility.h; sourceTree = "<group>"; };
 		E666A3F317E2BE380053CC8F /* M12306Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306Utility.m; sourceTree = "<group>"; };
 		E682B3651790407E00979A51 /* M12306TextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306TextField.h; sourceTree = "<group>"; };
@@ -203,6 +207,8 @@
 		E6B4063A178E780E00F1B668 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E665800F186D80FE0008014A /* query.py */,
+				E665800D186D803C0008014A /* enableProxy.txt */,
 				E6B4063B178E780E00F1B668 /* My12306-Info.plist */,
 				E6B4063C178E780E00F1B668 /* InfoPlist.strings */,
 				E6B4063F178E780E00F1B668 /* main.m */,
@@ -277,7 +283,9 @@
 				E6B4064A178E780E00F1B668 /* M12306Document.xib in Resources */,
 				E6B4064D178E780E00F1B668 /* MainMenu.xib in Resources */,
 				E69439FC17968DBD002B4275 /* icon.icns in Resources */,
+				E6658010186D80FE0008014A /* query.py in Resources */,
 				E6C245EB17E0A7BC00C9C4E2 /* loginform in Resources */,
+				E665800E186D803C0008014A /* enableProxy.txt in Resources */,
 				E6C245ED17E0AB4600C9C4E2 /* yudingform in Resources */,
 				E6C245EF17E0AB8D00C9C4E2 /* commitform in Resources */,
 				E6C245F117E0ABBB00C9C4E2 /* commitform2 in Resources */,
