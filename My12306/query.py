@@ -9,6 +9,7 @@ import  threading
 import thread
 import sys
 import base64
+import socket
 
 proxyFilePath=sys.argv[1]
 argdate=sys.argv[2]
@@ -22,11 +23,15 @@ MustCount=2
 
 UserAgent='Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11B554a (392691824)/Worklight/6.0.0'
 countLock=threading.RLock()
+
 index=0
 proxyadds =[]
 mFinded=False
+def printLog(log):
+    sys.stderr.write(log+'\n')
+
 def propxy(url,proxyUrl):
-    sys.stderr.write(proxyUrl+'\n')
+    printLog(proxyUrl)
     starts = time.time()
     proxy_support = urllib2.ProxyHandler({"http":"http://"+proxyUrl})
     opener = urllib2.build_opener(proxy_support)
@@ -34,11 +39,11 @@ def propxy(url,proxyUrl):
     req.add_header('User-Agent', UserAgent)
     res=''
     try:
-        f=opener.open(req)
+        f=opener.open(req,timeout=60)
         res= f.read()
     except urllib2.URLError ,e:
         res=None
-
+    
     return res
 
 
@@ -50,7 +55,7 @@ def readProxyAddFile():
         proxyadds.append(args[0])
 
 def getYupiaoCount(yupiaoStr,seat):
-
+    
     for i in range(0,len(yupiaoStr)/10):
         s=yupiaoStr[i*10:i*10+10]
         c_seat=s[0:1]
@@ -58,7 +63,7 @@ def getYupiaoCount(yupiaoStr,seat):
             count=int(s[6:6+4])
             if(count<3000):
                 return count
-
+    
     return 0
 
 def getNewIndex():
@@ -78,7 +83,7 @@ def query(proxy):
     data=obj['data']
     #queryLeftNewDTO=data['queryLeftNewDTO']
     for tr in data:
-
+        
         secretStr = tr['secretStr']
         unquoteSecretStr=urllib.unquote(secretStr)
         decodeSecretStr=base64.b64decode(unquoteSecretStr)
@@ -87,22 +92,27 @@ def query(proxy):
         yupiaoStr=args[13]
         count=getYupiaoCount(yupiaoStr,Seat)
         timeTick=float(args[15])/1000.0
-        if(count>MustCount and code==Tranicode):
+        #
+        if(code==Tranicode):
+            printLog(decodeSecretStr)
             # print decodeSecretStr
-
             # print code
             # print yupiaoStr
-            # print count
-            if(not mFinded):
-                print unquoteSecretStr
-                #print time.ctime() +'\t'+time.ctime(timeTick)
-                #print args[15]
+            # print decodeSecretStr
+            
+            if(not mFinded and count>MustCount):
                 mFinded=True
+                print unquoteSecretStr
+
 def queryThread():
     global mFinded
     while not mFinded:
         index=getNewIndex()
-        query(proxyadds[index])
+        try:
+            query(proxyadds[index])
+        except Exception ,e:
+            printLog('error')
+            time.sleep(1)
 
 readProxyAddFile()
 

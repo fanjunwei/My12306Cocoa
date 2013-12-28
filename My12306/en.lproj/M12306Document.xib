@@ -73,7 +73,7 @@
                         </scroller>
                     </scrollView>
                     <textField verticalHuggingPriority="750" id="100376">
-                        <rect key="frame" x="347" y="599" width="69" height="17"/>
+                        <rect key="frame" x="301" y="599" width="69" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="常用联系人" id="100377">
                             <font key="font" size="13" name="STHeitiSC-Light"/>
@@ -487,6 +487,17 @@ DQ
                         </buttonCell>
                         <connections>
                             <action selector="getAddrClick:" target="-2" id="2Mj-EA-jYa"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" id="dMK-UB-huY">
+                        <rect key="frame" x="370" y="588" width="92" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="重新获取" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1Gi-Zs-gmO">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="getPassengerClick:" target="-2" id="gnq-pu-Rvc"/>
                         </connections>
                     </button>
                 </subviews>

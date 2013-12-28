@@ -70,7 +70,7 @@
     NSDate * date = self.dpDingshi.dateValue;
     nowComponents.hour=11;
     nowComponents.minute=0;
-    nowComponents.second=20;
+    nowComponents.second=5;
     date = [cal dateFromComponents:nowComponents];
     self.dpDingshi.dateValue=date;
 }
@@ -88,7 +88,7 @@
         }
     }
     [self initSeat];
-    NSTimeInterval timei = 19*24*60*60;
+    NSTimeInterval timei = 24*24*60*60;
     NSDate *date = [NSDate dateWithTimeIntervalSinceNow:timei];
     self.dtpDate.dateValue=date;
     NSString * username=[self.savedDate objectForKey:@"username"];
@@ -218,7 +218,7 @@
 }
 - (NSImage *) getImageWithUrl:(NSString *)url refUrl:(NSString *)refUrl
 {
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:60];
     
     [request setValue:refUrl forHTTPHeaderField:@"Referer"];
     NSData * data=[M12306URLConnection sendSynchronousRequest:request];
@@ -331,11 +331,18 @@
                     }
                     
                 }];
-                NSString *name = [mathcStrs objectAtIndex:0];
-                NSString *tem = [NSString stringWithFormat:@"[\"%@\"]",name];
-                NSArray *aa= [tem objectFromJSONString];
-                name = [aa objectAtIndex:0];
-                self.lblLoginMsg.stringValue=name;
+                @try {
+                    NSString *name = [mathcStrs objectAtIndex:0];
+                    NSString *tem = [NSString stringWithFormat:@"[\"%@\"]",name];
+                    NSArray *aa= [tem objectFromJSONString];
+                    name = [aa objectAtIndex:0];
+                    self.lblLoginMsg.stringValue=name;
+                }
+                @catch (NSException *exception) {
+                    
+                }
+                
+              
                 [self getPassenger];
             }
         }
@@ -458,7 +465,7 @@
 
 - (NSData *)getData:(NSString *)url IsPost:(BOOL)isPost
 {
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:60];
     
     [request setValue:url forHTTPHeaderField:@"Referer"];
     if(isPost)
@@ -533,15 +540,16 @@
 - (void)getStations
 {
     NSString * str;
-    while (str==nil) {
-        str=[self getText:HOST_URL@"/otn/resources/js/framework/station_name.js" IsPost:NO];
-        if (str == nil)
-        {
-            [self addLog:@"获取车站信息错误，稍候重试"];
-            usleep(500*1000);
-        }
-    }
-    
+//    while (str==nil || [str isEqualToString:@""] ) {
+//        str=[self getText:HOST_URL@"/otn/resources/js/framework/station_name.js" IsPost:NO];
+//        if (str == nil || [str isEqualToString:@""] )
+//        {
+//            [self addLog:@"获取车站信息错误，稍候重试"];
+//            usleep(500*1000);
+//        }
+//    }
+    NSString *resPath= [[NSBundle mainBundle].resourcePath stringByAppendingPathComponent:@"station.txt"];
+    str=[NSString stringWithContentsOfFile:resPath encoding:NSUTF8StringEncoding error:nil];
     NSMutableArray * mathcStrs = [NSMutableArray array];
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"var station_names ='(.*?)'" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
     
@@ -680,7 +688,7 @@
                 [self addLog:[NSString stringWithFormat:@"%@,余票:%d",trainName,ticketCoun]];
                 [self addLog:[NSString stringWithFormat:@"%@#%f",dd,inter]];
                 [self addLog:time];
-                if(seatCode>0)
+                if(ticketCoun>0)
                 {
                     self.taskResult=TASK_RESULT_YES;
                 //usleep(1000*60);
@@ -1064,6 +1072,7 @@
     if(task)
     {
         [task interrupt];
+        task=nil;
     }
     [self stopYudingLoop];
 }
@@ -1214,7 +1223,7 @@
                 }
                 else
                 {
-                    //[self queryLock];
+                    [self queryLock];
                 }
                  if(self.taskResult != TASK_RESULT_YES)
                      usleep(100*1000);
@@ -1312,6 +1321,7 @@
     if(task)
     {
         [task interrupt];
+        task=nil;
     }
     [NSThread detachNewThreadSelector:@selector(exeScriptThread) toTarget:self withObject:nil];
 }
@@ -1362,5 +1372,8 @@
                                    encoding: NSUTF8StringEncoding];
     NSLog(@"%@",string);
     self.yudingSecretStr=string;
+}
+- (IBAction)getPassengerClick:(id)sender {
+    [self getPassenger];
 }
 @end

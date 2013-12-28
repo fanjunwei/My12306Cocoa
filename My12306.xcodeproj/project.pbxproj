@@ -14,6 +14,7 @@
 		E64013621852E4A0006921B1 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = E64013611852E4A0006921B1 /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E640136718531D40006921B1 /* M12306TrainInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = E640136618531D3F006921B1 /* M12306TrainInfo.m */; };
 		E6478E4817EAF53C007C8138 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6478E4717EAF53C007C8138 /* Images.xcassets */; };
+		E64B2707186E6A7000C8254E /* station.txt in Resources */ = {isa = PBXBuildFile; fileRef = E64B2706186E6A7000C8254E /* station.txt */; };
 		E653AD28178FB92100487ADE /* M12306Form.m in Sources */ = {isa = PBXBuildFile; fileRef = E653AD27178FB92100487ADE /* M12306Form.m */; };
 		E65994301793B5D00097C42D /* M12306QueryTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = E659942F1793B5D00097C42D /* M12306QueryTableView.m */; };
 		E665800E186D803C0008014A /* enableProxy.txt in Resources */ = {isa = PBXBuildFile; fileRef = E665800D186D803C0008014A /* enableProxy.txt */; };
@@ -58,6 +59,7 @@
 		E640136518531D3F006921B1 /* M12306TrainInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306TrainInfo.h; sourceTree = "<group>"; };
 		E640136618531D3F006921B1 /* M12306TrainInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306TrainInfo.m; sourceTree = "<group>"; };
 		E6478E4717EAF53C007C8138 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		E64B2706186E6A7000C8254E /* station.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = station.txt; sourceTree = "<group>"; };
 		E653AD26178FB92100487ADE /* M12306Form.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306Form.h; sourceTree = "<group>"; };
 		E653AD27178FB92100487ADE /* M12306Form.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306Form.m; sourceTree = "<group>"; };
 		E659942E1793B5D00097C42D /* M12306QueryTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306QueryTableView.h; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 		E6B4063A178E780E00F1B668 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E64B2706186E6A7000C8254E /* station.txt */,
 				E665800F186D80FE0008014A /* query.py */,
 				E665800D186D803C0008014A /* enableProxy.txt */,
 				E6B4063B178E780E00F1B668 /* My12306-Info.plist */,
@@ -294,6 +297,7 @@
 				E6C245ED17E0AB4600C9C4E2 /* yudingform in Resources */,
 				E6C245EF17E0AB8D00C9C4E2 /* commitform in Resources */,
 				E6C245F117E0ABBB00C9C4E2 /* commitform2 in Resources */,
+				E64B2707186E6A7000C8254E /* station.txt in Resources */,
 				E6478E4817EAF53C007C8138 /* Images.xcassets in Resources */,
 				E6C245F317E0ABEA00C9C4E2 /* checkform in Resources */,
 				E6C245F517E0AC1E00C9C4E2 /* checkform2 in Resources */,

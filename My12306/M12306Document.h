@@ -50,6 +50,7 @@ typedef enum TASK_RESULT_
 @property (nonatomic) TASK_RESULT taskResult;
 //$$$$$$$$$$$$$$$$$$$$$$$
 @property (weak) IBOutlet NSProgressIndicator *queryProcess;
+- (IBAction)getPassengerClick:(id)sender;
 
 @property (weak) IBOutlet NSDatePicker *dpDingshi;
 
