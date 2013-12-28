@@ -218,7 +218,8 @@
 }
 - (NSImage *) getImageWithUrl:(NSString *)url refUrl:(NSString *)refUrl
 {
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:60];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ]];
+    
     
     [request setValue:refUrl forHTTPHeaderField:@"Referer"];
     NSData * data=[M12306URLConnection sendSynchronousRequest:request];
@@ -243,17 +244,6 @@
     }
 }
 
-- (IBAction)getAddrClick:(id)sender {
-    
-    NSDateFormatter * formate=[[NSDateFormatter alloc]init];
-    [formate setDateFormat:@"yyyy-MM-dd"];
-    NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
-
-    NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
-    NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
-    NSString *url = [NSString stringWithFormat:HOST_URL@"/otn/leftTicket/query?leftTicketDTO.train_date=%@&leftTicketDTO.from_station=%@&leftTicketDTO.to_station=%@&purpose_codes=ADULT",date,sessionFrom,sessionTo];
-    self.txtAddr.stringValue=url;
-}
 - (void)delayLoginLock
 {
     
@@ -318,32 +308,10 @@
                 //登录成功
                 [self addLog:@"登录成功"];
                 self.isLogin = YES;
-                [NSThread detachNewThreadSelector:@selector(checkLoginLoop) toTarget:self withObject:nil];
-                NSString *str = [self getText:HOST_URL@"/otn/index/initMy12306" IsPost:NO];
-                
-                NSMutableArray * mathcStrs = [NSMutableArray array];
-                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"user_name='(.*?)'" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
-                
-                [regex enumerateMatchesInString:str options:0 range:NSMakeRange(0, str.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-                    if([result numberOfRanges]>0)
-                    {
-                        [mathcStrs addObject: [str substringWithRange:[result rangeAtIndex:1]]];
-                    }
-                    
-                }];
-                @try {
-                    NSString *name = [mathcStrs objectAtIndex:0];
-                    NSString *tem = [NSString stringWithFormat:@"[\"%@\"]",name];
-                    NSArray *aa= [tem objectFromJSONString];
-                    name = [aa objectAtIndex:0];
-                    self.lblLoginMsg.stringValue=name;
-                }
-                @catch (NSException *exception) {
-                    
-                }
-                
-              
+                self.lblLoginMsg.stringValue=@"已登录";
                 [self getPassenger];
+                [NSThread detachNewThreadSelector:@selector(getUserInfo) toTarget:self withObject:nil];
+
             }
         }
         else
@@ -384,6 +352,37 @@
         [self addLog:@"登录失败，重新登录"];
         [self delayLogin];
     }
+}
+-(void)getUserInfo
+{
+    [NSThread detachNewThreadSelector:@selector(checkLoginLoop) toTarget:self withObject:nil];
+    NSString *str = [self getText:HOST_URL@"/otn/index/initMy12306" IsPost:NO];
+    
+    NSMutableArray * mathcStrs = [NSMutableArray array];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"user_name='(.*?)'" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
+    
+    [regex enumerateMatchesInString:str options:0 range:NSMakeRange(0, str.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        if([result numberOfRanges]>0)
+        {
+            [mathcStrs addObject: [str substringWithRange:[result rangeAtIndex:1]]];
+        }
+        
+    }];
+    @try {
+        NSString *name = [mathcStrs objectAtIndex:0];
+        NSString *tem = [NSString stringWithFormat:@"[\"%@\"]",name];
+        NSArray *aa= [tem objectFromJSONString];
+        name = [aa objectAtIndex:0];
+        [self performSelectorOnMainThread:@selector(setUserInfo:) withObject:name waitUntilDone:NO];
+        
+    }
+    @catch (NSException *exception) {
+        
+    }
+}
+-(void)setUserInfo:(NSString *)name
+{
+    self.lblLoginMsg.stringValue=name;
 }
 -(void)setPassenger
 {
@@ -445,7 +444,10 @@
 }
 - (void)getPassenger
 {
-    [NSThread detachNewThreadSelector:@selector(getPassengerLock) toTarget:self withObject:nil];
+    if(self.isLogin)
+    {
+        [NSThread detachNewThreadSelector:@selector(getPassengerLock) toTarget:self withObject:nil];
+    }
 }
 
 - (void)setYuanshiForFile:(NSString *)filename forFrom:(M12306Form *)form
@@ -465,7 +467,7 @@
 
 - (NSData *)getData:(NSString *)url IsPost:(BOOL)isPost
 {
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:60];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url ]];
     
     [request setValue:url forHTTPHeaderField:@"Referer"];
     if(isPost)
@@ -1361,7 +1363,7 @@
     
     DDFileReader *reader = [[DDFileReader alloc]initWithFileHandle:fileerr];
     NSString *line;
-    while ((line=reader.readLine)) {
+    while ((line=reader.readTrimmedLine)) {
         NSLog(@"%@",line);
     }
     NSData *data;
@@ -1375,5 +1377,12 @@
 }
 - (IBAction)getPassengerClick:(id)sender {
     [self getPassenger];
+}
+- (IBAction)btnSetTimeoutClick:(id)sender {
+    NSTimeInterval interval = self.txtTimeout.stringValue.floatValue;
+    if(interval>0)
+    {
+        [M12306URLConnection setTimeoutInterval:interval];
+    }
 }
 @end

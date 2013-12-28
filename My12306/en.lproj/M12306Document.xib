@@ -20,12 +20,12 @@
                 <outlet property="queryProcess" destination="tYS-93-CGx" id="B8l-RL-4LF"/>
                 <outlet property="tablePassenger" destination="100540" id="100608"/>
                 <outlet property="tableViewQuery" destination="100581" id="100615"/>
-                <outlet property="txtAddr" destination="uyf-jk-RNU" id="x23-ii-FrT"/>
                 <outlet property="txtCommitCode" destination="100595" id="100627"/>
                 <outlet property="txtImgcode" destination="100095" id="100331"/>
                 <outlet property="txtLog" destination="100154" id="100327"/>
                 <outlet property="txtLogParent" destination="100153" id="100630"/>
                 <outlet property="txtPassword" destination="100620" id="100622"/>
+                <outlet property="txtTimeout" destination="Q5r-i2-uJI" id="4OS-4r-sdM"/>
                 <outlet property="txtTrainNameRegx" destination="100566" id="100619"/>
                 <outlet property="txtUsername" destination="100054" id="100329"/>
                 <outlet property="window" destination="5" id="18"/>
@@ -469,26 +469,6 @@ DQ
                         <rect key="frame" x="490" y="321" width="16" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </progressIndicator>
-                    <textField verticalHuggingPriority="750" id="uyf-jk-RNU">
-                        <rect key="frame" x="643" y="589" width="260" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="hh3-wL-qgO">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <button verticalHuggingPriority="750" id="8hc-HH-Z4O">
-                        <rect key="frame" x="905" y="583" width="91" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="getAddr" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uRj-Ug-1Y1">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="getAddrClick:" target="-2" id="2Mj-EA-jYa"/>
-                        </connections>
-                    </button>
                     <button verticalHuggingPriority="750" id="dMK-UB-huY">
                         <rect key="frame" x="370" y="588" width="92" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -500,6 +480,41 @@ DQ
                             <action selector="getPassengerClick:" target="-2" id="gnq-pu-Rvc"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" id="W7K-cU-IfL">
+                        <rect key="frame" x="883" y="575" width="66" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="设置" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ecP-LZ-dA2">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="btnSetTimeoutClick:" target="-2" id="nkS-PW-2AC"/>
+                        </connections>
+                    </button>
+                    <textField verticalHuggingPriority="750" id="Q5r-i2-uJI">
+                        <rect key="frame" x="785" y="582" width="96" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="vtB-7m-hbz">
+                            <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="3" id="JZo-PE-lYb">
+                                <real key="roundingIncrement" value="0.0"/>
+                                <metadata>
+                                    <bool key="localizesFormat" value="YES"/>
+                                </metadata>
+                            </numberFormatter>
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="J1r-ZO-cwh">
+                        <rect key="frame" x="681" y="584" width="98" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Socket超时时间" id="iLj-4S-XbL">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
             </view>
             <connections>

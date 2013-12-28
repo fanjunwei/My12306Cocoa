@@ -15,4 +15,6 @@
 @property BOOL finish;
 
 + (NSData *)sendSynchronousRequest:(NSMutableURLRequest*) request;
+
++(void)setTimeoutInterval:(NSTimeInterval)timeoutInterval;
 @end

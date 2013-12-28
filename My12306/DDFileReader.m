@@ -49,6 +49,7 @@
 @implementation DDFileReader
 {
     NSFileHandle * fileHandle;
+    NSData* lastData;
     //unsigned long long currentOffset;
 }
 @synthesize lineDelimiter, chunkSize;
@@ -75,6 +76,8 @@
     
     NSData * newLineData = [lineDelimiter dataUsingEncoding:NSUTF8StringEncoding];
     NSMutableData * currentData = [[NSMutableData alloc] init];
+    if(lastData)
+        [currentData appendData:lastData];
     BOOL shouldReadMore = YES;
     
  
@@ -89,6 +92,10 @@
         if (newLineRange.location != NSNotFound) {
             
             //include the length so we can include the delimiter in the string
+            if(newLineRange.location+newLineData.length<chunk.length)
+            {
+                lastData=[chunk subdataWithRange:NSMakeRange(newLineRange.location+newLineData.length, chunk.length-(newLineRange.location+newLineData.length))];
+            }
             chunk = [chunk subdataWithRange:NSMakeRange(0, newLineRange.location+[newLineData length])];
             shouldReadMore = NO;
         }

@@ -37,6 +37,8 @@ def propxy(url,proxyUrl):
     opener = urllib2.build_opener(proxy_support)
     req = urllib2.Request(url)
     req.add_header('User-Agent', UserAgent)
+    req.add_header('X-Forwarded-For', '192.168.1.2')
+    req.add_header('X-Proxy-ID', '000000000')
     res=''
     try:
         f=opener.open(req,timeout=60)
@@ -94,7 +96,7 @@ def query(proxy):
         timeTick=float(args[15])/1000.0
         #
         if(code==Tranicode):
-            printLog(decodeSecretStr)
+            printLog(yupiaoStr)
             # print decodeSecretStr
             # print code
             # print yupiaoStr
@@ -111,7 +113,7 @@ def queryThread():
         try:
             query(proxyadds[index])
         except Exception ,e:
-            printLog('error')
+            #printLog(e.message)
             time.sleep(1)
 
 readProxyAddFile()

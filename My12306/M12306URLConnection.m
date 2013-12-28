@@ -8,10 +8,14 @@
 
 #import "M12306URLConnection.h"
 
+static NSTimeInterval sTimeoutInterval = 60;
 @implementation M12306URLConnection
 
 
-
++(void)setTimeoutInterval:(NSTimeInterval)timeoutInterval
+{
+    sTimeoutInterval=timeoutInterval;
+}
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse*)response
 {
@@ -59,7 +63,13 @@
     M12306URLConnection *res = [[M12306URLConnection alloc]init];
     res.data=[NSMutableData dataWithCapacity:128];
     res.finish =NO;
+    [request setTimeoutInterval:sTimeoutInterval];
     [request setValue:UserAgent forHTTPHeaderField:@"User-Agent"];
+    //HTTP_X_FORWARDED_FOR
+    //MT-Proxy-ID=1804289383
+    //[request setValue:@"1804281312312" forHTTPHeaderField:@"MT-Proxy-ID"];
+    //[request setValue:@"342.108.232.188" forHTTPHeaderField:@"X-Forwarded-For"];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData];
     res.connection=[[NSURLConnection alloc]initWithRequest:request delegate:res];
     while (!res.finish) {
         
