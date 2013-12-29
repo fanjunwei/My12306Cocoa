@@ -15,6 +15,7 @@
 {
     NSDictionary *_savedDate;
     NSTask *task;
+    BOOL queryRunning;
 }
 - (id)init
 {
@@ -621,47 +622,56 @@
     self.dtQuery.data=self.queryResultData;
     [self.dtQuery reloadData];
 }
+- (void)query
+{
+    if(!queryRunning)
+    {
+        [NSThread detachNewThreadSelector:@selector(queryLock) toTarget:self withObject:nil];
+    }
+}
 - (void)queryLock
 {
-    self.queryResultData=nil;
-    [self addLog:[NSString stringWithFormat:@"查询车次：%ld",self.QueryCount]];
-    [self performSelectorOnMainThread:@selector(setQueryProcessAni:) withObject:[NSNumber numberWithBool:YES] waitUntilDone:YES];
-    //[self.queryProcess setIndeterminate:YES];
-    NSDateFormatter * formate=[[NSDateFormatter alloc]init];
-    [formate setDateFormat:@"yyyy-MM-dd"];
-    NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
-    NSString *search = nil;
-    NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
-    NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
-    NSString *url = [NSString stringWithFormat:HOST_URL@"/otn/leftTicket/query?leftTicketDTO.train_date=%@&leftTicketDTO.from_station=%@&leftTicketDTO.to_station=%@&purpose_codes=ADULT",date,sessionFrom,sessionTo];
-    while (YES) {
-        search = [self getText:url IsPost:NO];
-        if(search==nil)
-        {
-            usleep(500*1000);
+    queryRunning=YES;
+    @try {
+        self.queryResultData=nil;
+        [self addLog:[NSString stringWithFormat:@"查询车次：%ld",self.QueryCount]];
+        [self performSelectorOnMainThread:@selector(setQueryProcessAni:) withObject:[NSNumber numberWithBool:YES] waitUntilDone:YES];
+        //[self.queryProcess setIndeterminate:YES];
+        NSDateFormatter * formate=[[NSDateFormatter alloc]init];
+        [formate setDateFormat:@"yyyy-MM-dd"];
+        NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
+        NSString *search = nil;
+        NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
+        NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
+        NSString *url = [NSString stringWithFormat:HOST_URL@"/otn/leftTicket/query?leftTicketDTO.train_date=%@&leftTicketDTO.from_station=%@&leftTicketDTO.to_station=%@&purpose_codes=ADULT",date,sessionFrom,sessionTo];
+        while (YES) {
+            search = [self getText:url IsPost:NO];
+            if(search==nil)
+            {
+                usleep(500*1000);
+            }
+            else
+            {
+                break;
+            }
         }
-        else
+        
+        NSDictionary *json = [search objectFromJSONString];
+        self.queryResultData=[json objectForKey:@"data"];
+        [self performSelectorOnMainThread:@selector(setQueryResultToTableView) withObject:nil waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(setQueryProcessAni:) withObject:[NSNumber numberWithBool:NO] waitUntilDone:YES];
+        NSArray *messages = [json objectForKey:@"messages"];
+        if(messages!=nil && messages.count>0)
         {
-            break;
+            [self addLog:[messages objectAtIndex:0]];
         }
-    }
-    
-    NSDictionary *json = [search objectFromJSONString];
-    self.queryResultData=[json objectForKey:@"data"];
-    [self performSelectorOnMainThread:@selector(setQueryResultToTableView) withObject:nil waitUntilDone:NO];
-    [self performSelectorOnMainThread:@selector(setQueryProcessAni:) withObject:[NSNumber numberWithBool:NO] waitUntilDone:YES];
-    NSArray *messages = [json objectForKey:@"messages"];
-    if(messages!=nil && messages.count>0)
-    {
-        [self addLog:[messages objectAtIndex:0]];
-    }
         for (NSDictionary * item  in self.queryResultData) {
             M12306TrainInfo * info = [[M12306TrainInfo alloc]initWithDictionary:item];
             
             NSString *secretStr= info.secretStr;
             NSString *secretStrdec= [base64 decodeBase64String: info.secretStr];
             
-
+            
             NSArray *secretStrarray =[secretStrdec componentsSeparatedByString:@"#"];
             
             
@@ -679,11 +689,8 @@
             
             if([info Success:self.txtTrainNameRegx.stringValue])
             {
-               
-//                NSLog(@"%@\n%@",[base64 decodeBase64String: info.secretStr],[[info.mData objectForKey:@"queryLeftNewDTO"] objectForKey:@"yp_info"]);
-                
-                
                 self.currTrainInfo=info;
+                self.yudingSecretStr=info.secretStr;
                 NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
                 int ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
                 NSString *trainName=self.currTrainInfo.TrainName;
@@ -692,13 +699,16 @@
                 [self addLog:time];
                 if(ticketCoun>0)
                 {
+                    [self addLog:@"native"];
                     self.taskResult=TASK_RESULT_YES;
-                //usleep(1000*60);
-                //sleep(60*5+8);
                     break;
                 }
             }
         }
+    }
+    @finally {
+        queryRunning=NO;
+    }
 }
 
 - (void)yuding:(M12306TrainInfo *)info
@@ -1028,10 +1038,7 @@
     self.isLogin=NO;
     [self getLoginImgCode];
 }
-- (void)query
-{
-    [NSThread detachNewThreadSelector:@selector(queryLock) toTarget:self withObject:nil];
-}
+
 - (NSString *)formatDate:(NSDate *)date strFormat:(NSString *)format
 {
     NSDateFormatter * dateFormat=[[NSDateFormatter alloc]init];
@@ -1197,7 +1204,6 @@
         self.yudingLoopRuning=YES;
         self.yudingLoopRun=YES;
         self.yudingStatus=YUDING_STATUS_QUERY;
-        [self exeScript];
         [NSThread detachNewThreadSelector:@selector(yudingLoop) toTarget:self withObject:nil];
     }
 }
@@ -1218,14 +1224,15 @@
         self.taskResult=TASK_RESULT_NONE;
         switch (self.yudingStatus) {
             case YUDING_STATUS_QUERY:
+                if(task==nil)
+                {
+                    [self exeScript];
+                }
+                [self query];
                 if(self.yudingSecretStr && self.yudingSecretStr.length>5)
                 {
                     self.currTrainInfo=[[M12306TrainInfo alloc]initWithSecretStr:self.yudingSecretStr];
                     self.taskResult=TASK_RESULT_YES;
-                }
-                else
-                {
-                    [self queryLock];
                 }
                  if(self.taskResult != TASK_RESULT_YES)
                      usleep(100*1000);
@@ -1262,7 +1269,15 @@
                     break;
                 case YUDING_STATUS_QUERY:
                     if(self.taskResult == TASK_RESULT_YES)
+                    {
+                        if(task)
+                        {
+                            [task interrupt];
+                            task=nil;
+                        }
+                        self.yudingSecretStr=nil;
                         self.yudingStatus=YUDING_STATUS_YUDING;
+                    }
                     break;
                 case YUDING_STATUS_YUDING:
                     if(self.taskResult == TASK_RESULT_YES)
@@ -1329,7 +1344,6 @@
 }
 -(void)exeScriptThread
 {
-    self.yudingSecretStr=nil;
     NSDateFormatter * formate=[[NSDateFormatter alloc]init];
     [formate setDateFormat:@"yyyy-MM-dd"];
     NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
@@ -1373,6 +1387,8 @@
     string = [[NSString alloc] initWithData: data
                                    encoding: NSUTF8StringEncoding];
     NSLog(@"%@",string);
+    [self addLog:@"python"];
+    task=nil;
     self.yudingSecretStr=string;
 }
 - (IBAction)getPassengerClick:(id)sender {
