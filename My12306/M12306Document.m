@@ -160,7 +160,7 @@
             self.isLogin=NO;
             [self getLoginImgCode];
         }
-        sleep(3);
+        sleep(25);
     }
 }
 

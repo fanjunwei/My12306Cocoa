@@ -91,6 +91,7 @@ def query(proxy):
         decodeSecretStr=base64.b64decode(unquoteSecretStr)
         args = decodeSecretStr.split('#')
         code=args[2]
+        printLog(code)
         yupiaoStr=args[13]
         count=getYupiaoCount(yupiaoStr,Seat)
         timeTick=float(args[15])/1000.0

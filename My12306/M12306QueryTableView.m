@@ -62,11 +62,11 @@
         NSString * canWebBuy =[[item objectForKey:@"queryLeftNewDTO"] objectForKey:@"canWebBuy"];
         if([canWebBuy isEqualToString:@"Y"])
         {
-            return @"可预订";
+            return @"**可预订";
         }
         else
         {
-            return [item objectForKey:idname];
+            return [[item objectForKey:idname] stringByReplacingOccurrencesOfString:@"<br/>" withString:@","];
         }
     }
     else
