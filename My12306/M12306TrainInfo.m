@@ -54,7 +54,7 @@
 - (int)TicketCountForSeat:(NSString *)seat
 {
     //NSString *ypinfo=[queryLeftNewDTO objectForKey:@"yp_info"];
-    int seat_1 = 0;
+    int seat_1 = -1;
     //int seat_2 = -1;
     for (int i=0; i<ypinfo.length; i+=10) {
         NSString *s = [ypinfo substringWithRange:NSMakeRange(i, 10)];

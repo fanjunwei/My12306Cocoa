@@ -690,15 +690,16 @@
             if([info Success:self.txtTrainNameRegx.stringValue])
             {
                 self.currTrainInfo=info;
-                self.yudingSecretStr=info.secretStr;
+                
                 NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
                 int ticketCoun=[self.currTrainInfo TicketCountForSeat:seatCode];
                 NSString *trainName=self.currTrainInfo.TrainName;
                 [self addLog:[NSString stringWithFormat:@"%@,余票:%d",trainName,ticketCoun]];
                 [self addLog:[NSString stringWithFormat:@"%@#%f",dd,inter]];
                 [self addLog:time];
-                if(ticketCoun>0)
+                if(ticketCoun>0 && self.yudingStatus == YUDING_STATUS_QUERY)
                 {
+                    self.yudingSecretStr=info.secretStr;
                     [self addLog:@"native"];
                     self.taskResult=TASK_RESULT_YES;
                     break;
@@ -1270,13 +1271,14 @@
                 case YUDING_STATUS_QUERY:
                     if(self.taskResult == TASK_RESULT_YES)
                     {
+                        self.yudingStatus=YUDING_STATUS_YUDING;
                         if(task)
                         {
                             [task interrupt];
                             task=nil;
                         }
                         self.yudingSecretStr=nil;
-                        self.yudingStatus=YUDING_STATUS_YUDING;
+                        
                     }
                     break;
                 case YUDING_STATUS_YUDING:
@@ -1387,9 +1389,13 @@
     string = [[NSString alloc] initWithData: data
                                    encoding: NSUTF8StringEncoding];
     NSLog(@"%@",string);
-    [self addLog:@"python"];
+    
     task=nil;
-    self.yudingSecretStr=string;
+    if(self.yudingStatus == YUDING_STATUS_QUERY)
+    {
+        [self addLog:@"python"];
+        self.yudingSecretStr=string;
+    }
 }
 - (IBAction)getPassengerClick:(id)sender {
     [self getPassenger];
