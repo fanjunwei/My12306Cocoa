@@ -701,7 +701,7 @@
                 {
                     self.yudingSecretStr=info.secretStr;
                     [self addLog:@"native"];
-                    self.taskResult=TASK_RESULT_YES;
+                    //self.taskResult=TASK_RESULT_YES;
                     break;
                 }
             }
@@ -1233,7 +1233,10 @@
                 if(self.yudingSecretStr && self.yudingSecretStr.length>5)
                 {
                     self.currTrainInfo=[[M12306TrainInfo alloc]initWithSecretStr:self.yudingSecretStr];
-                    self.taskResult=TASK_RESULT_YES;
+                    if(self.currTrainInfo)
+                    {
+                        self.taskResult=TASK_RESULT_YES;
+                    }
                 }
                  if(self.taskResult != TASK_RESULT_YES)
                      usleep(100*1000);
@@ -1360,7 +1363,7 @@
     NSString *proxyFilePath=[respath stringByAppendingPathComponent:@"enableProxy.txt"];
     NSArray *arguments;
     //arguments = [NSArray arrayWithObjects: scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat,nil];
-    NSString *cmd =[NSString stringWithFormat:@"python %@ %@ %@ %@ %@ %@ %@",scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat];
+    NSString *cmd =[NSString stringWithFormat:@"python1 %@ %@ %@ %@ %@ %@ %@",scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat];
     arguments = [NSArray arrayWithObjects: @"-c",cmd,nil];
     [task setArguments: arguments];
     

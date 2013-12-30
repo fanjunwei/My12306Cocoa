@@ -28,11 +28,18 @@
     self = [self init];
     if(self)
     {
-        self.secretStr=secretStr;
-        NSString *secretStrdec= [base64 decodeBase64String: secretStr];
-        NSArray *args=[secretStrdec componentsSeparatedByString:@"#"];
-        self.TrainName=[args objectAtIndex:2];
-        ypinfo=[args objectAtIndex:13];
+        @try {
+            self.secretStr=secretStr;
+            NSString *secretStrdec= [base64 decodeBase64String: secretStr];
+            NSArray *args=[secretStrdec componentsSeparatedByString:@"#"];
+            self.TrainName=[args objectAtIndex:2];
+            ypinfo=[args objectAtIndex:13];
+        }
+        @catch (NSException *exception) {
+            return nil;
+        }
+    
+
     }
     return self;
 }
