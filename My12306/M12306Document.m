@@ -1354,12 +1354,14 @@
     NSString *trainCode =self.txtTrainNameRegx.stringValue;
     NSString *seat=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
     task = [[NSTask alloc] init];
-    [task setLaunchPath: @"/Library/Frameworks/Python.framework/Versions/2.7/bin/python"];
+    [task setLaunchPath: @"/bin/bash"];
     NSString * respath = [[NSBundle mainBundle] resourcePath];
     NSString *scriptPath=[respath stringByAppendingPathComponent:@"query.py"];
     NSString *proxyFilePath=[respath stringByAppendingPathComponent:@"enableProxy.txt"];
     NSArray *arguments;
-    arguments = [NSArray arrayWithObjects: scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat,nil];
+    //arguments = [NSArray arrayWithObjects: scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat,nil];
+    NSString *cmd =[NSString stringWithFormat:@"python %@ %@ %@ %@ %@ %@ %@",scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat];
+    arguments = [NSArray arrayWithObjects: @"-c",cmd,nil];
     [task setArguments: arguments];
     
     NSPipe *pipe;
