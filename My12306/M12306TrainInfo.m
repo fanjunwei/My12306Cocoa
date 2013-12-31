@@ -38,8 +38,8 @@
         @catch (NSException *exception) {
             return nil;
         }
-    
-
+        
+        
     }
     return self;
 }
@@ -61,23 +61,28 @@
 - (int)TicketCountForSeat:(NSString *)seat
 {
     //NSString *ypinfo=[queryLeftNewDTO objectForKey:@"yp_info"];
-    int seat_1 = -1;
-    //int seat_2 = -1;
+    BOOL find=NO;
+    int seat_1 = 0;
+    int seat_2 = 0;
     for (int i=0; i<ypinfo.length; i+=10) {
         NSString *s = [ypinfo substringWithRange:NSMakeRange(i, 10)];
         NSString *c_seat=[s substringWithRange:NSMakeRange(0, 1)];
         if ([c_seat isEqualToString: seat]) {
             NSString * count =[s substringWithRange:NSMakeRange(6, 4)];
             int intcount = count.intValue;
+            find=YES;
             if (intcount < 3000) {
                 seat_1 = intcount;
             }
-//            else {
-//                seat_2 = (intcount - 3000);
-//            }
+            else {
+                seat_2 = (intcount - 3000);
+            }
         }
     }
-
-    return seat_1;
+    
+    if(find)
+        return seat_1+seat_2;
+    else
+        return -1;
 }
 @end
