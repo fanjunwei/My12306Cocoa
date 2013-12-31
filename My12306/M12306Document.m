@@ -1229,7 +1229,7 @@
                 {
                     [self exeScript];
                 }
-                [self query];
+                //[self query];
                 if(self.yudingSecretStr && self.yudingSecretStr.length>5)
                 {
                     self.currTrainInfo=[[M12306TrainInfo alloc]initWithSecretStr:self.yudingSecretStr];
@@ -1357,13 +1357,12 @@
     NSString *trainCode =self.txtTrainNameRegx.stringValue;
     NSString *seat=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
     task = [[NSTask alloc] init];
-    [task setLaunchPath: @"/bin/bash"];
+    [task setLaunchPath: @"/Library/Frameworks/Python.framework/Versions/2.7/bin/python"];
     NSString * respath = [[NSBundle mainBundle] resourcePath];
     NSString *scriptPath=[respath stringByAppendingPathComponent:@"query.py"];
     NSString *proxyFilePath=[respath stringByAppendingPathComponent:@"enableProxy.txt"];
     NSArray *arguments;
-    NSString *cmd =[NSString stringWithFormat:@"python %@ %@ %@ %@ %@ %@ %@",scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat];
-    arguments = [NSArray arrayWithObjects: @"-c",cmd,nil];
+    arguments = [NSArray arrayWithObjects: scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat,nil];
     [task setArguments: arguments];
     
     NSPipe *pipe;
