@@ -1362,8 +1362,7 @@
     NSString *scriptPath=[respath stringByAppendingPathComponent:@"query.py"];
     NSString *proxyFilePath=[respath stringByAppendingPathComponent:@"enableProxy.txt"];
     NSArray *arguments;
-    //arguments = [NSArray arrayWithObjects: scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat,nil];
-    NSString *cmd =[NSString stringWithFormat:@"python1 %@ %@ %@ %@ %@ %@ %@",scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat];
+    NSString *cmd =[NSString stringWithFormat:@"python %@ %@ %@ %@ %@ %@ %@",scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat];
     arguments = [NSArray arrayWithObjects: @"-c",cmd,nil];
     [task setArguments: arguments];
     
@@ -1396,7 +1395,7 @@
     NSLog(@"%@",string);
     
     task=nil;
-    if(self.yudingStatus == YUDING_STATUS_QUERY)
+    if(self.yudingStatus == YUDING_STATUS_QUERY && string && string.length>5)
     {
         [self addLog:@"python"];
         self.yudingSecretStr=string;
