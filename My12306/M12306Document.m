@@ -216,6 +216,8 @@
 }
 -(void) getLoginImgCode
 {
+    NSImage * image;
+
     [NSThread detachNewThreadSelector:@selector(getLoginImgCodeLock) toTarget:self withObject:nil];
     
 }

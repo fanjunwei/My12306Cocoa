@@ -57,16 +57,18 @@ def readProxyAddFile():
         proxyadds.append(args[0])
 
 def getYupiaoCount(yupiaoStr,seat):
-    
+    out=0
     for i in range(0,len(yupiaoStr)/10):
         s=yupiaoStr[i*10:i*10+10]
         c_seat=s[0:1]
         if(c_seat==seat):
             count=int(s[6:6+4])
             if(count<3000):
-                return count
+                out=out+count
+            else:
+                out=out+count-3000
     
-    return 0
+    return out
 
 def getNewIndex():
     global countLock,index
