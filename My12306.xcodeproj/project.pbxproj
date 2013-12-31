@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E6027AA0186DC8890015DBEA /* DDFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = E6027A9F186DC8890015DBEA /* DDFileReader.m */; };
+		E6096312187322C30053099A /* M12306GifView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6096311187322C30053099A /* M12306GifView.m */; };
 		E621B6F0178FC21D00DFFFE9 /* M12306KeyValue.m in Sources */ = {isa = PBXBuildFile; fileRef = E621B6EF178FC21D00DFFFE9 /* M12306KeyValue.m */; };
 		E62446C617913D3700C1CF79 /* M12306ComboBox.m in Sources */ = {isa = PBXBuildFile; fileRef = E62446C517913D3700C1CF79 /* M12306ComboBox.m */; };
 		E62DE8F417E1DE2400A4B423 /* login.html in Resources */ = {isa = PBXBuildFile; fileRef = E62DE8F317E1DE2400A4B423 /* login.html */; };
@@ -49,6 +50,8 @@
 /* Begin PBXFileReference section */
 		E6027A9E186DC8890015DBEA /* DDFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileReader.h; sourceTree = "<group>"; };
 		E6027A9F186DC8890015DBEA /* DDFileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDFileReader.m; sourceTree = "<group>"; };
+		E6096310187322C30053099A /* M12306GifView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306GifView.h; sourceTree = "<group>"; };
+		E6096311187322C30053099A /* M12306GifView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306GifView.m; sourceTree = "<group>"; };
 		E621B6EE178FC21D00DFFFE9 /* M12306KeyValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306KeyValue.h; sourceTree = "<group>"; };
 		E621B6EF178FC21D00DFFFE9 /* M12306KeyValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306KeyValue.m; sourceTree = "<group>"; };
 		E62446C417913D3700C1CF79 /* M12306ComboBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306ComboBox.h; sourceTree = "<group>"; };
@@ -207,6 +210,8 @@
 				E6A832D21855866800412EF5 /* base64.m */,
 				E6027A9E186DC8890015DBEA /* DDFileReader.h */,
 				E6027A9F186DC8890015DBEA /* DDFileReader.m */,
+				E6096310187322C30053099A /* M12306GifView.h */,
+				E6096311187322C30053099A /* M12306GifView.m */,
 			);
 			path = My12306;
 			sourceTree = "<group>";
@@ -324,6 +329,7 @@
 				E62446C617913D3700C1CF79 /* M12306ComboBox.m in Sources */,
 				E6F178621792DAAF003A81DC /* M12306passengerTicketItem.m in Sources */,
 				E6F178651792DDBA003A81DC /* M12306PassengerTableView.m in Sources */,
+				E6096312187322C30053099A /* M12306GifView.m in Sources */,
 				E65994301793B5D00097C42D /* M12306QueryTableView.m in Sources */,
 				E683C7E017E1A59700FF16B3 /* M12306Base32.m in Sources */,
 				E683C7E517E1C06600FF16B3 /* M12306Js.m in Sources */,

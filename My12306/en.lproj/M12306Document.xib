@@ -14,7 +14,7 @@
                 <outlet property="dtQuery" destination="100581" id="100618"/>
                 <outlet property="dtpDate" destination="100563" id="100613"/>
                 <outlet property="imgCommitCode" destination="11y-7j-mtN" id="BOU-0L-ebR"/>
-                <outlet property="imgLoginCode" destination="RFk-LR-AxU" id="TuX-PG-tSV"/>
+                <outlet property="imgLoginCode" destination="xRc-kp-5mF" id="UEr-Jc-DF0"/>
                 <outlet property="lblDelayCommit" destination="100597" id="100628"/>
                 <outlet property="lblLoginMsg" destination="100605" id="100607"/>
                 <outlet property="popupSeat" destination="100568" id="100599"/>
@@ -226,13 +226,10 @@ DQ
                                         <action selector="loginOutClick:" target="-2" id="100638"/>
                                     </connections>
                                 </button>
-                                <webView id="RFk-LR-AxU">
-                                    <rect key="frame" x="68" y="67" width="78" height="30"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
-                                        <nil key="identifier"/>
-                                    </webPreferences>
-                                </webView>
+                                <customView id="xRc-kp-5mF" customClass="M12306GifView">
+                                    <rect key="frame" x="68" y="58" width="145" height="39"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                </customView>
                             </subviews>
                         </view>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>

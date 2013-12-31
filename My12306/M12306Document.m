@@ -191,7 +191,7 @@
 }
 - (void)setLoginImgCode:(NSData *)image
 {
-    [self.imgLoginCode.mainFrame loadData:image MIMEType:@"image/gif" textEncodingName:@"urf8" baseURL:nil];
+    [self.imgLoginCode setImageData:image];
     if(self.txtUsername.stringValue && ![self.txtUsername.stringValue isEqualToString:@""] && self.txtPassword.stringValue && ![self.txtPassword.stringValue isEqualToString:@""])
     {
         self.txtImgcode.stringValue=@"";
@@ -1008,7 +1008,7 @@
 }
 - (void)setCommitImgCodeLock:(NSData *)image
 {
-    [self.imgLoginCode.mainFrame loadData:image MIMEType:@"image/gif" textEncodingName:@"utf8" baseURL:nil];
+    [self.imgCommitCode.mainFrame loadData:image MIMEType:@"image/gif" textEncodingName:@"utf8" baseURL:nil];
     self.txtCommitCode.stringValue=@"";
     [self.txtCommitCode becomeFirstResponder];
     

@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "M12306GifView.h"
 #import "M12306URLConnection.h"
 #import "M12306TextField.h"
 #import "M12306Form.h"
@@ -78,7 +79,8 @@ typedef enum TASK_RESULT_
 @property (weak) IBOutlet NSPopUpButton *popupSeat;
 @property (weak) IBOutlet M12306PassengerTableView *tablePassenger;
 @property (weak) IBOutlet NSScrollView *txtLogParent;
-@property (weak) IBOutlet WebView *imgLoginCode;
+@property (weak) IBOutlet M12306GifView *imgLoginCode;
+
 
 @property (weak) IBOutlet M12306ComboBox *cbxToStation;
 @property (weak) IBOutlet M12306ComboBox *cbxFromStation;
