@@ -189,9 +189,9 @@
 {
     [self performSelectorOnMainThread:@selector(addLogLock:) withObject:log waitUntilDone:YES];
 }
-- (void)setLoginImgCode:(NSImage *)image
+- (void)setLoginImgCode:(NSData *)image
 {
-    [self.imgLoginCode setImage:image];
+    [self.imgLoginCode.mainFrame loadData:image MIMEType:@"image/gif" textEncodingName:@"urf8" baseURL:nil];
     if(self.txtUsername.stringValue && ![self.txtUsername.stringValue isEqualToString:@""] && self.txtPassword.stringValue && ![self.txtPassword.stringValue isEqualToString:@""])
     {
         self.txtImgcode.stringValue=@"";
@@ -202,9 +202,9 @@
 {
     
     self.loginKey=nil;
-    NSImage *image=nil;
+    NSData *image=nil;
     while (!image) {
-        image = [self getImageWithUrl:HOST_URL@"/otn/passcodeNew/getPassCodeNew?module=login&rand=sjrand" refUrl:HOST_URL@"/otn/login/init"];
+        image = [self getData:HOST_URL@"/otn/passcodeNew/getPassCodeNew?module=login&rand=sjrand" IsPost:NO];
         if(!image)
         {
             [self addLog:@"获取验证码错误,重新获取!"];

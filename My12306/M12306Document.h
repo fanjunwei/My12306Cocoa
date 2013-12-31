@@ -77,6 +77,7 @@ typedef enum TASK_RESULT_
 @property (weak) IBOutlet NSPopUpButton *popupSeat;
 @property (weak) IBOutlet M12306PassengerTableView *tablePassenger;
 @property (weak) IBOutlet NSScrollView *txtLogParent;
+@property (weak) IBOutlet WebView *imgLoginCode;
 
 @property (weak) IBOutlet M12306ComboBox *cbxToStation;
 @property (weak) IBOutlet M12306ComboBox *cbxFromStation;
@@ -84,7 +85,7 @@ typedef enum TASK_RESULT_
 @property (weak) IBOutlet NSTextField *txtUsername;
 @property (weak) IBOutlet NSSecureTextField *txtPassword;
 @property (weak) IBOutlet NSTextField *txtImgcode;
-@property (weak) IBOutlet NSImageView *imgLoginCode;
+
 - (IBAction)btnLoginClick:(id)sender;
 - (void)txtImgLoginCodeAction;
 @property (strong)NSString* yudingSecretStr;
