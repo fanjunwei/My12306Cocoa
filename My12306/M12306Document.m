@@ -11,11 +11,13 @@
 #import "JSONKit.h"
 #import "base64.h"
 #import "DDFileReader.h"
+
 @implementation M12306Document
 {
     NSDictionary *_savedDate;
-    NSTask *task;
     BOOL queryRunning;
+    NSTask *task;
+    BOOL taskRunning;
 }
 - (id)init
 {
@@ -1225,11 +1227,11 @@
         self.taskResult=TASK_RESULT_NONE;
         switch (self.yudingStatus) {
             case YUDING_STATUS_QUERY:
-                if(task==nil)
+                if(!taskRunning)
                 {
                     [self exeScript];
                 }
-                //[self query];
+                [self query];
                 if(self.yudingSecretStr && self.yudingSecretStr.length>5)
                 {
                     self.currTrainInfo=[[M12306TrainInfo alloc]initWithSecretStr:self.yudingSecretStr];
@@ -1349,56 +1351,61 @@
 }
 -(void)exeScriptThread
 {
-    NSDateFormatter * formate=[[NSDateFormatter alloc]init];
-    [formate setDateFormat:@"yyyy-MM-dd"];
-    NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
-    NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
-    NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
-    NSString *trainCode =self.txtTrainNameRegx.stringValue;
-    NSString *seat=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
-    task = [[NSTask alloc] init];
-    [task setLaunchPath: @"/Library/Frameworks/Python.framework/Versions/2.7/bin/python"];
-    NSString * respath = [[NSBundle mainBundle] resourcePath];
-    NSString *scriptPath=[respath stringByAppendingPathComponent:@"query.py"];
-    NSString *proxyFilePath=[respath stringByAppendingPathComponent:@"enableProxy.txt"];
-    NSArray *arguments;
-    arguments = [NSArray arrayWithObjects: scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat,nil];
-    [task setArguments: arguments];
-    
-    NSPipe *pipe;
-    pipe = [NSPipe pipe];
-    [task setStandardOutput: pipe];
-    NSFileHandle *file;
-    file = [pipe fileHandleForReading];
-    
-    
-    NSPipe *pipeerr;
-    pipeerr = [NSPipe pipe];
-    [task setStandardError: pipeerr];
-    NSFileHandle *fileerr;
-    fileerr = [pipeerr fileHandleForReading];
-    
-    [task launch];
-    
-    DDFileReader *reader = [[DDFileReader alloc]initWithFileHandle:fileerr];
-    NSString *line;
-    while ((line=reader.readTrimmedLine)) {
-        NSLog(@"%@",line);
+    @try {
+        taskRunning=YES;
+        NSDateFormatter * formate=[[NSDateFormatter alloc]init];
+        [formate setDateFormat:@"yyyy-MM-dd"];
+        NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
+        NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
+        NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
+        NSString *trainCode =self.txtTrainNameRegx.stringValue;
+        NSString *seat=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
+        task = [[NSTask alloc] init];
+        [task setLaunchPath: @"/Library/Frameworks/Python.framework/Versions/2.7/bin/python"];
+        NSString * respath = [[NSBundle mainBundle] resourcePath];
+        NSString *scriptPath=[respath stringByAppendingPathComponent:@"query.py"];
+        NSString *proxyFilePath=[respath stringByAppendingPathComponent:@"enableProxy.txt"];
+        NSArray *arguments;
+        arguments = [NSArray arrayWithObjects: scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat,nil];
+        [task setArguments: arguments];
+        
+        NSPipe *pipe;
+        pipe = [NSPipe pipe];
+        [task setStandardOutput: pipe];
+        NSFileHandle *file;
+        file = [pipe fileHandleForReading];
+        
+        
+        NSPipe *pipeerr;
+        pipeerr = [NSPipe pipe];
+        [task setStandardError: pipeerr];
+        NSFileHandle *fileerr;
+        fileerr = [pipeerr fileHandleForReading];
+        
+        [task launch];
+        
+        DDFileReader *reader = [[DDFileReader alloc]initWithFileHandle:fileerr];
+        NSString *line;
+        while ((line=reader.readTrimmedLine)) {
+            NSLog(@"%@",line);
+        }
+        NSData *data;
+        data = [file readDataToEndOfFile];
+        
+        NSString *string;
+        string = [[NSString alloc] initWithData: data
+                                       encoding: NSUTF8StringEncoding];
+        NSLog(@"%@",string);
+        if(self.yudingStatus == YUDING_STATUS_QUERY && string && string.length>5)
+        {
+            [self addLog:@"python"];
+            self.yudingSecretStr=string;
+        }
     }
-    NSData *data;
-    data = [file readDataToEndOfFile];
-    
-    NSString *string;
-    string = [[NSString alloc] initWithData: data
-                                   encoding: NSUTF8StringEncoding];
-    NSLog(@"%@",string);
-    
-    task=nil;
-    if(self.yudingStatus == YUDING_STATUS_QUERY && string && string.length>5)
-    {
-        [self addLog:@"python"];
-        self.yudingSecretStr=string;
+    @finally {
+        taskRunning=NO;
     }
+    
 }
 - (IBAction)getPassengerClick:(id)sender {
     [self getPassenger];
