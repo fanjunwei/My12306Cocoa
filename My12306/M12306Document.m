@@ -990,10 +990,9 @@
 }
 - (void)getCommitImgCodeLock
 {
-    NSString * url= HOST_URL@"/otn/passcodeNew/getPassCodeNew.do?module=login&rand=sjrand";
-    NSImage * map=nil;
+    NSData * map=nil;
     while (YES) {
-        map=[self getImageWithUrl:url refUrl:HOST_URL@"/otn/passcodeNew/getPassCodeNew.do?module=login&rand=sjrand"];
+        map=[self getData:HOST_URL@"/otn/passcodeNew/getPassCodeNew.do?module=login&rand=sjrand" IsPost:NO];
         if(map==nil)
         {
             [self addLog:@"获取验证码错误,稍候重试!"];
@@ -1007,9 +1006,9 @@
     self.taskResult=TASK_RESULT_YES;
     [self performSelectorOnMainThread:@selector(setCommitImgCodeLock:) withObject:map waitUntilDone:YES];
 }
-- (void)setCommitImgCodeLock:(NSImage *)image
+- (void)setCommitImgCodeLock:(NSData *)image
 {
-    self.imgCommitCode.image=image;
+    [self.imgLoginCode.mainFrame loadData:image MIMEType:@"image/gif" textEncodingName:@"utf8" baseURL:nil];
     self.txtCommitCode.stringValue=@"";
     [self.txtCommitCode becomeFirstResponder];
     
