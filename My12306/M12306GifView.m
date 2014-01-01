@@ -39,7 +39,7 @@
         NSImage *image = [self.images objectAtIndex:index];
         [image drawInRect:dirtyRect];
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(redraw) object:nil];
-        [self performSelector:@selector(redraw) withObject:nil afterDelay:1];
+        [self performSelector:@selector(redraw) withObject:nil afterDelay:0.8];
     }
     
 //	[super drawRect:dirtyRect];
