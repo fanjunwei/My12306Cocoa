@@ -216,8 +216,6 @@
 }
 -(void) getLoginImgCode
 {
-    NSImage * image;
-
     [NSThread detachNewThreadSelector:@selector(getLoginImgCodeLock) toTarget:self withObject:nil];
     
 }
@@ -607,7 +605,7 @@
         
         self.QueryCount = 0;
         [self query];
-        [self exeScript];
+        //[self exeScript];
     }
 }
 -(void) setQueryProcessAni:(NSNumber *)run
@@ -1402,6 +1400,9 @@
             [self addLog:@"python"];
             self.yudingSecretStr=string;
         }
+    }
+    @catch (NSException *exception) {
+        
     }
     @finally {
         taskRunning=NO;
