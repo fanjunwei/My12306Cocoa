@@ -50,9 +50,19 @@
 {
     // Insert code here to write your document to data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning nil.
     // You can also choose to override -fileWrapperOfType:error:, -writeToURL:ofType:error:, or -writeToURL:ofType:forSaveOperation:originalContentsURL:error: instead.
-    NSException *exception = [NSException exceptionWithName:@"UnimplementedMethod" reason:[NSString stringWithFormat:@"%@ is unimplemented", NSStringFromSelector(_cmd)] userInfo:nil];
-    @throw exception;
-    return nil;
+    NSString *path= [self storeFilePath];
+    [self saveUserInfo];
+    [self saveYundingInfo];
+    NSFileManager *fm =[NSFileManager defaultManager];
+    if([fm fileExistsAtPath:path])
+    {
+        return [NSData dataWithContentsOfFile:path];
+    }
+    else
+    {
+        return [NSData data];
+    }
+
 }
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
@@ -60,9 +70,13 @@
     // Insert code here to read your document from the given data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning NO.
     // You can also choose to override -readFromFileWrapper:ofType:error: or -readFromURL:ofType:error: instead.
     // If you override either of these, you should also override -isEntireFileLoaded to return NO if the contents are lazily loaded.
-    NSException *exception = [NSException exceptionWithName:@"UnimplementedMethod" reason:[NSString stringWithFormat:@"%@ is unimplemented", NSStringFromSelector(_cmd)] userInfo:nil];
-    @throw exception;
+    if(data)
+    {
+        NSString *path= [self storeFilePath];
+        [data writeToFile:path atomically:YES];
+    }
     return YES;
+
 }
 -(void)initDingshi
 {
@@ -268,12 +282,16 @@
 {
     [self performSelectorOnMainThread:@selector(reLoginMainThread) withObject:nil waitUntilDone:YES];
 }
-- (void)login
+-(void)saveUserInfo
 {
     NSMutableArray *sd = [self.savedDate mutableCopy];
     [sd setValue:self.txtUsername.stringValue forKey:@"username"];
     [sd setValue:self.txtPassword.stringValue forKey:@"password"];
     self.savedDate=(NSDictionary *)sd;
+}
+- (void)login
+{
+    [self saveUserInfo];
     [NSThread detachNewThreadSelector:@selector(loginLock) toTarget:self withObject:nil];
 }
 - (void)loginLock
