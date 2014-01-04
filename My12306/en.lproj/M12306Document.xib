@@ -476,7 +476,7 @@ DQ
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="W7K-cU-IfL">
-                        <rect key="frame" x="883" y="575" width="66" height="32"/>
+                        <rect key="frame" x="628" y="205" width="66" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="设置" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ecP-LZ-dA2">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -487,7 +487,7 @@ DQ
                         </connections>
                     </button>
                     <textField verticalHuggingPriority="750" id="Q5r-i2-uJI">
-                        <rect key="frame" x="785" y="582" width="96" height="22"/>
+                        <rect key="frame" x="530" y="212" width="96" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="vtB-7m-hbz">
                             <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="3" id="JZo-PE-lYb">
@@ -502,7 +502,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="J1r-ZO-cwh">
-                        <rect key="frame" x="681" y="584" width="98" height="17"/>
+                        <rect key="frame" x="426" y="214" width="98" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Socket超时时间" id="iLj-4S-XbL">
                             <font key="font" metaFont="system"/>

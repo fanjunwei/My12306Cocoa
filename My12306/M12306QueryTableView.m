@@ -24,7 +24,7 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        NSArray *cname =[NSArray arrayWithObjects:@"车次",@"发站",@"到站",@"开时",@"到时",@"历时",@"商务座",@"特等座",@"一等座",@"二等座",@"高级软卧",@"软卧",@"硬卧",@"软座",@"硬座",@"无座",@"其他",@"备注", nil];
+        NSArray *cname =[NSArray arrayWithObjects:@"车次",@"发站",@"到站",@"开时",@"到时",@"历时",@"商务座",@"特等座",@"一等座",@"二等座",@"高级软卧",@"软卧",@"硬卧",@"软座",@"硬座",@"无座",@"其他",@"状态", nil];
         NSArray *identifiers =[NSArray arrayWithObjects:@"station_train_code",@"start_station_name",@"end_station_name",@"start_time",@"arrive_time",@"lishi",@"swz_num",@"tz_num",@"zy_num",@"ze_num",@"gr_num",@"rw_num",@"yw_num",@"rz_num",@"yz_num",@"wz_num",@"qt_num",@"buttonTextInfo", nil];
         for (int i=0; i<[cname count]; i++) {
             NSTableColumn * column = [[NSTableColumn alloc]initWithIdentifier:[identifiers objectAtIndex:i]];
@@ -63,6 +63,10 @@
         if([canWebBuy isEqualToString:@"Y"])
         {
             return @"**可预订";
+        }
+        else if ([[item objectForKey:idname] isEqualToString:@"预订"])
+        {
+            return @"无票";
         }
         else
         {
