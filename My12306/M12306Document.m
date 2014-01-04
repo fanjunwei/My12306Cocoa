@@ -625,7 +625,7 @@
         
         self.QueryCount = 0;
         [self query];
-        //[self exeScript];
+        //[self exeScript:2];
     }
 }
 -(void) setQueryProcessAni:(NSNumber *)run
@@ -706,7 +706,7 @@
             
             NSString * endsec = [NSString stringWithFormat:@"%@\t%@\t%@\t%f\n",secretStrdec,secretStr,dd,inter];
             endsec = [endsec stringByReplacingOccurrencesOfString:@"#" withString:@"\t"];
-            [self appendTicketToFile:endsec];
+            //[self appendTicketToFile:endsec];
             
             
             if([info Success:self.txtTrainNameRegx.stringValue])
@@ -1310,6 +1310,11 @@
                         {
                             [task interrupt];
                             task=nil;
+                        }
+                        if(task2)
+                        {
+                            [task2 interrupt];
+                            task2=nil;
                         }
                         self.yudingSecretStr=nil;
                         
