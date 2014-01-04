@@ -12,6 +12,7 @@
 		E621B6F0178FC21D00DFFFE9 /* M12306KeyValue.m in Sources */ = {isa = PBXBuildFile; fileRef = E621B6EF178FC21D00DFFFE9 /* M12306KeyValue.m */; };
 		E62446C617913D3700C1CF79 /* M12306ComboBox.m in Sources */ = {isa = PBXBuildFile; fileRef = E62446C517913D3700C1CF79 /* M12306ComboBox.m */; };
 		E62DE8F417E1DE2400A4B423 /* login.html in Resources */ = {isa = PBXBuildFile; fileRef = E62DE8F317E1DE2400A4B423 /* login.html */; };
+		E63A4F6F1878109A00584738 /* M12306CookieStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E63A4F6E1878109A00584738 /* M12306CookieStore.m */; };
 		E64013621852E4A0006921B1 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = E64013611852E4A0006921B1 /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E640136718531D40006921B1 /* M12306TrainInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = E640136618531D3F006921B1 /* M12306TrainInfo.m */; };
 		E6478E4817EAF53C007C8138 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6478E4717EAF53C007C8138 /* Images.xcassets */; };
@@ -59,6 +60,8 @@
 		E62446C417913D3700C1CF79 /* M12306ComboBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306ComboBox.h; sourceTree = "<group>"; };
 		E62446C517913D3700C1CF79 /* M12306ComboBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306ComboBox.m; sourceTree = "<group>"; };
 		E62DE8F317E1DE2400A4B423 /* login.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = login.html; sourceTree = "<group>"; };
+		E63A4F6D1878109A00584738 /* M12306CookieStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306CookieStore.h; sourceTree = "<group>"; };
+		E63A4F6E1878109A00584738 /* M12306CookieStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306CookieStore.m; sourceTree = "<group>"; };
 		E64013601852E4A0006921B1 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		E64013611852E4A0006921B1 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		E640136518531D3F006921B1 /* M12306TrainInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306TrainInfo.h; sourceTree = "<group>"; };
@@ -216,6 +219,8 @@
 				E6027A9F186DC8890015DBEA /* DDFileReader.m */,
 				E6096310187322C30053099A /* M12306GifView.h */,
 				E6096311187322C30053099A /* M12306GifView.m */,
+				E63A4F6D1878109A00584738 /* M12306CookieStore.h */,
+				E63A4F6E1878109A00584738 /* M12306CookieStore.m */,
 			);
 			path = My12306;
 			sourceTree = "<group>";
@@ -344,6 +349,7 @@
 				E666A3F417E2BE380053CC8F /* M12306Utility.m in Sources */,
 				E64013621852E4A0006921B1 /* JSONKit.m in Sources */,
 				E6027AA0186DC8890015DBEA /* DDFileReader.m in Sources */,
+				E63A4F6F1878109A00584738 /* M12306CookieStore.m in Sources */,
 				E6A832D31855866800412EF5 /* base64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

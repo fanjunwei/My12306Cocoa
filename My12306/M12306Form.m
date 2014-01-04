@@ -82,7 +82,7 @@
     return res;
 }
 
-- (NSString *)post
+- (NSString *)post:(M12306CookieStore *)cookieStore
 {
     NSString *strbody=@"";
     for (int i=0; i<[self.inputs count]; i++) {
@@ -141,7 +141,7 @@
     {
         [request setValue:self.actionURL forHTTPHeaderField:@"Referer"];
     }
-    NSData *data = [M12306URLConnection sendSynchronousRequest:request];
+    NSData *data = [M12306URLConnection sendSynchronousRequest:request forCookieStore:cookieStore];
     
     return  [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     

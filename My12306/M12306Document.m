@@ -20,6 +20,7 @@
     NSTask *task2;
     BOOL taskRunning;
     BOOL taskRunning2;
+    M12306CookieStore *cookieStore;
 }
 - (id)init
 {
@@ -93,10 +94,10 @@
     date = [cal dateFromComponents:nowComponents];
     self.dpDingshi.dateValue=date;
 }
--(void)myinit
+-(void)clearCookie
 {
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
     NSURL *url = [NSURL URLWithString:HOST_URL];
     if (url) {
         NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:url];
@@ -106,6 +107,13 @@
             
         }
     }
+    if(cookieStore)
+       [cookieStore clearCookie];
+}
+-(void)myinit
+{
+    cookieStore=[[M12306CookieStore alloc]init];
+    [self clearCookie];
     [self initSeat];
     NSTimeInterval timei = 24*24*60*60;
     NSDate *date = [NSDate dateWithTimeIntervalSinceNow:timei];
@@ -241,7 +249,7 @@
     
     
     [request setValue:refUrl forHTTPHeaderField:@"Referer"];
-    NSData * data=[M12306URLConnection sendSynchronousRequest:request];
+    NSData * data=[M12306URLConnection sendSynchronousRequest:request forCookieStore:cookieStore];
     NSImage* image = [[NSImage alloc]initWithData:data];
     
     return image;
@@ -309,7 +317,7 @@
     [form setTagValue:self.loginValue  forKey:self.loginKey];
     
     //form.referer=HOST_URL@"/otsweb/loginAction.do?method=init";
-    NSString * outs= [form post];
+    NSString * outs= [form post:cookieStore];
     [self performSelectorOnMainThread:@selector(loginDidResult:) withObject:outs waitUntilDone:YES];
 }
 - (void)loginDidResult:(NSString *)strresult
@@ -502,7 +510,7 @@
     {
         [request setHTTPMethod:@"GET"];
     }
-    NSData * data=[M12306URLConnection sendSynchronousRequest:request];
+    NSData * data=[M12306URLConnection sendSynchronousRequest:request forCookieStore:cookieStore];
     return data;
 }
 - (NSString *)getText:(NSString *)url IsPost:(BOOL)isPost
@@ -766,7 +774,7 @@
     [yudingForm setTagValue:passengerTicketStr forKey:@"passengerTicketStr"];
     [yudingForm setTagValue:oldPassengerStr forKey:@"oldPassengerStr"];
     NSLog(@"%@",[yudingForm debug]);
-    NSString * postResult = [yudingForm post];
+    NSString * postResult = [yudingForm post:cookieStore];
     if(postResult)
     {
         [self yudingDoResult:postResult];
@@ -833,7 +841,7 @@
     [yudingForm setTagValue:@"sjrand" forKey:@"rand"];
     [yudingForm setTagValue:self.txtCommitCode.stringValue forKey:@"randCode"];
     
-    NSString * postResult = [yudingForm post];
+    NSString * postResult = [yudingForm post:cookieStore];
     if(postResult)
     {
         [self checkImgCodeDoResult:postResult];
@@ -899,7 +907,7 @@
     [yudingForm setTagValue:[parms objectAtIndex:1] forKey:@"key_check_isChange"];
     [yudingForm setTagValue:[parms objectAtIndex:2] forKey:@"leftTicketStr"];
     [yudingForm setTagValue:[parms objectAtIndex:0] forKey:@"train_location"];
-    NSString * postResult = [yudingForm post];
+    NSString * postResult = [yudingForm post:cookieStore];
     NSLog(@"%@",[yudingForm debug]);
     if(postResult)
     {
@@ -1044,17 +1052,7 @@
 }
 
 - (IBAction)loginOutClick:(id)sender {
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
-    
-    NSURL *url = [NSURL URLWithString:HOST_URL];
-    if (url) {
-        NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:url];
-        for (int i = 0; i < [cookies count]; i++) {
-            NSHTTPCookie *cookie = (NSHTTPCookie *)[cookies objectAtIndex:i];
-            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
-            
-        }
-    }
+    [self clearCookie];
     [self addLog:@"已不在线"];
     self.lblLoginMsg.stringValue=@"【未登录】";
     self.isLogin=NO;

@@ -24,7 +24,12 @@ static NSTimeInterval sTimeoutInterval = 30;
     NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:[http allHeaderFields] forURL:[http URL]];
     for(int i=0;i<[cookies count];i++)
     {
-        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:[cookies objectAtIndex:i]];
+        //[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:[cookies objectAtIndex:i]];
+        if(self.cookieStore)
+        {
+            [self.cookieStore addCookie:[cookies objectAtIndex:i]];
+        }
+        
     }
 }
 
@@ -58,18 +63,24 @@ static NSTimeInterval sTimeoutInterval = 30;
     [self.data appendData:data];
 }
 
-+ (NSData *)sendSynchronousRequest:(NSMutableURLRequest *)request
++ (NSData *)sendSynchronousRequest:(NSMutableURLRequest *)request forCookieStore:(M12306CookieStore *)cookieStore
 {
     M12306URLConnection *res = [[M12306URLConnection alloc]init];
+    res.cookieStore=cookieStore;
     res.data=[NSMutableData dataWithCapacity:128];
     res.finish =NO;
     [request setTimeoutInterval:sTimeoutInterval];
     [request setValue:UserAgent forHTTPHeaderField:@"User-Agent"];
+    if(cookieStore)
+    {
+        [request setAllHTTPHeaderFields:[cookieStore requestHeaderFields]];
+    }
     //HTTP_X_FORWARDED_FOR
     //MT-Proxy-ID=1804289383
     //[request setValue:@"1804281312312" forHTTPHeaderField:@"MT-Proxy-ID"];
     //[request setValue:@"342.108.232.188" forHTTPHeaderField:@"X-Forwarded-For"];
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData];
+    
     res.connection=[[NSURLConnection alloc]initWithRequest:request delegate:res];
     while (!res.finish) {
         

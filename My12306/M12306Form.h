@@ -22,7 +22,7 @@
 - (NSString *)getTagValue:(NSString *)key;
 - (void)addTagValue:(NSString *)value forKey:(NSString *)key;
 - (void)clearTag;
-- (NSString *)post;
+- (NSString *)post:(M12306CookieStore *)cookieStore;
 - (NSString *)debug;
 - (void)addQueryStringValue:(NSString *)value forKey:(NSString *)key;
 @end
