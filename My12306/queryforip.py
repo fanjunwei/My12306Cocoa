@@ -36,7 +36,6 @@ def propxy(url,ip):
         host=array[2]
         array[2]=ip
         url='/'.join(array)
-
         req = urllib2.Request(url)
         req.add_header('User-Agent', UserAgent)
         req.add_header('Host', host)
@@ -49,7 +48,7 @@ def readProxyAddFile():
     global ips
     file = open(proxyFilePath,'r')
     for line in file.readlines():
-        ips.append(line)
+        ips.append(line.strip())
 
 def getYupiaoCount(yupiaoStr,seat):
     out=0
@@ -62,7 +61,7 @@ def getYupiaoCount(yupiaoStr,seat):
                 out=out+count
             else:
                 out=out+count-3000
-
+    
     return out
 
 def getNewIndex():
@@ -82,7 +81,7 @@ def query(ip):
     data=obj['data']
     #queryLeftNewDTO=data['queryLeftNewDTO']
     for tr in data:
-
+        
         secretStr = tr['secretStr']
         unquoteSecretStr=urllib.unquote(secretStr)
         decodeSecretStr=base64.b64decode(unquoteSecretStr)
@@ -99,7 +98,7 @@ def query(ip):
             # print code
             # print yupiaoStr
             # print decodeSecretStr
-
+            
             if(not mFinded and count>MustCount):
                 mFinded=True
                 print unquoteSecretStr
