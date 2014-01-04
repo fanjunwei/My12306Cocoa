@@ -1100,15 +1100,13 @@
 - (IBAction)btnStopYudingClick:(id)sender {
     self.QueryCount = 0;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startYudingLoop) object:nil];
-    if(task)
+    if(taskRunning)
     {
         [task interrupt];
-        task=nil;
     }
-    if(task2)
+    if(taskRunning2)
     {
         [task2 interrupt];
-        task2=nil;
     }
     [self stopYudingLoop];
 }
@@ -1306,15 +1304,13 @@
                     if(self.taskResult == TASK_RESULT_YES)
                     {
                         self.yudingStatus=YUDING_STATUS_YUDING;
-                        if(task)
+                        if(taskRunning)
                         {
                             [task interrupt];
-                            task=nil;
                         }
-                        if(task2)
+                        if(taskRunning2)
                         {
                             [task2 interrupt];
-                            task2=nil;
                         }
                         self.yudingSecretStr=nil;
                         
@@ -1378,19 +1374,17 @@
 {
     if(taskid==1)
     {
-        if(task)
+        if(taskRunning)
         {
             [task interrupt];
-            task=nil;
         }
         [NSThread detachNewThreadSelector:@selector(exeScriptThread) toTarget:self withObject:nil];
     }
     else if(taskid==2)
     {
-        if(task2)
+        if(taskRunning2)
         {
             [task2 interrupt];
-            task2=nil;
         }
         [NSThread detachNewThreadSelector:@selector(exeScriptThread2) toTarget:self withObject:nil];
     }
