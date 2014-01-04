@@ -69,6 +69,13 @@
             return [[item objectForKey:idname] stringByReplacingOccurrencesOfString:@"<br/>" withString:@","];
         }
     }
+    else if ([idname isEqualToString:@"station_train_code"])
+    {
+        NSString * s1 = [[item objectForKey:@"queryLeftNewDTO"] objectForKey:@"station_train_code"];
+        NSString * s2 = [[item objectForKey:@"queryLeftNewDTO"] objectForKey:@"from_station_name"];
+        NSString * s3 = [[item objectForKey:@"queryLeftNewDTO"] objectForKey:@"to_station_name"];
+        return [NSString stringWithFormat:@"%@ %@-%@",s1,s2,s3];
+    }
     else
     {
         return [[item objectForKey:@"queryLeftNewDTO"] objectForKey:idname];

@@ -42,6 +42,8 @@
 		E6C245F117E0ABBB00C9C4E2 /* commitform2 in Resources */ = {isa = PBXBuildFile; fileRef = E6C245F017E0ABBB00C9C4E2 /* commitform2 */; };
 		E6C245F317E0ABEA00C9C4E2 /* checkform in Resources */ = {isa = PBXBuildFile; fileRef = E6C245F217E0ABEA00C9C4E2 /* checkform */; };
 		E6C245F517E0AC1E00C9C4E2 /* checkform2 in Resources */ = {isa = PBXBuildFile; fileRef = E6C245F417E0AC1E00C9C4E2 /* checkform2 */; };
+		E6EDD9191877C15C0007D545 /* queryforip.py in Resources */ = {isa = PBXBuildFile; fileRef = E6EDD9181877C15C0007D545 /* queryforip.py */; };
+		E6EDD91B1877C16A0007D545 /* enableIp.txt in Resources */ = {isa = PBXBuildFile; fileRef = E6EDD91A1877C16A0007D545 /* enableIp.txt */; };
 		E6F178621792DAAF003A81DC /* M12306passengerTicketItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E6F178611792DAAF003A81DC /* M12306passengerTicketItem.m */; };
 		E6F178651792DDBA003A81DC /* M12306PassengerTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6F178641792DDB9003A81DC /* M12306PassengerTableView.m */; };
 		E6F5291F178EF10F0082312C /* M12306URLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E6F5291E178EF10F0082312C /* M12306URLConnection.m */; };
@@ -107,6 +109,8 @@
 		E6C245F017E0ABBB00C9C4E2 /* commitform2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = commitform2; sourceTree = "<group>"; };
 		E6C245F217E0ABEA00C9C4E2 /* checkform */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = checkform; sourceTree = "<group>"; };
 		E6C245F417E0AC1E00C9C4E2 /* checkform2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = checkform2; sourceTree = "<group>"; };
+		E6EDD9181877C15C0007D545 /* queryforip.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = queryforip.py; sourceTree = "<group>"; };
+		E6EDD91A1877C16A0007D545 /* enableIp.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = enableIp.txt; sourceTree = "<group>"; };
 		E6F178601792DAAF003A81DC /* M12306passengerTicketItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306passengerTicketItem.h; sourceTree = "<group>"; };
 		E6F178611792DAAF003A81DC /* M12306passengerTicketItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M12306passengerTicketItem.m; sourceTree = "<group>"; };
 		E6F178631792DDB9003A81DC /* M12306PassengerTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M12306PassengerTableView.h; sourceTree = "<group>"; };
@@ -219,6 +223,8 @@
 		E6B4063A178E780E00F1B668 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E6EDD91A1877C16A0007D545 /* enableIp.txt */,
+				E6EDD9181877C15C0007D545 /* queryforip.py */,
 				E64B2706186E6A7000C8254E /* station.txt */,
 				E665800F186D80FE0008014A /* query.py */,
 				E665800D186D803C0008014A /* enableProxy.txt */,
@@ -301,9 +307,11 @@
 				E665800E186D803C0008014A /* enableProxy.txt in Resources */,
 				E6C245ED17E0AB4600C9C4E2 /* yudingform in Resources */,
 				E6C245EF17E0AB8D00C9C4E2 /* commitform in Resources */,
+				E6EDD9191877C15C0007D545 /* queryforip.py in Resources */,
 				E6C245F117E0ABBB00C9C4E2 /* commitform2 in Resources */,
 				E64B2707186E6A7000C8254E /* station.txt in Resources */,
 				E6478E4817EAF53C007C8138 /* Images.xcassets in Resources */,
+				E6EDD91B1877C16A0007D545 /* enableIp.txt in Resources */,
 				E6C245F317E0ABEA00C9C4E2 /* checkform in Resources */,
 				E6C245F517E0AC1E00C9C4E2 /* checkform2 in Resources */,
 				E62DE8F417E1DE2400A4B423 /* login.html in Resources */,

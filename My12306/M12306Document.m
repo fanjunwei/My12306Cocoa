@@ -17,7 +17,9 @@
     NSDictionary *_savedDate;
     BOOL queryRunning;
     NSTask *task;
+    NSTask *task2;
     BOOL taskRunning;
+    BOOL taskRunning2;
 }
 - (id)init
 {
@@ -1103,6 +1105,11 @@
         [task interrupt];
         task=nil;
     }
+    if(task2)
+    {
+        [task2 interrupt];
+        task2=nil;
+    }
     [self stopYudingLoop];
 }
 
@@ -1244,11 +1251,16 @@
         self.taskResult=TASK_RESULT_NONE;
         switch (self.yudingStatus) {
             case YUDING_STATUS_QUERY:
+                [self query];
                 if(!taskRunning)
                 {
-                    [self exeScript];
+                    [self exeScript:1];
                 }
-                [self query];
+                if(!taskRunning2)
+                {
+                    [self exeScript:2];
+                }
+                
                 if(self.yudingSecretStr && self.yudingSecretStr.length>5)
                 {
                     self.currTrainInfo=[[M12306TrainInfo alloc]initWithSecretStr:self.yudingSecretStr];
@@ -1357,14 +1369,26 @@
     [logFile synchronizeFile];
     [logFile closeFile];
 }
--(void)exeScript
+-(void)exeScript:(NSInteger)taskid
 {
-    if(task)
+    if(taskid==1)
     {
-        [task interrupt];
-        task=nil;
+        if(task)
+        {
+            [task interrupt];
+            task=nil;
+        }
+        [NSThread detachNewThreadSelector:@selector(exeScriptThread) toTarget:self withObject:nil];
     }
-    [NSThread detachNewThreadSelector:@selector(exeScriptThread) toTarget:self withObject:nil];
+    else if(taskid==2)
+    {
+        if(task2)
+        {
+            [task2 interrupt];
+            task2=nil;
+        }
+        [NSThread detachNewThreadSelector:@selector(exeScriptThread2) toTarget:self withObject:nil];
+    }
 }
 -(void)exeScriptThread
 {
@@ -1424,6 +1448,67 @@
     }
     @finally {
         taskRunning=NO;
+    }
+    
+}
+-(void)exeScriptThread2
+{
+    @try {
+        taskRunning2=YES;
+        NSDateFormatter * formate=[[NSDateFormatter alloc]init];
+        [formate setDateFormat:@"yyyy-MM-dd"];
+        NSString *date = [formate stringFromDate:self.dtpDate.dateValue];
+        NSString *sessionFrom =[[self.stations objectAtIndex:[self.cbxFromStation indexOfSelectedItem]] objectForKey:@"value"];
+        NSString *sessionTo =[[self.stations objectAtIndex:[self.cbxToStation indexOfSelectedItem]] objectForKey:@"value"];
+        NSString *trainCode =self.txtTrainNameRegx.stringValue;
+        NSString *seat=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
+        task2 = [[NSTask alloc] init];
+        [task2 setLaunchPath: @"/Library/Frameworks/Python.framework/Versions/2.7/bin/python"];
+        NSString * respath = [[NSBundle mainBundle] resourcePath];
+        NSString *scriptPath=[respath stringByAppendingPathComponent:@"queryforip.py"];
+        NSString *proxyFilePath=[respath stringByAppendingPathComponent:@"enableIp.txt"];
+        NSArray *arguments;
+        arguments = [NSArray arrayWithObjects: scriptPath,proxyFilePath,date,sessionFrom,sessionTo,trainCode,seat,nil];
+        [task2 setArguments: arguments];
+        
+        NSPipe *pipe;
+        pipe = [NSPipe pipe];
+        [task2 setStandardOutput: pipe];
+        NSFileHandle *file;
+        file = [pipe fileHandleForReading];
+        
+        
+        NSPipe *pipeerr;
+        pipeerr = [NSPipe pipe];
+        [task2 setStandardError: pipeerr];
+        NSFileHandle *fileerr;
+        fileerr = [pipeerr fileHandleForReading];
+        
+        [task2 launch];
+        
+        DDFileReader *reader = [[DDFileReader alloc]initWithFileHandle:fileerr];
+        NSString *line;
+        while ((line=reader.readTrimmedLine)) {
+            NSLog(@"%@",line);
+        }
+        NSData *data;
+        data = [file readDataToEndOfFile];
+        
+        NSString *string;
+        string = [[NSString alloc] initWithData: data
+                                       encoding: NSUTF8StringEncoding];
+        NSLog(@"%@",string);
+        if(self.yudingStatus == YUDING_STATUS_QUERY && string && string.length>5)
+        {
+            [self addLog:@"python2"];
+            self.yudingSecretStr=string;
+        }
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        taskRunning2=NO;
     }
     
 }
