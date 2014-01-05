@@ -39,7 +39,7 @@ def propxy(url,ip):
         req = urllib2.Request(url)
         req.add_header('User-Agent', UserAgent)
         req.add_header('Host', host)
-        return urllib2.urlopen(req,timeout=5).read()
+        return urllib2.urlopen(req,timeout=60).read()
     except:
         printLog('err')
 

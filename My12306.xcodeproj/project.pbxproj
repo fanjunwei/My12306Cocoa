@@ -228,24 +228,24 @@
 		E6B4063A178E780E00F1B668 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E6EDD91A1877C16A0007D545 /* enableIp.txt */,
-				E6EDD9181877C15C0007D545 /* queryforip.py */,
-				E64B2706186E6A7000C8254E /* station.txt */,
-				E665800F186D80FE0008014A /* query.py */,
-				E665800D186D803C0008014A /* enableProxy.txt */,
-				E6B4063B178E780E00F1B668 /* My12306-Info.plist */,
-				E6B4063C178E780E00F1B668 /* InfoPlist.strings */,
-				E6B4063F178E780E00F1B668 /* main.m */,
-				E6B40641178E780E00F1B668 /* My12306-Prefix.pch */,
-				E6B40642178E780E00F1B668 /* Credits.rtf */,
-				E6C245EA17E0A7BC00C9C4E2 /* loginform */,
-				E6C245EC17E0AB4600C9C4E2 /* yudingform */,
-				E6C245EE17E0AB8D00C9C4E2 /* commitform */,
-				E6C245F017E0ABBB00C9C4E2 /* commitform2 */,
 				E6C245F217E0ABEA00C9C4E2 /* checkform */,
 				E6C245F417E0AC1E00C9C4E2 /* checkform2 */,
+				E6C245EE17E0AB8D00C9C4E2 /* commitform */,
+				E6C245F017E0ABBB00C9C4E2 /* commitform2 */,
+				E6B40642178E780E00F1B668 /* Credits.rtf */,
+				E6EDD91A1877C16A0007D545 /* enableIp.txt */,
+				E665800D186D803C0008014A /* enableProxy.txt */,
+				E6B4063C178E780E00F1B668 /* InfoPlist.strings */,
 				E62DE8F317E1DE2400A4B423 /* login.html */,
+				E6C245EA17E0A7BC00C9C4E2 /* loginform */,
+				E6B4063F178E780E00F1B668 /* main.m */,
+				E6B4063B178E780E00F1B668 /* My12306-Info.plist */,
+				E6B40641178E780E00F1B668 /* My12306-Prefix.pch */,
+				E665800F186D80FE0008014A /* query.py */,
+				E6EDD9181877C15C0007D545 /* queryforip.py */,
+				E64B2706186E6A7000C8254E /* station.txt */,
 				E6851E3E17E6E88E00C64237 /* testJS */,
+				E6C245EC17E0AB4600C9C4E2 /* yudingform */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

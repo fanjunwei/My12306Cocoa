@@ -752,6 +752,7 @@
         }
     }
     @finally {
+        sleep(5);
         queryRunning=NO;
     }
 }
