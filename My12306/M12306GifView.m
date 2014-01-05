@@ -38,8 +38,11 @@
     if (self.isShow && self.images && self.images.count>0) {
         NSImage *image = [self.images objectAtIndex:index];
         [image drawInRect:dirtyRect];
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(redraw) object:nil];
-        [self performSelector:@selector(redraw) withObject:nil afterDelay:0.8];
+        if(self.images.count>1)
+        {
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(redraw) object:nil];
+            [self performSelector:@selector(redraw) withObject:nil afterDelay:0.8];
+        }
     }
     
 //	[super drawRect:dirtyRect];
