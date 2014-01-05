@@ -7,7 +7,7 @@
 //
 
 #import "M12306QueryTableView.h"
-
+#import "M12306TrainInfo.h"
 @implementation M12306QueryTableView
 
 //- (id)initWithFrame:(NSRect)frame
@@ -55,22 +55,24 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
+    NSString * str=@"";
     NSDictionary *item=[self.data objectAtIndex:row];
+    M12306TrainInfo * info = [[M12306TrainInfo alloc]initWithDictionary:item];
     NSString *idname=tableColumn.identifier;
     if([idname isEqualToString:@"buttonTextInfo"])
     {
         NSString * canWebBuy =[[item objectForKey:@"queryLeftNewDTO"] objectForKey:@"canWebBuy"];
         if([canWebBuy isEqualToString:@"Y"])
         {
-            return @"**可预订";
+            str= @"**可预订";
         }
         else if ([[item objectForKey:idname] isEqualToString:@"预订"])
         {
-            return @"无票";
+            str= @"无票";
         }
         else
         {
-            return [[item objectForKey:idname] stringByReplacingOccurrencesOfString:@"<br/>" withString:@","];
+            str= [[item objectForKey:idname] stringByReplacingOccurrencesOfString:@"<br/>" withString:@","];
         }
     }
     else if ([idname isEqualToString:@"station_train_code"])
@@ -78,12 +80,24 @@
         NSString * s1 = [[item objectForKey:@"queryLeftNewDTO"] objectForKey:@"station_train_code"];
         NSString * s2 = [[item objectForKey:@"queryLeftNewDTO"] objectForKey:@"from_station_name"];
         NSString * s3 = [[item objectForKey:@"queryLeftNewDTO"] objectForKey:@"to_station_name"];
-        return [NSString stringWithFormat:@"%@ %@-%@",s1,s2,s3];
+        str= [NSString stringWithFormat:@"%@ %@-%@",s1,s2,s3];
     }
     else
     {
-        return [[item objectForKey:@"queryLeftNewDTO"] objectForKey:idname];
+        str= [[item objectForKey:@"queryLeftNewDTO"] objectForKey:idname];
     }
+    
+    NSTextFieldCell * cell= [tableColumn dataCellForRow:row];
+    if([info Success:self.trainName])
+    {
+        [cell setTextColor:[NSColor redColor]];
+    }
+    else
+    {
+        [cell setTextColor:[NSColor blackColor]];
+    }
+    return str;
+
 //    NSTextFieldCell * cell=[tableColumn dataCellForRow:row];
 //    cell.stringValue=[item objectForKey:cname];
     //[cell setAllowsEditingTextAttributes:NO];

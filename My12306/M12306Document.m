@@ -387,7 +387,13 @@
 -(void)getUserInfo
 {
     [NSThread detachNewThreadSelector:@selector(checkLoginLoop) toTarget:self withObject:nil];
-    NSString *str = [self getText:HOST_URL@"/otn/index/initMy12306" IsPost:NO];
+    NSString *str;
+    while (str==nil) {
+        str = [self getText:HOST_URL@"/otn/index/initMy12306" IsPost:NO];
+        if(str==nil)
+        sleep(1);
+    }
+    
     
     NSMutableArray * mathcStrs = [NSMutableArray array];
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"user_name='(.*?)'" options:NSRegularExpressionCaseInsensitive|NSRegularExpressionDotMatchesLineSeparators error:nil];
@@ -460,18 +466,25 @@
     
     NSArray *jsonPassengersArray=[[json objectForKey:@"data"]objectForKey:@"normal_passengers"];
     NSMutableArray * tempassenger=[NSMutableArray array];
-    for (int i=0; i<[jsonPassengersArray count ]; i++) {
-        NSDictionary *p=[jsonPassengersArray objectAtIndex:i];
-        M12306passengerTicketItem * item =[[M12306passengerTicketItem alloc]init];
-        item.Cardno=[p objectForKey:@"passenger_id_no"];
-        item.Cardtype=[p objectForKey:@"passenger_id_type_code"];
-        item.Mobileno=[p objectForKey:@"mobile_no"];
-        item.Name=[p objectForKey:@"passenger_name"];
-        item.Ticket=[p objectForKey:@"passenger_type"];
-        [tempassenger addObject:item];
+    if([jsonPassengersArray respondsToSelector:@selector(count)])
+    {
+        for (int i=0; i<[jsonPassengersArray count ]; i++) {
+            NSDictionary *p=[jsonPassengersArray objectAtIndex:i];
+            M12306passengerTicketItem * item =[[M12306passengerTicketItem alloc]init];
+            item.Cardno=[p objectForKey:@"passenger_id_no"];
+            item.Cardtype=[p objectForKey:@"passenger_id_type_code"];
+            item.Mobileno=[p objectForKey:@"mobile_no"];
+            item.Name=[p objectForKey:@"passenger_name"];
+            item.Ticket=[p objectForKey:@"passenger_type"];
+            [tempassenger addObject:item];
+        }
+        self.allPassengers=[tempassenger copy];
+        [self performSelectorOnMainThread:@selector(setPassenger) withObject:nil waitUntilDone:YES];
     }
-    self.allPassengers=[tempassenger copy];
-    [self performSelectorOnMainThread:@selector(setPassenger) withObject:nil waitUntilDone:YES];
+    else
+    {
+        [self addLog:@"无联系人信息"];
+    }
 }
 - (void)getPassenger
 {
@@ -649,6 +662,7 @@
 }
 - (void) setQueryResultToTableView
 {
+    self.dtQuery.trainName=self.txtTrainNameRegx.stringValue;
     self.dtQuery.data=self.queryResultData;
     [self.dtQuery reloadData];
 }
@@ -836,7 +850,7 @@
 - (void)checkImgCode
 {
     
-    M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otn/confirmPassenger/checkRandCode"];
+    M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otn/passcodeNew/checkRandCodeAnsyn"];
     
     [yudingForm setTagValue:@"sjrand" forKey:@"rand"];
     [yudingForm setTagValue:self.txtCommitCode.stringValue forKey:@"randCode"];
@@ -860,10 +874,9 @@
     
     if(status.boolValue && httpstatus.intValue==200)
     {
-        NSDictionary *data=[json objectForKey:@"data"];
+        NSString *data=[json objectForKey:@"data"];
         
-        NSNumber * submitStatus = [data objectForKey:@"submitStatus"];
-        if(submitStatus.boolValue)
+        if([data isEqualToString:@"Y"])
         {
             self.taskResult=TASK_RESULT_YES;
             return;
@@ -885,7 +898,7 @@
 
 - (void)yudingCheck
 {
-    M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otn/confirmPassenger/confirmSingleForQueue"];
+    M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otn/confirmPassenger/confirmSingleForQueueAsys"];
     NSString *seat=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
     NSArray * parms = [self.yudingResult componentsSeparatedByString:@"#"];
     NSString *passengerTicketStr=@"";
@@ -906,6 +919,7 @@
     
     [yudingForm setTagValue:[parms objectAtIndex:1] forKey:@"key_check_isChange"];
     [yudingForm setTagValue:[parms objectAtIndex:2] forKey:@"leftTicketStr"];
+    [yudingForm setTagValue:self.txtCommitCode.stringValue forKey:@"randCode"];
     [yudingForm setTagValue:[parms objectAtIndex:0] forKey:@"train_location"];
     NSString * postResult = [yudingForm post:cookieStore];
     NSLog(@"%@",[yudingForm debug]);
@@ -1034,7 +1048,7 @@
 }
 - (void)setCommitImgCodeLock:(NSData *)image
 {
-    [self.imgCommitCode.mainFrame loadData:image MIMEType:@"image/gif" textEncodingName:@"utf8" baseURL:nil];
+    self.imgCommitCode.imageData=image;
     self.txtCommitCode.stringValue=@"";
     [self.txtCommitCode becomeFirstResponder];
     
@@ -1316,7 +1330,7 @@
                     break;
                 case YUDING_STATUS_YUDING:
                     if(self.taskResult == TASK_RESULT_YES)
-                        self.yudingStatus=YUDING_STATUS_YUDING_CHECK;//跳过验证码
+                        self.yudingStatus=YUDING_STATUS_GET_IMG_CODE;//跳过验证码
                     else if(self.taskResult == TASK_RESULT_ERROR_TO_QUERY)
                         self.yudingStatus=YUDING_STATUS_QUERY;
                     break;
@@ -1327,6 +1341,8 @@
                 case YUDING_STATUS_WAIT_INPUT_IMG_CODE:
                     if(self.taskResult == TASK_RESULT_YES)
                         self.yudingStatus=YUDING_STATUS_CHECK_IMG_CODE;
+                    else if (self.taskResult == TASK_RESULT_ERROR)
+                        self.yudingStatus=YUDING_STATUS_GET_IMG_CODE;
                     break;
                 case YUDING_STATUS_CHECK_IMG_CODE:
                     if(self.taskResult == TASK_RESULT_YES)

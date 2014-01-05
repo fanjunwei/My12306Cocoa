@@ -35,7 +35,7 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    if (self.isShow) {
+    if (self.isShow && self.images && self.images.count>0) {
         NSImage *image = [self.images objectAtIndex:index];
         [image drawInRect:dirtyRect];
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(redraw) object:nil];

@@ -98,6 +98,7 @@ def query(ip):
             # print code
             # print yupiaoStr
             # print decodeSecretStr
+            #printLog(time.ctime(timeTick))
             
             if(not mFinded and count>MustCount):
                 mFinded=True

@@ -64,7 +64,8 @@ typedef enum TASK_RESULT_
 - (IBAction)btnStopYudingClick:(id)sender;
 - (IBAction)btnYudingClick:(id)sender;
 - (IBAction)loginOutClick:(id)sender;
-@property (weak) IBOutlet WebView *imgCommitCode;
+@property (weak) IBOutlet M12306GifView *imgCommitCode;
+
 
 @property (weak) IBOutlet M12306TextField *txtCommitCode;
 @property (weak) IBOutlet NSTextField *lblDelayCommit;

@@ -11,4 +11,5 @@
 @interface M12306QueryTableView : NSTableView<NSTableViewDataSource>
 
 @property (weak,nonatomic) NSArray * data;
+@property (nonatomic,strong)NSString *trainName;
 @end
