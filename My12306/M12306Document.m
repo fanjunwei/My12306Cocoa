@@ -341,6 +341,7 @@
                 self.isLogin = YES;
                 self.lblLoginMsg.stringValue=@"已登录";
                 [self getPassenger];
+                [self getCommitImgCode];
                 [NSThread detachNewThreadSelector:@selector(getUserInfo) toTarget:self withObject:nil];
 
             }
@@ -1062,7 +1063,10 @@
     }
     else if ([self.txtCommitCode.stringValue length] == 4)
     {
-        self.taskResult=TASK_RESULT_YES;
+        if(self.yudingStatus==YUDING_STATUS_WAIT_INPUT_IMG_CODE)
+        {
+            self.taskResult=TASK_RESULT_YES;
+        }
     }
 }
 
@@ -1292,6 +1296,7 @@
             case YUDING_STATUS_WAIT_INPUT_IMG_CODE:
                 while(self.taskResult==TASK_RESULT_NONE)
                 {
+                    [self addLog:@"请输入验证码"];
                     usleep(100*1000);
                 }
                 break;
@@ -1331,7 +1336,16 @@
                     break;
                 case YUDING_STATUS_YUDING:
                     if(self.taskResult == TASK_RESULT_YES)
-                        self.yudingStatus=YUDING_STATUS_GET_IMG_CODE;//跳过验证码
+                    {
+                        if(self.txtCommitCode.stringValue && self.txtCommitCode.stringValue.length==4)
+                        {
+                            self.yudingStatus=YUDING_STATUS_CHECK_IMG_CODE;
+                        }
+                        else
+                        {
+                            self.yudingStatus=YUDING_STATUS_GET_IMG_CODE;
+                        }
+                    }
                     else if(self.taskResult == TASK_RESULT_ERROR_TO_QUERY)
                         self.yudingStatus=YUDING_STATUS_QUERY;
                     break;
@@ -1341,7 +1355,7 @@
                     break;
                 case YUDING_STATUS_WAIT_INPUT_IMG_CODE:
                     if(self.taskResult == TASK_RESULT_YES)
-                        self.yudingStatus=YUDING_STATUS_CHECK_IMG_CODE;
+                        self.yudingStatus=YUDING_STATUS_YUDING_CHECK;
                     else if (self.taskResult == TASK_RESULT_ERROR)
                         self.yudingStatus=YUDING_STATUS_GET_IMG_CODE;
                     break;
@@ -1355,7 +1369,7 @@
                     if(self.taskResult == TASK_RESULT_YES)
                         self.yudingStatus=YUDING_STATUS_WAIT_ORDER;
                     else if(self.taskResult==TASK_RESULT_ERROR)
-                        self.yudingStatus=YUDING_STATUS_YUDING_CHECK;
+                        self.yudingStatus=YUDING_STATUS_WAIT_INPUT_IMG_CODE;
                     break;
                 case YUDING_STATUS_WAIT_ORDER:
                     if(self.taskResult == TASK_RESULT_YES)

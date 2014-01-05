@@ -8,7 +8,7 @@
 
 #import "M12306URLConnection.h"
 
-static NSTimeInterval sTimeoutInterval = 30;
+static NSTimeInterval sTimeoutInterval = 60;
 @implementation M12306URLConnection
 
 
