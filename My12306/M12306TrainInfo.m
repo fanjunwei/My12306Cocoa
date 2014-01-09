@@ -33,6 +33,9 @@
             NSString *secretStrdec= [base64 decodeBase64String: secretStr];
             NSArray *args=[secretStrdec componentsSeparatedByString:@"#"];
             self.TrainName=[args objectAtIndex:2];
+            self.TrainNo=[args objectAtIndex:5];
+            self.FromStationCode=[args objectAtIndex:6];
+            self.TotationCode=[args objectAtIndex:7];
             ypinfo=[args objectAtIndex:13];
         }
         @catch (NSException *exception) {

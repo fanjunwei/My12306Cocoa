@@ -10,13 +10,13 @@
 
 @interface M12306TrainInfo : NSObject
 
-//@property (strong,nonatomic) NSString *TrainNo;
+@property (strong,nonatomic) NSString *TrainNo;
 @property (strong,nonatomic) NSString *TrainName ;
 @property (strong,nonatomic) NSString *StartTime;
 @property (strong,nonatomic) NSString *ArriveTime ;
-@property (strong,nonatomic) NSString *FromStationName;
+//@property (strong,nonatomic) NSString *FromStationName;
 @property (strong,nonatomic) NSString *FromStationCode;
-@property (strong,nonatomic) NSString *ToStationName;
+//@property (strong,nonatomic) NSString *ToStationName;
 @property (strong,nonatomic) NSString *TotationCode;
 @property (strong,nonatomic) NSMutableDictionary *info;
 

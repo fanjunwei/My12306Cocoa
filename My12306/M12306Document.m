@@ -115,7 +115,7 @@
     cookieStore=[[M12306CookieStore alloc]init];
     [self clearCookie];
     [self initSeat];
-    NSTimeInterval timei = 24*24*60*60;
+    NSTimeInterval timei = 19*24*60*60;
     NSDate *date = [NSDate dateWithTimeIntervalSinceNow:timei];
     self.dtpDate.dateValue=date;
     NSString * username=[self.savedDate objectForKey:@"username"];
@@ -341,7 +341,7 @@
                 self.isLogin = YES;
                 self.lblLoginMsg.stringValue=@"已登录";
                 [self getPassenger];
-                [self getCommitImgCode];
+                //[self getCommitImgCode];
                 [NSThread detachNewThreadSelector:@selector(getUserInfo) toTarget:self withObject:nil];
 
             }
@@ -814,6 +814,7 @@
         if(submitStatus.boolValue)
         {
             self.yudingResult=result;
+            [self getQueueCount];
             self.taskResult=TASK_RESULT_YES;
             return;
         }
@@ -897,7 +898,26 @@
     self.taskResult=TASK_RESULT_ERROR;
     
 }
+-(void)getQueueCount
+{
+    M12306Form* form=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otn/confirmPassenger/getQueueCountAsync"];
+ 
+    NSString * seatCode=[self.seatData objectForKey:[self.popupSeat selectedItem].title];
+    NSArray * parms = [self.yudingResult componentsSeparatedByString:@"#"];
+    [form setTagValue:@"Thu Jan 30 2014 22:25:49 GMT+0800 (CST)" forKey:@"train_date"];
+    [form setTagValue:self.currTrainInfo.TrainNo forKey:@"train_no"];
+    [form setTagValue:self.currTrainInfo.TrainName forKey:@"stationTrainCode"];
+    [form setTagValue:seatCode forKey:@"seatType"];
+    [form setTagValue:self.currTrainInfo.FromStationCode forKey:@"fromStationTelecode"];
+    [form setTagValue:self.currTrainInfo.TotationCode forKey:@"toStationTelecode"];
+    [form setTagValue:[parms objectAtIndex:2] forKey:@"leftTicket"];
+    [form setTagValue:@"ADULT" forKey:@"purpose_codes"];
 
+    form.referer=@"https://kyfw.12306.cn/otn/leftTicket/init";
+    NSLog(@"%@",[form debug]);
+    NSString * res=[form post:cookieStore];
+    NSLog(@"%@",res);
+}
 - (void)yudingCheck
 {
     M12306Form* yudingForm=[[M12306Form alloc]initWithActionURL:HOST_URL@"/otn/confirmPassenger/confirmSingleForQueueAsys"];
@@ -1339,7 +1359,7 @@
                     {
                         if(self.txtCommitCode.stringValue && self.txtCommitCode.stringValue.length==4)
                         {
-                            self.yudingStatus=YUDING_STATUS_CHECK_IMG_CODE;
+                            self.yudingStatus=YUDING_STATUS_YUDING_CHECK;
                         }
                         else
                         {
@@ -1355,7 +1375,7 @@
                     break;
                 case YUDING_STATUS_WAIT_INPUT_IMG_CODE:
                     if(self.taskResult == TASK_RESULT_YES)
-                        self.yudingStatus=YUDING_STATUS_YUDING_CHECK;
+                        self.yudingStatus=YUDING_STATUS_CHECK_IMG_CODE;
                     else if (self.taskResult == TASK_RESULT_ERROR)
                         self.yudingStatus=YUDING_STATUS_GET_IMG_CODE;
                     break;

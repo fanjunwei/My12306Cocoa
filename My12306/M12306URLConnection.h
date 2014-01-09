@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "M12306CookieStore.h"
-#define UserAgent @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/536.30.1 (KHTML, like Gecko) Version/6.0.5 Safari/536.30.1"
+#define UserAgent @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/7.0.1 Safari/537.73.11"
 @interface M12306URLConnection : NSObject<NSURLConnectionDelegate,NSURLConnectionDataDelegate,NSURLDownloadDelegate>
 
 @property NSURLConnection* connection;
